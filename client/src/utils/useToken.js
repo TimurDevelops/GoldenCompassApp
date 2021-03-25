@@ -4,6 +4,7 @@ export default function useToken() {
   const getToken = () => {
     const tokenString = sessionStorage.getItem('token');
     const userToken = JSON.parse(tokenString);
+    console.log(userToken ? userToken : undefined)
     return userToken ? userToken : undefined
   };
 
@@ -11,11 +12,16 @@ export default function useToken() {
 
   const saveToken = userToken => {
     sessionStorage.setItem('token', JSON.stringify(userToken));
-    setToken(userToken.token);
+    setToken(userToken);
   };
+  const unsetToken = () => {
+    sessionStorage.removeItem('token');
+    setToken(undefined);
+  }
 
   return {
     setToken: saveToken,
-    token
+    token,
+    unsetToken
   }
 }

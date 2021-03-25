@@ -1,0 +1,128 @@
+$primary: #11998e;
+$secondary: #38ef7d;
+$white: #fff;
+$gray: #9b9b9b;
+.form-group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.form-field {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid $gray;
+  outline: 0;
+  font-size: 1.3rem;
+  color: $white;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:placeholder-shown ~ .form-label {
+    font-size: 1.3rem;
+    cursor: text;
+    top: 20px;
+  }
+}
+
+.form-label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: $gray;
+}
+
+.form-field:focus {
+  ~ .form-label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: $primary;
+    font-weight: 700;
+  }
+
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, $primary, $secondary) 1;
+}
+
+/* reset input */
+.form-field {
+  &:required, &:invalid {
+    box-shadow: none;
+  }
+}
+
+/* demo */
+.form {
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
+
+.login-form {
+  margin: auto;
+  width: 50%;
+}
+
+.login-wrapper {
+  min-height: 100vh;
+  font-size: 1.5rem;
+  background-color: #222222;
+}
+
+.submit-btn-wrapper {
+
+}
+
+.btn {
+  position: relative;
+  display: block;
+  background: transparent;
+  margin: 15px 0;
+  padding: 5px 40px;
+  font-size: 20px;
+  color: $gray;
+  transition: height .5s ease-in;
+  cursor: pointer;
+  border: 2px solid $gray;
+
+  &:hover {
+    color: #222;
+
+    &:after {
+      width: calc(100% + 4px);
+    }
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 0;
+    height: calc(100% + 4px);
+    background: linear-gradient(to right, $primary, $secondary);
+    transition: width .2s ease-in;
+  }
+
+  span {
+    position: relative;
+    z-index: 100;
+  }
+}
