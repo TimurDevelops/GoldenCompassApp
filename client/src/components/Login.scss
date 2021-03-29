@@ -1,7 +1,60 @@
-$primary: #11998e;
-$secondary: #38ef7d;
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+$primary: #fa752a;
+$secondary: #ee8d5c;
 $white: #fff;
 $gray: #9b9b9b;
+.login-wrapper {
+  min-height: 100vh;
+  font-size: 1.5rem;
+  //background-color: #222222;
+  background: url("../img/loginBg.png");
+  font-family: 'Roboto', sans-serif;
+
+}
+.background-holder{
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(#333, 0.5);
+}
+
+.login-form {
+  width: 700px;
+  display: flex;
+  background: $white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 3px 6px 20px 10px #565656;
+}
+.form{
+  width: 50%;
+  padding: 30px 20px;
+  box-sizing: border-box;
+}
+.login-image{
+  background: url("../img/compass.jpg");
+  background-size: cover;
+  width: 50%;
+}
+.login-header{
+  .golden-compass{
+    font-weight: bold;
+    font-family: 'Quicksand', sans-serif;
+    .g-letter{
+      color: $secondary;
+    }
+  }
+
+}
+
+.inputs-wrapper {
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
 .form-group {
   position: relative;
   padding: 15px 0 0;
@@ -10,14 +63,13 @@ $gray: #9b9b9b;
 }
 
 .form-field {
-  font-family: inherit;
   width: 100%;
-  border: 0;
-  border-bottom: 2px solid $gray;
+  border: 1px solid $gray;
   outline: 0;
   font-size: 1.3rem;
-  color: $white;
-  padding: 7px 0;
+  padding: 7px 15px;
+  margin: 7px 0;
+  box-sizing: border-box;
   background: transparent;
   transition: border-color 0.2s;
 
@@ -26,15 +78,16 @@ $gray: #9b9b9b;
   }
 
   &:placeholder-shown ~ .form-label {
-    font-size: 1.3rem;
+    font-size: 1rem;
     cursor: text;
-    top: 20px;
+    top: 33px;
+    left: 15px;
   }
 }
 
 .form-label {
-  position: absolute;
   top: 0;
+  position: absolute;
   display: block;
   transition: 0.2s;
   font-size: 1rem;
@@ -45,60 +98,55 @@ $gray: #9b9b9b;
   ~ .form-label {
     position: absolute;
     top: 0;
+    left: 0;
     display: block;
     transition: 0.2s;
-    font-size: 1rem;
     color: $primary;
-    font-weight: 700;
   }
 
-  padding-bottom: 6px;
-  font-weight: 700;
-  border-width: 3px;
+  border-width: 1px;
   border-image: linear-gradient(to right, $primary, $secondary) 1;
 }
 
-/* reset input */
 .form-field {
   &:required, &:invalid {
     box-shadow: none;
   }
 }
-
-/* demo */
-.form {
-  font-family: 'Poppins', sans-serif;
+.submit-btn-wrapper{
   display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: start;
+  width: 100%;
+  align-content: center;
+  justify-content: center;
+}
+#loginBtn{
+  background: linear-gradient(to right, $primary, $secondary);
+  border: none;
+  border-radius: 25px;
+  padding: 10px 40px;
+  transition: transform .2s ease-in;
+
+  &:hover{
+    transform: scale(1.07);
+  }
 }
 
-.login-form {
-  margin: auto;
-  width: 50%;
-}
 
-.login-wrapper {
-  min-height: 100vh;
-  font-size: 1.5rem;
-  background-color: #222222;
-}
-
-.submit-btn-wrapper {
-
-}
-
-.btn {
-  position: relative;
+// BUTTON
+.btn{
   display: block;
-  background: transparent;
   margin: 15px 0;
   padding: 5px 40px;
   font-size: 20px;
+  cursor: pointer;
+}
+
+.btn-transition {
+  position: relative;
+  display: block;
+  background: transparent;
   color: $gray;
   transition: height .5s ease-in;
-  cursor: pointer;
   border: 2px solid $gray;
 
   &:hover {

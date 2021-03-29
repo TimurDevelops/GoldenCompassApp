@@ -23,32 +23,38 @@ const Login = ({setToken}) => {
   }
   return (
     <div className="login-wrapper">
-      <div className="login-form">
+      <div className='background-holder'>
+        <div className="login-form">
 
-        <div className="login-header">
-          Golden Compass
-        </div>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <div className={'form'}>
-            <div className="form-group field">
-              <input type="input" className="form-field" placeholder="Логин" name="login" id='login'
-                     onChange={e => setUserName(e.target.value)} required/>
-              <label htmlFor="login" className="form-label">Логин</label>
+          <form className='form' onSubmit={(e) => handleSubmit(e)}>
+            <div className="login-header">
+              <p>Добро пожаловать в <br/>
+                <span className='golden-compass'><span className='g-letter'>G</span>olden Compass</span></p>
             </div>
+            <div className={'inputs-wrapper'}>
+              <div className="form-group field">
+                <input type="input" className="form-field" placeholder="Логин" name="login" id='login'
+                       onChange={e => setUserName(e.target.value)} required/>
+                <label htmlFor="login" className="form-label">Логин</label>
+              </div>
 
-            <div className="form-group field">
-              <input type="password" className="form-field" placeholder="Пароль" name="password" id='password'
-                     onChange={e => setPassword(e.target.value)} required/>
-              <label htmlFor="password" className="form-label">Пароль</label>
-            </div>
+              <div className="form-group field">
+                <input type="password" className="form-field" placeholder="Пароль" name="password" id='password'
+                       onChange={e => setPassword(e.target.value)} required/>
+                <label htmlFor="password" className="form-label">Пароль</label>
+              </div>
 
-            <div className={'submit-btn-wrapper'}>
-              <button type="submit" className={'btn'}>
-                <span>Войти</span>
-              </button>
+              <div className='submit-btn-wrapper'>
+                <button type="submit" className='btn' id='loginBtn'>
+                  <span>Войти</span>
+                </button>
+              </div>
             </div>
+          </form>
+          <div className='login-image'>
+
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
