@@ -2,12 +2,13 @@ import React from 'react';
 import './App.css';
 import useToken from "./utils/useToken";
 import Login from "./components/Login";
+import Header from "./layout/Header";
 
 function App() {
 
   const { token, setToken, unsetToken } = useToken();
-
   const logout = () => {
+    console.log('here')
     unsetToken();
   }
 
@@ -16,10 +17,8 @@ function App() {
   }
 
   return (
-    <div className="wrapper">
-      <h1>Application</h1>
-      Вы вошли
-      <button onClick={logout}>Выйти</button>
+    <div>
+      <Header logout={logout}/>
     </div>
   );
 }
