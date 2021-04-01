@@ -3,12 +3,12 @@ import './App.css';
 import useToken from "./utils/useToken";
 import Login from "./components/Login";
 import Header from "./layout/Header";
+import Canvas from "./layout/Canvas";
 
 function App() {
 
   const { token, setToken, unsetToken } = useToken();
   const logout = () => {
-    console.log('here')
     unsetToken();
   }
 
@@ -19,6 +19,7 @@ function App() {
   return (
     <div>
       <Header logout={logout}/>
+      <Canvas/>
     </div>
   );
 }
