@@ -24,6 +24,21 @@ app.use('/login', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Sever started on port ${PORT}`);
 });
+
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*'
+  }
+})
+
+io.sockets.on('connection', (socket) => {
+
+  socket.on('mouseDragged', (data) => {
+    socket.broadcast.emit('mouseDragged', data);
+  })
+})
+
+

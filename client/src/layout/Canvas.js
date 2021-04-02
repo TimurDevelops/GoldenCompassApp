@@ -6,20 +6,17 @@ import sketch from './Sketch';
 
 const Canvas = () => {
 
-  const [color, setColor] = useState();
+  const [drawWidth, setDrawWidth] = useState(10);
 
-  const randomColor = () => {
-    setColor([
-      Math.floor(Math.random() * 255),
-      Math.floor(Math.random() * 255),
-      Math.floor(Math.random() * 255)
-    ])
-  }
-  console.log(color)
   return (
     <div id='mainCanvas' style={{background: '#ccc', width: '50vw', height: '50vh'}}>
-      <button onClick={randomColor}>Random Color</button>
-      <P5Wrapper sketch={sketch} color={color}/>
+      <select value={drawWidth} onChange={e => setDrawWidth(e.target.value)}>
+        <option value={10}>10</option>
+        <option value={20}>20</option>
+        <option value={50}>50</option>
+        <option value={150}>150</option>
+      </select>
+      <P5Wrapper sketch={sketch} drawWidth={drawWidth}/>
     </div>
   )
 }
