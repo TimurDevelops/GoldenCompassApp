@@ -2,6 +2,7 @@ import {io} from 'socket.io-client';
 
 export default function sketch(p) {
   // TODO Разобраться с https (SSL)
+  // TODO подставлять адресс
   const socket = io('http://161.35.232.115:5000');
 
   let canvas;
