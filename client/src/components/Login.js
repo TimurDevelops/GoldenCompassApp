@@ -5,7 +5,7 @@ import axios from 'axios';
 import './Login.scss'
 
 const loginUser = async (credentials) => {
-  const res = await axios.post('http://localhost:5000/login', credentials);
+  const res = await axios.post('http://161.35.232.115:5000/login', credentials);
   return res.data.token;
 }
 
