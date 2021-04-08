@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://goldenCompassAdmin:y9PBP0XTwMCUPRHv@goldencompass.jmjkx.mongodb.net/golden_compass?retryWrites=true&w=majority",
+  "jwtSecret": "what are you doing here"
+}

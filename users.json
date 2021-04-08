@@ -2,11 +2,11 @@
   {
     "name": "Тимур Еремченко",
     "login": "timur",
-    "pass": "pass"
+    "password": "pass"
   },
   {
     "name": "Тимур Препод",
     "login": "teach",
-    "pass": "123"
+    "password": "123"
   }
 ]

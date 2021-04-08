@@ -3,24 +3,35 @@ import PropTypes from "prop-types";
 
 import axios from 'axios';
 import './Login.scss'
+import Switch from "./Switch";
 
-const loginUser = async (credentials) => {
-  const res = await axios.post('http://161.35.232.115:5000/login', credentials);
-  return res.data.token;
+const loginUser = async ({credentials, type}) => {
+  if(type === 'teacher'){
+    const res = await axios.post('http://localhost:5000/api/auth/teacher', credentials);
+    return res.data.token;
+  } else if(type === 'student'){
+    const res = await axios.post('http://localhost:5000/api/auth/student', credentials);
+    return res.data.token;
+  }
 }
 
 const Login = ({setToken}) => {
-  const [username, setUserName] = useState();
+  const [login, setLogin] = useState();
   const [password, setPassword] = useState();
+  const [type, setType] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault()
     const token = await loginUser({
-      username,
-      password
+      credentials: {
+        login,
+        password,
+      },
+      type
     });
     setToken(token);
   }
+
   return (
     <div className="login-wrapper">
       <div className='background-holder'>
@@ -34,7 +45,7 @@ const Login = ({setToken}) => {
             <div className={'inputs-wrapper'}>
               <div className="form-group field">
                 <input type="input" className="form-field" placeholder="Логин" name="login" id='login'
-                       onChange={e => setUserName(e.target.value)} required/>
+                       onChange={e => setLogin(e.target.value)} required/>
                 <label htmlFor="login" className="form-label">Логин</label>
               </div>
 
@@ -43,6 +54,9 @@ const Login = ({setToken}) => {
                        onChange={e => setPassword(e.target.value)} required/>
                 <label htmlFor="password" className="form-label">Пароль</label>
               </div>
+
+              <Switch labelOne="Учитель" labelTwo="Ученик" valueOne="teacher" valueTwo="student"
+                      onChange={(value) => {console.log(value); setType(value)}} />
 
               <div className='submit-btn-wrapper'>
                 <button type="submit" className='btn' id='loginBtn'>
