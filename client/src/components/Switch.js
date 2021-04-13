@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import './Switch.scss'
 
-
 const Switch = ({labelOne, labelTwo, onChange, valueOne, valueTwo}) => {
   const switchChange = (checked) => {
     onChange(checked ? valueTwo : valueOne);

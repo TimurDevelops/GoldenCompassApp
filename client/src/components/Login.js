@@ -5,31 +5,47 @@ import axios from 'axios';
 import './Login.scss'
 import Switch from "./Switch";
 
+const outputErrors = (errors) => {
+  errors.forEach(err=>{
+    console.log(err)
+  })
+}
+
 const loginUser = async ({credentials, type}) => {
-  if(type === 'teacher'){
-    const res = await axios.post('http://localhost:5000/api/auth/teacher', credentials);
-    return res.data.token;
-  } else if(type === 'student'){
-    const res = await axios.post('http://localhost:5000/api/auth/student', credentials);
-    return res.data.token;
+  if (type === 'teacher') {
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/teacher', credentials);
+      return {token: res.data.token, user: res.data.user};
+    } catch (e) {
+      outputErrors(e.response.data.errors)
+    }
+  } else if (type === 'student') {
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/student', credentials);
+      return {token: res.data.token, user: res.data.user};
+    } catch (e) {
+      outputErrors(e.response.data.errors)
+    }
   }
 }
 
-const Login = ({setToken}) => {
+const Login = ({setToken, setUser}) => {
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
   const [type, setType] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const token = await loginUser({
+    const {token, user} = await loginUser({
       credentials: {
         login,
         password,
       },
       type
     });
+    // console.log(user)
     setToken(token);
+    setUser(user)
   }
 
   return (
@@ -56,7 +72,10 @@ const Login = ({setToken}) => {
               </div>
 
               <Switch labelOne="Учитель" labelTwo="Ученик" valueOne="teacher" valueTwo="student"
-                      onChange={(value) => {console.log(value); setType(value)}} />
+                      onChange={(value) => {
+                        console.log(value);
+                        setType(value)
+                      }}/>
 
               <div className='submit-btn-wrapper'>
                 <button type="submit" className='btn' id='loginBtn'>
@@ -75,7 +94,8 @@ const Login = ({setToken}) => {
 }
 
 Login.propTypes = {
-  setToken: PropTypes.func.isRequired
+  setToken: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired
 }
 
 export default Login;

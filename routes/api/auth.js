@@ -79,7 +79,8 @@ router.post(
         { expiresIn: '5 days' },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          user.type = 'student';
+          res.json({ token, user });
         }
       );
     } catch (err) {
@@ -133,7 +134,8 @@ router.post(
         { expiresIn: '5 days' },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          user.type = 'teacher';
+          res.json({ token, user });
         }
       );
     } catch (err) {
