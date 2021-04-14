@@ -4,16 +4,15 @@ import './TeachersList.scss'
 import TeacherItem from "./TeacherItem";
 
 const TeachersList = ({teachers}) => {
-
   return (
     <div>
+      Список учителей
       {teachers.map(teacher => <TeacherItem teacher={teacher}/>)}
     </div>
-  );
+  )
 }
 
 TeachersList.propTypes = {
-  // TODO types
   teachers: PropTypes.array
 }
 

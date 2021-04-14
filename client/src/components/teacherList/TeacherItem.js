@@ -3,17 +3,15 @@ import PropTypes from "prop-types";
 import './TeacherItem.scss'
 
 const TeacherItem = ({name}) => {
-
   return (
     <div>
       {name}
     </div>
-  );
+  )
 }
 
 TeacherItem.propTypes = {
-  // TODO types
-  teacher: PropTypes.object.isRequired
+  teacher: PropTypes.object
 }
 
 export default TeacherItem;

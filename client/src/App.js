@@ -1,37 +1,35 @@
-import React, {useState} from 'react';
-import './App.css';
+import React, {Fragment} from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+
 import useToken from "./utils/useToken";
-import Login from "./components/Login";
-import Header from "./layout/Header";
-import Canvas from "./layout/Canvas";
-import TeachersList from "./layout/TeachersList";
+import Login from "./components/login/Login";
+import Header from "./components/layout/Header";
+
+import './App.css';
+import Routes from "./components/routing/Routes";
 
 function App() {
-
-  const { token, setToken, unsetToken } = useToken();
-  const [user, setUser] = useState();
-
+  const {token, setToken, unsetToken} = useToken();
 
   const logout = () => {
     unsetToken();
   }
 
-  if(!token) {
-    return <Login setToken={setToken} setUser={setUser}/>
+  if (!token) {
+    return <Login setToken={setToken} setUser={setToken}/>
   }
-  console.log(user)
+
   return (
-    <div>
-      <Header logout={logout}/>
-      <Canvas/>
-      {
-        user.type === 'teacher' ?
-        <div>Учитель вошел</div> :
-        user.type === 'student' ?
-        <TeachersList/> :
-        <div>Неизвестный тип пользователя</div>
-      }
-    </div>
+    <Router>
+      <Fragment>
+        <Header logout={logout}/>
+        <Switch>
+          {/* TODO Maybe make this path */}
+          {/*<Route exact path="/" component={Landing} />*/}
+          <Route component={Routes}/>
+        </Switch>
+      </Fragment>
+    </Router>
   );
 }
 

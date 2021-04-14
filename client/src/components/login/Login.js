@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import axios from 'axios';
 import './Login.scss'
-import Switch from "./Switch";
+import Switch from "../ui/Switch";
 
 const outputErrors = (errors) => {
   errors.forEach(err=>{
