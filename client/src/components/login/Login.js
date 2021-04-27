@@ -6,6 +6,7 @@ import './Login.scss'
 import Switch from "../ui/Switch";
 
 const outputErrors = (errors) => {
+
   errors.forEach(err => {
     // TODO Output Errors
     console.log(err)
@@ -13,44 +14,41 @@ const outputErrors = (errors) => {
 }
 
 const loginUser = async ({credentials, type, setIsLoading}) => {
-  if (type === 'teacher') {
-    setIsLoading(true);
-    try {
+  try {
+    if (type === 'teacher') {
       const res = await axios.post('http://localhost:5000/api/auth/teacher', credentials);
-      setIsLoading(false);
       return {token: res.data.token, user: res.data.user};
-    } catch (e) {
-      setIsLoading(false);
-      outputErrors(e.response.data.errors)
-    }
-  } else if (type === 'student') {
-    try {
+    } else if (type === 'student') {
       const res = await axios.post('http://localhost:5000/api/auth/student', credentials);
-      setIsLoading(false);
       return {token: res.data.token, user: res.data.user};
-    } catch (e) {
-      setIsLoading(false);
-      outputErrors(e.response.data.errors)
     }
+  } catch (e) {
+    throw e.response.data.errors;
   }
 }
 
 const Login = ({setUser, setIsLoading}) => {
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
-  const [type, setType] = useState();
+  const [type, setType] = useState("teacher");
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const {user} = await loginUser({
-      setIsLoading,
-      credentials: {
-        login,
-        password,
-      },
-      type
-    });
-    setUser(user)
+    setIsLoading(false);
+    try {
+      const user = await loginUser({
+        setIsLoading,
+        credentials: {
+          login,
+          password,
+        },
+        type
+      });
+      setUser(user)
+    } catch (errors) {
+      outputErrors(errors);
+    }
+    setIsLoading(true);
   }
 
   return (
@@ -78,8 +76,7 @@ const Login = ({setUser, setIsLoading}) => {
 
               <Switch labelOne="Учитель" labelTwo="Ученик" valueOne="teacher" valueTwo="student"
                       onChange={(value) => {
-                        console.log(value);
-                        setType(value)
+                        setType(value);
                       }}/>
 
               <div className='submit-btn-wrapper'>

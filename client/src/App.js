@@ -10,7 +10,7 @@ import Routes from "./components/routing/Routes";
 
 function App() {
   const {user, setUser, unsetUser} = useUser();
-  const {isLoading, setIsLoading} = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const logout = () => {
     unsetUser();
