@@ -13,7 +13,7 @@ const outputErrors = (errors) => {
   })
 }
 
-const loginUser = async ({credentials, type, setIsLoading}) => {
+const loginUser = async ({credentials, type}) => {
   try {
     if (type === 'teacher') {
       const res = await axios.post('http://localhost:5000/api/auth/teacher', credentials);
@@ -37,7 +37,6 @@ const Login = ({setUser, setIsLoading}) => {
     setIsLoading(false);
     try {
       const user = await loginUser({
-        setIsLoading,
         credentials: {
           login,
           password,
