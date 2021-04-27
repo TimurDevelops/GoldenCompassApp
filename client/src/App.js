@@ -1,7 +1,7 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useState} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
-import useToken from "./utils/useToken";
+import useUser from "./utils/useUser";
 import Login from "./components/login/Login";
 import Header from "./components/layout/Header";
 
@@ -9,14 +9,15 @@ import './App.css';
 import Routes from "./components/routing/Routes";
 
 function App() {
-  const {token, setToken, unsetToken} = useToken();
+  const {user, setUser, unsetUser} = useUser();
+  const {isLoading, setIsLoading} = useState(true);
 
   const logout = () => {
-    unsetToken();
+    unsetUser();
   }
 
-  if (!token) {
-    return <Login setToken={setToken} setUser={setToken}/>
+  if (!user || !user.token) {
+    return <Login setToken={setUser} setIsLoading={setIsLoading} setUser={setUser}/>
   }
 
   return (
@@ -26,7 +27,7 @@ function App() {
         <Switch>
           {/* TODO Maybe make this path */}
           {/*<Route exact path="/" component={Landing} />*/}
-          <Route component={Routes}/>
+          <Route component={<Routes isLoading={isLoading} />}/>
         </Switch>
       </Fragment>
     </Router>

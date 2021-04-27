@@ -6,8 +6,12 @@ import PrivateRoute from "./PrivateRoute";
 import Login from "../login/Login";
 import TeacherMenu from "../teacherMenu/TeacherMenu";
 import TeachersList from "../teacherList/TeachersList";
+import useUser from "../../utils/useUser";
 
-const Routes = () => {
+const Routes = (loading) => {
+  const {user} = useUser()
+  const auth = {isAuthenticated: Boolean(user && user.token), loading};
+
   return (
     <section className="container">
       <Switch>
@@ -15,16 +19,16 @@ const Routes = () => {
         <Route exact path="/login" component={Login}/>
 
         {/* Teacher Menu */}
-        <PrivateRoute exact path="/teacher" component={TeacherMenu} auth={}/>
+        <PrivateRoute exact path="/teacher" component={TeacherMenu} auth={auth}/>
 
         {/* TODO Links for teachers */}
         {/*<PrivateRoute exact path="/teacher/note" component={}/>*/}
 
         {/* Student Available Teachers */}
-        <PrivateRoute exact path="/student" component={TeachersList} auth={}/>
+        <PrivateRoute exact path="/student" component={TeachersList} auth={auth}/>
 
         {/* Canvas will determine content by type and room */}
-        <PrivateRoute exact path="/canvas/:room" component={Canvas} auth={}/>
+        <PrivateRoute exact path="/canvas/:room" component={Canvas} auth={auth}/>
 
         {/* TODO 404 */}
         {/*<Route component={NotFound} />*/}

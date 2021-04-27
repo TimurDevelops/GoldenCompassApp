@@ -80,7 +80,8 @@ router.post(
         (err, token) => {
           if (err) throw err;
           user.type = 'student';
-          res.json({ token, user });
+          user.token = token;
+          res.json(user);
         }
       );
     } catch (err) {
@@ -135,7 +136,8 @@ router.post(
         (err, token) => {
           if (err) throw err;
           user.type = 'teacher';
-          res.json({ token, user });
+          user.token = token;
+          res.json(user);
         }
       );
     } catch (err) {

@@ -6,45 +6,50 @@ import './Login.scss'
 import Switch from "../ui/Switch";
 
 const outputErrors = (errors) => {
-  errors.forEach(err=>{
+  errors.forEach(err => {
+    // TODO Output Errors
     console.log(err)
   })
 }
 
-const loginUser = async ({credentials, type}) => {
+const loginUser = async ({credentials, type, setIsLoading}) => {
   if (type === 'teacher') {
+    setIsLoading(true);
     try {
       const res = await axios.post('http://localhost:5000/api/auth/teacher', credentials);
+      setIsLoading(false);
       return {token: res.data.token, user: res.data.user};
     } catch (e) {
+      setIsLoading(false);
       outputErrors(e.response.data.errors)
     }
   } else if (type === 'student') {
     try {
       const res = await axios.post('http://localhost:5000/api/auth/student', credentials);
+      setIsLoading(false);
       return {token: res.data.token, user: res.data.user};
     } catch (e) {
+      setIsLoading(false);
       outputErrors(e.response.data.errors)
     }
   }
 }
 
-const Login = ({setToken, setUser}) => {
+const Login = ({setUser, setIsLoading}) => {
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
   const [type, setType] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const {token, user} = await loginUser({
+    const {user} = await loginUser({
+      setIsLoading,
       credentials: {
         login,
         password,
       },
       type
     });
-    // console.log(user)
-    setToken(token);
     setUser(user)
   }
 
@@ -94,7 +99,7 @@ const Login = ({setToken, setUser}) => {
 }
 
 Login.propTypes = {
-  setToken: PropTypes.func.isRequired,
+  setIsLoading: PropTypes.func.isRequired,
   setUser: PropTypes.func.isRequired
 }
 
