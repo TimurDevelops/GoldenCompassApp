@@ -48,6 +48,5 @@ export default function sketch(p) {
       //   p.fill(newProps.color);
       // }
       drawWidth = newProps.drawWidth;
-      console.log(drawWidth)
     }
 }

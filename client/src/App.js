@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 // TODO restructure components folder
 import useUser from "./utils/useUser";
 
@@ -52,7 +52,21 @@ const Routes = () => {
           <PrivateRoute exact path="/canvas/:room" component={Canvas} auth={auth}/>
 
           {/* 404 Page */}
-          <PrivateRoute path="*" component={NotFound} />
+          <Route path="*" render={
+            () => {
+              if (auth.isAuthenticated) {
+                if (user.type === 'student') {
+                  return <Redirect to="/student"/>
+                } else if (user.type === 'teacher') {
+                  return <Redirect to="/teacher"/>
+                } else {
+                  return <Redirect to="/login"/>
+                }
+              } else {
+                return <Redirect to="/login"/>
+              }
+            }
+          }/>
         </Switch>
       </Router>
     </section>

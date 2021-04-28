@@ -25,9 +25,8 @@ const Login = ({setUser, setIsLoading, setAlert}) => {
   const [type, setType] = useState("teacher");
 
   const outputErrors = (errors) => {
-
     errors.forEach(err => {
-      setAlert(err)
+      setAlert(err.msg, 'danger')
     })
   }
 
