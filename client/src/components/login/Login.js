@@ -5,14 +5,6 @@ import axios from 'axios';
 import './Login.scss'
 import Switch from "../ui/Switch";
 
-const outputErrors = (errors) => {
-
-  errors.forEach(err => {
-    // TODO Output Errors
-    console.log(err)
-  })
-}
-
 const loginUser = async ({credentials, type}) => {
   try {
     if (type === 'teacher') {
@@ -27,10 +19,17 @@ const loginUser = async ({credentials, type}) => {
   }
 }
 
-const Login = ({setUser, setIsLoading}) => {
+const Login = ({setUser, setIsLoading, setAlert}) => {
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
   const [type, setType] = useState("teacher");
+
+  const outputErrors = (errors) => {
+
+    errors.forEach(err => {
+      setAlert(err)
+    })
+  }
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -95,6 +94,7 @@ const Login = ({setUser, setIsLoading}) => {
 }
 
 Login.propTypes = {
+  setAlert: PropTypes.func.isRequired,
   setIsLoading: PropTypes.func.isRequired,
   setUser: PropTypes.func.isRequired
 }
