@@ -105,7 +105,7 @@ router.post(
           .status(404)
           .json({errors: [{msg: 'Данный Учитель уже закреплен за данным учеником'}]});
       }
-      await Student.update({ _id: student._id }, { teachers: [...student.teachers, teacher._id] });
+      await Student.updateOne({ _id: student._id }, { teachers: [...student.teachers, teacher._id] });
       return res.json({msg: 'Учитель закреплен за учеником'});
 
     } catch (err) {
@@ -137,11 +137,14 @@ router.post(
           .status(404)
           .json({errors: [{msg: 'Ученик с таким логином отсутствует'}]});
       }
+      const ObjectId = require('mongoose').Types.ObjectId;
 
-      return res.json({teachers: student.teachers});
+      const teachers_ids = student.teachers.map(function(id) { return ObjectId(id); });
+      const teachers = await Teacher.find({_id: {$in: teachers_ids}});
+
+      return res.json({teachers});
 
     } catch (err) {
-      console.error(err.message);
       res.status(500).send('Server error');
     }
   }

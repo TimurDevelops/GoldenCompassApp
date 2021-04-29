@@ -1,10 +1,11 @@
 import React from "react";
 import './TeacherItem.scss'
 
-const TeacherItem = ({name}) => {
+const TeacherItem = ({teacher}) => {
+  console.log(teacher)
   return (
     <div>
-      {name}
+      {teacher.name}
     </div>
   )
 }
