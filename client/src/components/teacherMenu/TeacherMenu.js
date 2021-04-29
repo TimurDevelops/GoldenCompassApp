@@ -1,12 +1,12 @@
 import React from "react";
 import './TeacherMenu.scss'
-import TeacherMenuItem from "./TeacherMenuItem";
+import MenuItem from "../layout/MenuItem";
 
 const TeacherMenu = () => {
 
   return (
     <div>
-      <TeacherMenuItem label='Памятка'/>
+      <MenuItem label='Памятка'/>
     </div>
   );
 }

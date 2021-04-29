@@ -7,7 +7,9 @@ import Alert from "./components/layout/Alert";
 
 import Login from "./components/login/Login";
 import TeacherMenu from "./components/teacherMenu/TeacherMenu";
-import TeachersList from "./components/teacherList/TeachersList"
+import TeachersList from "./components/teachersList/TeachersList";
+
+import StudentMenu from "./components/studentMenu/StudentMenu"
 import PrivateRoute from "./components/routing/PrivateRoute";
 import Canvas from "./components/canvas/Canvas";
 import {v4 as uuidv4} from 'uuid';
@@ -46,7 +48,10 @@ const Routes = () => {
           {/*<PrivateRoute exact path="/teacher/note" component={}/>*/}
 
           {/* Student Available Teachers */}
-          <PrivateRoute exact path="/student" component={TeachersList} auth={auth}/>
+          <PrivateRoute exact path="/student" component={StudentMenu} auth={auth} student={user}/>
+
+          {/* Student Available Teachers */}
+          <PrivateRoute exact path="/teachers-list" component={TeachersList} auth={auth} student={user}/>
 
           {/* Canvas will determine content by type and room */}
           <PrivateRoute exact path="/canvas/:room" component={Canvas} auth={auth}/>

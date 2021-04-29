@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import axios from 'axios';
@@ -9,10 +10,10 @@ const loginUser = async ({credentials, type}) => {
   try {
     if (type === 'teacher') {
       const res = await axios.post('http://localhost:5000/api/auth/teacher', credentials);
-      return {token: res.data.token, user: res.data.user};
+      return res.data;
     } else if (type === 'student') {
       const res = await axios.post('http://localhost:5000/api/auth/student', credentials);
-      return {token: res.data.token, user: res.data.user};
+      return res.data;
     }
   } catch (e) {
     throw e.response.data.errors;
@@ -20,6 +21,7 @@ const loginUser = async ({credentials, type}) => {
 }
 
 const Login = ({setUser, setIsLoading, setAlert}) => {
+  const history = useHistory();
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
   const [type, setType] = useState("teacher");
@@ -42,6 +44,8 @@ const Login = ({setUser, setIsLoading, setAlert}) => {
         type
       });
       setUser(user)
+      history.push("/" + user.type);
+
     } catch (errors) {
       outputErrors(errors);
     }

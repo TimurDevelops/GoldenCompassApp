@@ -4,6 +4,7 @@ import './TeachersList.scss'
 import TeacherItem from "./TeacherItem";
 
 const TeachersList = ({teachers}) => {
+  console.log(teachers)
   return (
     <div>
       Список учителей

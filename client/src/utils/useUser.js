@@ -13,7 +13,7 @@ export default function useUser() {
     sessionStorage.setItem('user', JSON.stringify(userToken));
     setUser(userToken);
   };
-  const unsetToken = () => {
+  const unsetUser = () => {
     sessionStorage.removeItem('user');
     setUser(undefined);
   }
@@ -21,6 +21,6 @@ export default function useUser() {
   return {
     setUser: saveUser,
     user: user,
-    unsetUser: unsetToken
+    unsetUser: unsetUser
   }
 }

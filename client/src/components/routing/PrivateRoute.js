@@ -12,7 +12,7 @@ const PrivateRoute = ({component: Component, auth: {isAuthenticated, loading}, .
         loading ? (
           <Spinner/>
         ) : isAuthenticated ? (
-          <Component {...props} />
+          <Component {...props} {...rest} />
         ) : (
           <Redirect to="/login"/>
         )
