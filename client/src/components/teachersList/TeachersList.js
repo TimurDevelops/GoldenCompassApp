@@ -13,11 +13,9 @@ const TeachersList = ({student: {login}}) => {
       const res = await axios.post('http://localhost:5000/api/student/get-teachers', {studentLogin: login});
       setTeachers(res.data.teachers);
     }
-    getTeachers().catch((err)=> console.log(err))
+    getTeachers().catch((err)=> console.error(err))
 
   }, [login]);
-
-  console.log(teachers)
 
   return (
     <div>
