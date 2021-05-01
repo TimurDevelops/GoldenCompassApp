@@ -1,32 +1,21 @@
-import React, {Fragment, useState} from 'react';
-import P5Wrapper from 'react-p5-wrapper';
-import sketch from './Sketch';
-import Header from "../layout/Header";
-import useUser from "../../utils/useUser";
+import React, {useState} from 'react';
+import P5Wrapper from "react-p5-wrapper";
+import sketch from "./Sketch";
+import PropTypes from "prop-types";
+import WorkingSpace from "./WorkingSpace";
 
-const Canvas = () => {
-  const {unsetUser} = useUser()
-  const [drawWidth, setDrawWidth] = useState(10);
-
-  const logout = () => {
-    unsetUser();
-  }
+const Canvas = ({drawWidth, drawColor}) => {
 
   return (
-    <Fragment>
-      <Header logout={logout}/>
-      <div id='mainCanvas' style={{background: '#ccc', width: '50vw', height: '50vh'}}>
-        <select value={drawWidth} onChange={e => setDrawWidth(e.target.value)}>
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={50}>50</option>
-          <option value={150}>150</option>
-        </select>
-        <P5Wrapper sketch={sketch} drawWidth={drawWidth}/>
-      </div>
-    </Fragment>
+    <div id='mainCanvas' style={{background: '#ccc', width: '50vw', height: '50vh'}}>
+      <P5Wrapper sketch={sketch} drawWidth={drawWidth} drawColor={drawColor}/>
+    </div>
   )
 }
 
+WorkingSpace.propTypes = {
+  drawWidth: PropTypes.number.isRequired,
+  drawColor: PropTypes.string.isRequired
+}
 
 export default Canvas;

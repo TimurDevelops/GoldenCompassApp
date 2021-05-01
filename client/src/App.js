@@ -11,7 +11,7 @@ import TeachersList from "./components/teachersList/TeachersList";
 
 import StudentMenu from "./components/studentMenu/StudentMenu"
 import PrivateRoute from "./components/routing/PrivateRoute";
-import Canvas from "./components/canvas/Canvas";
+import Canvas from "./components/canvas/ClassRoom";
 import {v4 as uuidv4} from 'uuid';
 
 const Routes = () => {
