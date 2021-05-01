@@ -1,19 +1,19 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-const LessonPicker = () => {
+const SlidePicker = ({setLesson}) => {
 
   return (
     <div>
-      <div>Урок Номер 1</div>
-      <div>Урок Номер 2</div>
-      <div>Урок Номер 3</div>
+      <button onClick={setLesson(1)}>Урок Номер 1</button>
+      <button onClick={setLesson(2)}>Урок Номер 2</button>
+      <button onClick={setLesson(3)}>Урок Номер 3</button>
     </div>
   )
 }
 
-export default LessonPicker;
+SlidePicker.propTypes = {
+  setLesson: PropTypes.func.isRequired,
+}
 
-
-
-
-
+export default SlidePicker;
