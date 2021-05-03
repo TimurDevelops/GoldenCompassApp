@@ -1,19 +1,43 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const SlidePicker = ({setLesson}) => {
+const LessonPicker = ({setLesson}) => {
 
   return (
     <div>
-      <button onClick={setLesson(1)}>Урок Номер 1</button>
-      <button onClick={setLesson(2)}>Урок Номер 2</button>
-      <button onClick={setLesson(3)}>Урок Номер 3</button>
+      <button onClick={
+        () => setLesson({
+          slides: [
+            {img: 'a image', id: 1, tip: "Tip for teacher"}
+          ]
+        })
+      }>Урок Номер 1
+      </button>
+
+      <button onClick={
+        () => setLesson({
+          slides: [
+            {img: 'b image', id: 1, tip: "Tip for teacher"}, {img: 'b image two', id: 2, tip: "Tip for teacher"}
+          ]
+        })
+      }>Урок Номер 2
+      </button>
+
+      <button onClick={
+        () => setLesson({
+          slides: [
+            {img: 'c image', id: 1, tip: "Tip for teacher"}, {img: 'c image two', id: 2, tip: "Tip for teacher"}
+          ]
+        })
+      }>Урок Номер 3
+      </button>
+
     </div>
   )
 }
 
-SlidePicker.propTypes = {
+LessonPicker.propTypes = {
   setLesson: PropTypes.func.isRequired,
 }
 
-export default SlidePicker;
+export default LessonPicker;

@@ -5,7 +5,7 @@ import ToolPanel from "./ToolPanel";
 
 import PropTypes from "prop-types";
 
-const WorkingSpace = ({userType, tip}) => {
+const WorkingSpace = ({userType, tip, slideImg}) => {
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
 
@@ -13,7 +13,7 @@ const WorkingSpace = ({userType, tip}) => {
   return (
     <div>
       {userType === 'teacher' ? <TipArea tip={tip}/> : ''}
-
+      {slideImg}
       <Canvas drawWidth={drawWidth} drawColor={drawColor}/>
       <ToolPanel setDrawWidth={setDrawWidth} setDrawColor={setDrawColor}/>
     </div>

@@ -8,8 +8,8 @@ import LessonPicker from "./LessonPicker";
 
 const ClassRoom = () => {
   const {user, unsetUser} = useUser()
-  const [slide, setSlide] = useState({})
-  const [lesson, setLesson] = useState({})
+  const [slide, setSlide] = useState({img: 'Добро пожаловать', id: 1, tip: ", Учитель;)"})
+  const [lesson, setLesson] = useState({slides: []})
 
   return (
     <Fragment>
@@ -17,7 +17,7 @@ const ClassRoom = () => {
 
       <section>
         <VideoArea/>
-        <WorkingSpace userType={user.type} tip={slide.tip} slideImg={slide.slideImg}/>
+        <WorkingSpace userType={user.type} tip={slide.tip} slideImg={slide.img}/>
         <SlidePicker setSlide={setSlide} slides={lesson.slides}/>
         <LessonPicker setLesson={setLesson}/>
       </section>

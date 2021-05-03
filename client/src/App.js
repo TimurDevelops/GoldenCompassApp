@@ -11,7 +11,7 @@ import TeachersList from "./components/teachersList/TeachersList";
 
 import StudentMenu from "./components/studentMenu/StudentMenu"
 import PrivateRoute from "./components/routing/PrivateRoute";
-import Canvas from "./components/canvas/ClassRoom";
+import ClassRoom from "./components/canvas/ClassRoom";
 import {v4 as uuidv4} from 'uuid';
 
 const App = () => {
@@ -63,7 +63,7 @@ const App = () => {
           }
 
           {/* Canvas will determine content by type and room */}
-          <PrivateRoute exact path="/canvas/:room" component={Canvas} auth={auth}/>
+          <PrivateRoute exact path="/canvas/:room" component={ClassRoom} auth={auth}/>
 
           {/* 404 Page */}
           <Route path="*" render={
