@@ -14,10 +14,9 @@ import PrivateRoute from "./components/routing/PrivateRoute";
 import Canvas from "./components/canvas/ClassRoom";
 import {v4 as uuidv4} from 'uuid';
 
-const Routes = () => {
-  const {user, setUser} = useUser()
-  const [isLoading, setIsLoading] = useState(true);
-  const auth = {isAuthenticated: Boolean(user && user.token), isLoading};
+const App = () => {
+  const {user, setUser, unsetUser} = useUser()
+  const [auth, setAuth] = useState({isAuthenticated: Boolean(user && user.token), isLoading: false});
   const [alerts, setAlerts] = useState([])
 
   const setAlert = (msg, alertType, timeout = 5000) => {
@@ -31,6 +30,12 @@ const Routes = () => {
     setAlerts(alerts.filter((alert) => alert.id !== id));
   }
 
+  console.log('auth = ', auth, Boolean(user && user.token))
+
+  const logout = () => {
+    unsetUser();
+    setAuth({isAuthenticated: false, isLoading: false});
+  };
   return (
     <section className="container">
       <Alert alerts={alerts}/>
@@ -39,16 +44,16 @@ const Routes = () => {
           {/* Sign In Page */}
           <Route exact path="/login"
                  render={(props) =>
-                   <Login {...props} setIsLoading={setIsLoading} setAlert={setAlert} setUser={setUser}/>
+                   <Login {...props} setAuth={setAuth} setAlert={setAlert} setUser={setUser} auth={auth}/>
                  }/>
           {/* Teacher Menu */}
-          <PrivateRoute exact path="/teacher" component={TeacherMenu} auth={auth}/>
+          <PrivateRoute exact path="/teacher" component={TeacherMenu} auth={auth} user={user} logout={logout}/>
 
           {/* TODO Links for teachers */}
           {/*<PrivateRoute exact path="/teacher/note" component={}/>*/}
 
           {/* Student Available Teachers */}
-          <PrivateRoute exact path="/student" component={StudentMenu} auth={auth} student={user}/>
+          <PrivateRoute exact path="/student" component={StudentMenu} auth={auth} student={user} logout={logout}/>
 
           {/* Student Available Teachers */}
           <PrivateRoute exact path="/teachers-list" component={TeachersList} auth={auth} student={user}/>
@@ -78,4 +83,4 @@ const Routes = () => {
   );
 };
 
-export default Routes;
+export default App;

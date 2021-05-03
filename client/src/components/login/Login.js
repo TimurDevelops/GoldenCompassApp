@@ -20,7 +20,7 @@ const loginUser = async ({credentials, type}) => {
   }
 }
 
-const Login = ({setUser, setIsLoading, setAlert}) => {
+const Login = ({auth, setUser, setAuth, setAlert}) => {
   const history = useHistory();
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
@@ -34,7 +34,7 @@ const Login = ({setUser, setIsLoading, setAlert}) => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    setIsLoading(false);
+    setAuth({isLoading: true, isAuthenticated: false});
     try {
       const user = await loginUser({
         credentials: {
@@ -44,12 +44,13 @@ const Login = ({setUser, setIsLoading, setAlert}) => {
         type
       });
       setUser(user)
+      setAuth({isLoading: false, isAuthenticated: true});
       history.push("/" + user.type);
 
     } catch (errors) {
+      setAuth({isLoading: false, isAuthenticated: false});
       outputErrors(errors);
     }
-    setIsLoading(true);
   }
 
   return (
@@ -97,8 +98,9 @@ const Login = ({setUser, setIsLoading, setAlert}) => {
 }
 
 Login.propTypes = {
+  auth: PropTypes.object.isRequired,
   setAlert: PropTypes.func.isRequired,
-  setIsLoading: PropTypes.func.isRequired,
+  setAuth: PropTypes.func.isRequired,
   setUser: PropTypes.func.isRequired
 }
 

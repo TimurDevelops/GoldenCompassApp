@@ -11,13 +11,9 @@ const ClassRoom = () => {
   const [slide, setSlide] = useState({})
   const [lesson, setLesson] = useState({})
 
-  const logout = () => {
-    unsetUser();
-  }
-
   return (
     <Fragment>
-      <Header logout={logout}/>
+      <Header logout={unsetUser}/>
 
       <section>
         <VideoArea/>

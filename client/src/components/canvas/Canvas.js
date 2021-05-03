@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import P5Wrapper from "react-p5-wrapper";
 import sketch from "./Sketch";
 import PropTypes from "prop-types";
-import WorkingSpace from "./WorkingSpace";
 
 const Canvas = ({drawWidth, drawColor}) => {
 
@@ -13,7 +12,7 @@ const Canvas = ({drawWidth, drawColor}) => {
   )
 }
 
-WorkingSpace.propTypes = {
+Canvas.propTypes = {
   drawWidth: PropTypes.number.isRequired,
   drawColor: PropTypes.string.isRequired
 }

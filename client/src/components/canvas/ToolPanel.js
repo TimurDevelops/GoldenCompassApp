@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import WorkingSpace from "./WorkingSpace";
 
 const TipArea = ({setDrawWidth, setDrawColor}) => {
 
@@ -23,7 +22,7 @@ const TipArea = ({setDrawWidth, setDrawColor}) => {
   )
 }
 
-WorkingSpace.propTypes = {
+TipArea.propTypes = {
   setDrawWidth: PropTypes.func.isRequired,
   setDrawColor: PropTypes.func.isRequired,
 }
