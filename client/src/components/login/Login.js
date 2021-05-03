@@ -20,7 +20,7 @@ const loginUser = async ({credentials, type}) => {
   }
 }
 
-const Login = ({auth, setUser, setAuth, setAlert}) => {
+const Login = ({setUser, setAuth, setAlert}) => {
   const history = useHistory();
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();

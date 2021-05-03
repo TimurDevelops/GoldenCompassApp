@@ -30,8 +30,6 @@ const App = () => {
     setAlerts(alerts.filter((alert) => alert.id !== id));
   }
 
-  console.log('auth = ', auth, Boolean(user && user.token))
-
   const logout = () => {
     unsetUser();
     setAuth({isAuthenticated: false, isLoading: false});
@@ -47,16 +45,22 @@ const App = () => {
                    <Login {...props} setAuth={setAuth} setAlert={setAlert} setUser={setUser} auth={auth}/>
                  }/>
           {/* Teacher Menu */}
+          {user && user.type === 'teacher' &&
           <PrivateRoute exact path="/teacher" component={TeacherMenu} auth={auth} user={user} logout={logout}/>
+          }
 
           {/* TODO Links for teachers */}
           {/*<PrivateRoute exact path="/teacher/note" component={}/>*/}
 
           {/* Student Available Teachers */}
+          {user && user.type === 'student' &&
           <PrivateRoute exact path="/student" component={StudentMenu} auth={auth} student={user} logout={logout}/>
+          }
 
           {/* Student Available Teachers */}
+          {user && user.type === 'student' &&
           <PrivateRoute exact path="/teachers-list" component={TeachersList} auth={auth} student={user}/>
+          }
 
           {/* Canvas will determine content by type and room */}
           <PrivateRoute exact path="/canvas/:room" component={Canvas} auth={auth}/>

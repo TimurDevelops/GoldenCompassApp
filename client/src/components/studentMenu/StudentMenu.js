@@ -8,8 +8,8 @@ const StudentMenu = ({logout}) => {
   return (
     <div className={"menu-bg"}>
       <div className={"menu-wrapper"}>
+        Меню ученика
         <MenuItem link={'/teachers-list'} label={'Начать урок'}/>
-
         <button className={'menu-button'} onClick={logout} >Выйти</button>
       </div>
     </div>

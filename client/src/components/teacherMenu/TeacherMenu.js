@@ -4,11 +4,11 @@ import MenuItem from "../layout/MenuItem";
 import PropTypes from "prop-types";
 
 const TeacherMenu = ({user, logout}) => {
-  console.log('unsetUser')
-
   return (
     <div>
-      <MenuItem label="" link={`/canvas/${user.login}`}/>
+      Меню учителя
+      <MenuItem link={`/canvas/${user.login}`} label={'Начать урок'}/>
+
       <button className={'menu-button'} onClick={logout} >Выйти</button>
     </div>
   );
