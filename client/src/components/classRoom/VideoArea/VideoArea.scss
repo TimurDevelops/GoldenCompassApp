@@ -1,0 +1,16 @@
+.video-wrapper{
+  height: 100%;
+  flex: 3;
+  .video{
+    background-color: #ccc;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .teacher-video{
+  }
+  .student-video{
+
+  }
+}

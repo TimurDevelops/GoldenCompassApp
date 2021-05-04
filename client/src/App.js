@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
-// TODO restructure components folder
 import useUser from "./utils/useUser";
 
 import Alert from "./components/ui/Alert";

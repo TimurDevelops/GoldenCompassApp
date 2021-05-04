@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-const TipArea = ({setDrawWidth, setDrawColor}) => {
+import "./ToolPanel.scss";
+
+const ToolPanel = ({setDrawWidth, setDrawColor}) => {
 
   return (
-    <div>
+    <div className={"tool-panel"}>
       <select onChange={e => setDrawWidth(e.target.value)}>
         <option defaultChecked={true} value={10}>10</option>
         <option value={20}>20</option>
@@ -22,9 +24,9 @@ const TipArea = ({setDrawWidth, setDrawColor}) => {
   )
 }
 
-TipArea.propTypes = {
+ToolPanel.propTypes = {
   setDrawWidth: PropTypes.func.isRequired,
   setDrawColor: PropTypes.func.isRequired,
 }
 
-export default TipArea;
+export default ToolPanel;

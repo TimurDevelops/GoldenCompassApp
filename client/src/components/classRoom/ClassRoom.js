@@ -6,6 +6,7 @@ import CanvasArea from "./CanvasArea/CanvasArea";
 import SlidePicker from "./Slides/SlidePicker";
 import LessonPicker from "./LessonPicker/LessonPicker";
 
+import "./ClassRoom.scss";
 
 const ClassRoom = () => {
   const {user, unsetUser} = useUser()
@@ -14,15 +15,17 @@ const ClassRoom = () => {
 
   return (
     <Fragment>
-      <Header logout={unsetUser}/>
+      <div className={"class-room"}>
 
-      <section className={"class-room"}>
-        <VideoArea/>
-        <CanvasArea userType={user.type} tip={slide.tip} slideImg={slide.img}/>
-        <SlidePicker setSlide={setSlide} slides={lesson.slides}/>
-        <LessonPicker setLesson={setLesson}/>
-      </section>
+        <Header logout={unsetUser}/>
 
+        <section className={"class-room-wrapper"}>
+          <VideoArea/>
+          <CanvasArea userType={user.type} tip={slide.tip} slideImg={slide.img}/>
+          <SlidePicker setSlide={setSlide} slides={lesson.slides}/>
+          <LessonPicker setLesson={setLesson}/>
+        </section>
+      </div>
     </Fragment>
   )
 }

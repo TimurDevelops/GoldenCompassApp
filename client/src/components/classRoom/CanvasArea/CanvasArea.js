@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
+import PropTypes from "prop-types";
 import TipArea from "./TipArea";
 import Canvas from "./Canvas/Canvas";
 import ToolPanel from "./ToolPanel";
 
-import PropTypes from "prop-types";
+import "./CanvasArea.scss"
 
 const CanvasArea = ({userType, tip, slideImg}) => {
   const [drawWidth, setDrawWidth] = useState(10);
@@ -11,7 +12,7 @@ const CanvasArea = ({userType, tip, slideImg}) => {
 
 
   return (
-    <div>
+    <div className={"canvas-area"}>
       {userType === 'teacher' ? <TipArea tip={tip}/> : ''}
       {slideImg}
       <Canvas drawWidth={drawWidth} drawColor={drawColor}/>

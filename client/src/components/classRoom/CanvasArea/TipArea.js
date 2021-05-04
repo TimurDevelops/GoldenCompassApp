@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
+import "./TipArea.scss"
+
 const TipArea = ({tip}) => {
 
   return (
-    <div>
+    <div className={"tip-area"}>
       {tip}
     </div>
   )
