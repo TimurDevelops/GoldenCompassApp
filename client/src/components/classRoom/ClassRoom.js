@@ -1,10 +1,11 @@
 import React, {Fragment, useState} from 'react';
-import Header from "../layout/Header";
+import Header from "../ui/Header";
 import useUser from "../../utils/useUser";
-import VideoArea from "./VideoArea";
-import WorkingSpace from "./WorkingSpace";
-import SlidePicker from "./SlidePicker";
-import LessonPicker from "./LessonPicker";
+import VideoArea from "./VideoArea/VideoArea";
+import CanvasArea from "./CanvasArea/CanvasArea";
+import SlidePicker from "./Slides/SlidePicker";
+import LessonPicker from "./LessonPicker/LessonPicker";
+
 
 const ClassRoom = () => {
   const {user, unsetUser} = useUser()
@@ -15,9 +16,9 @@ const ClassRoom = () => {
     <Fragment>
       <Header logout={unsetUser}/>
 
-      <section>
+      <section className={"class-room"}>
         <VideoArea/>
-        <WorkingSpace userType={user.type} tip={slide.tip} slideImg={slide.img}/>
+        <CanvasArea userType={user.type} tip={slide.tip} slideImg={slide.img}/>
         <SlidePicker setSlide={setSlide} slides={lesson.slides}/>
         <LessonPicker setLesson={setLesson}/>
       </section>

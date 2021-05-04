@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import './StudentMenu.scss'
-import MenuItem from "../layout/MenuItem";
+import MenuItem from "../ui/MenuItem";
 
 const StudentMenu = ({logout}) => {
 

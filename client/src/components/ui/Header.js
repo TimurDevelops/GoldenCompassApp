@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import Logo from '../ui/Logo';
+import Logo from './Logo';
 import './Header.scss'
 
 const Header = ({logout}) => {

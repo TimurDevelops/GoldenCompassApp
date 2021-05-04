@@ -3,15 +3,15 @@ import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom
 // TODO restructure components folder
 import useUser from "./utils/useUser";
 
-import Alert from "./components/layout/Alert";
+import Alert from "./components/ui/Alert";
 
 import Login from "./components/login/Login";
 import TeacherMenu from "./components/teacherMenu/TeacherMenu";
 import TeachersList from "./components/teachersList/TeachersList";
 
 import StudentMenu from "./components/studentMenu/StudentMenu"
-import PrivateRoute from "./components/routing/PrivateRoute";
-import ClassRoom from "./components/canvas/ClassRoom";
+import PrivateRoute from "./components/ui/PrivateRoute";
+import ClassRoom from "./components/classRoom/ClassRoom";
 import {v4 as uuidv4} from 'uuid';
 
 const App = () => {

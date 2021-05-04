@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import TipArea from "./TipArea";
-import Canvas from "./Canvas";
+import Canvas from "./Canvas/Canvas";
 import ToolPanel from "./ToolPanel";
 
 import PropTypes from "prop-types";
 
-const WorkingSpace = ({userType, tip, slideImg}) => {
+const CanvasArea = ({userType, tip, slideImg}) => {
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
 
@@ -20,10 +20,10 @@ const WorkingSpace = ({userType, tip, slideImg}) => {
   )
 }
 
-WorkingSpace.propTypes = {
+CanvasArea.propTypes = {
   userType: PropTypes.string.isRequired,
   tip: PropTypes.string.isRequired,
   slideImg: PropTypes.string.isRequired,
 }
 
-export default WorkingSpace;
+export default CanvasArea;

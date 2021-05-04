@@ -44,7 +44,7 @@ export default function sketch(p) {
      * @param {{drawWidth:number}} newProps
      */
       newProps => {
-      // if (canvas) { //Make sure the canvas has been created
+      // if (Canvas) { //Make sure the Canvas has been created
       //   p.fill(newProps.color);
       // }
       drawWidth = newProps.drawWidth;
