@@ -116,7 +116,7 @@ router.post(
 );
 
 // @route    POST api/users
-// @desc     Register user
+// @desc     Get all Teachers of a Student
 // @access   Public
 router.post(
   '/get-teachers',

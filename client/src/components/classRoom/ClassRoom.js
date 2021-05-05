@@ -1,6 +1,8 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
+import PropTypes from "prop-types";
+import axios from "axios";
+
 import Header from "../ui/Header";
-import useUser from "../../utils/useUser";
 import VideoArea from "./VideoArea/VideoArea";
 import CanvasArea from "./CanvasArea/CanvasArea";
 import SlidePicker from "./Slides/SlidePicker";
@@ -8,16 +10,30 @@ import LessonPicker from "./LessonPicker/LessonPicker";
 
 import "./ClassRoom.scss";
 
-const ClassRoom = () => {
-  const {user, unsetUser} = useUser()
-  const [slide, setSlide] = useState({img: 'Добро пожаловать', id: 1, tip: ", Учитель;)"})
-  const [lesson, setLesson] = useState({slides: []})
+const ClassRoom = ({user, logout}) => {
+  const [slide, setSlide] = useState({img: 'Добро пожаловать', id: 1, tip: ", Учитель;)"});
+  const [lesson, setLesson] = useState({slides: []});
+
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    const getStudents = async () => {
+      const res = await axios.post('http://localhost:5000/api/teacher/get-students', {teacherLogin: user.login});
+      console.log(res.data.students)
+      setStudents(res.data.students);
+    }
+    getStudents().catch((err) => console.error(err))
+
+  }, [user]);
+
 
   return (
     <Fragment>
       <div className={"class-room"}>
 
-        <Header logout={unsetUser}/>
+        {students.map(student => <div key={student._id}>{student.name}</div>)}
+
+        <Header logout={logout}/>
 
         <section className={"class-room-wrapper"}>
           <VideoArea/>
@@ -30,5 +46,9 @@ const ClassRoom = () => {
   )
 }
 
+ClassRoom.propTypes = {
+  user: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+};
 
 export default ClassRoom;

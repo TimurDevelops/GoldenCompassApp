@@ -32,9 +32,14 @@ const io = require('socket.io')(server, {
 })
 
 io.sockets.on('connection', (socket) => {
-  socket.on('joinClassRoom', ({userLogin, teacherLogin, usertype}) => {
+  // Todo Change socket id on join??
+
+  socket.on('joinClassRoom', ({teacherLogin, usertype}) => {
     if (usertype === 'student') {
       //  TODO запросить разрешение на доступ для ученика
+      //  TODO Выводить обработку при запрещении входа
+      //  TODO Сообщение о попытке входа в комнату от ученика в комнату учителя по id
+      //  TODO Обработка сообщения о попытке входа ученика
     } else if(usertype === 'teacher'){
       socket.join(teacherLogin)
     }
@@ -43,6 +48,14 @@ io.sockets.on('connection', (socket) => {
   socket.on('mouseDragged', (teacherLogin, data) => {
     if(teacherLogin){
       io.to(teacherLogin).emit('mouseDragged', data);
+    }
+  })
+
+  socket.on('allowStudent', (teacherLogin, studentLogin) => {
+    if(teacherLogin){
+      io.to(teacherLogin).emit('studentAllowed', studentLogin);
+      //  TODO Обработка разрешения по id
+      //  TODO добавление ученика в список допущеных до учителя
     }
   })
 })
