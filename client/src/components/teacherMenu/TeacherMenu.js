@@ -1,15 +1,16 @@
 import React from "react";
-import './TeacherMenu.scss'
 import MenuItem from "../ui/MenuItem";
 import PropTypes from "prop-types";
 
+import "./TeacherMenu.scss"
+
 const TeacherMenu = ({user, logout}) => {
   return (
-    <div>
-      Меню учителя
-      <MenuItem link={`/canvas/${user.login}`} label={'Начать урок'}/>
-
-      <button className={'menu-button'} onClick={logout} >Выйти</button>
+    <div className={"menu-bg"}>
+      <div className={"menu-wrapper"}>
+        <MenuItem link={`/canvas/${user.login}`} label={'Начать урок'}/>
+        <button className={'menu-button underline'} onClick={logout} >Выйти</button>
+      </div>
     </div>
   );
 }

@@ -6,7 +6,9 @@ import './MenuItem.scss'
 
 const MenuItem = ({link, label}) => {
   return (
-    <Link to={link}>{label}</Link>
+    <div className={"menu-item underline"}>
+      <Link to={link}>{label}</Link>
+    </div>
   )
 }
 
