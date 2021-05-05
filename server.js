@@ -32,7 +32,17 @@ const io = require('socket.io')(server, {
 })
 
 io.sockets.on('connection', (socket) => {
-  socket.on('mouseDragged', (data) => {
-    socket.broadcast.emit('mouseDragged', data);
+  socket.on('joinClassRoom', ({userLogin, teacherLogin, usertype}) => {
+    if (usertype === 'student') {
+      //  TODO запросить разрешение на доступ для ученика
+    } else if(usertype === 'teacher'){
+      socket.join(teacherLogin)
+    }
+  })
+
+  socket.on('mouseDragged', (teacherLogin, data) => {
+    if(teacherLogin){
+      io.to(teacherLogin).emit('mouseDragged', data);
+    }
   })
 })
