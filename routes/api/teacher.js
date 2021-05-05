@@ -96,10 +96,6 @@ router.post(
       const ObjectId = require('mongoose').Types.ObjectId;
 
       const students = await Student.find({teachers: ObjectId(teacher._id)});
-      console.log(students)
-
-      // const teachers_ids = student.teachers.map(function(id) { return ObjectId(id); });
-
       return res.json({students});
 
     } catch (err) {

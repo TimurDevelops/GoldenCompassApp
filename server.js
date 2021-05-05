@@ -33,6 +33,7 @@ const io = require('socket.io')(server, {
 
 io.sockets.on('connection', (socket) => {
   // Todo Change socket id on join??
+  // Todo Store allowed student on this level??
 
   socket.on('joinClassRoom', ({teacherLogin, usertype}) => {
     if (usertype === 'student') {
