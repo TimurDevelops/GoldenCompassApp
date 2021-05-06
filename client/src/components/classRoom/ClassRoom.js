@@ -18,9 +18,10 @@ const ClassRoom = ({user, logout}) => {
 
   useEffect(() => {
     const getStudents = async () => {
-      // TODO conditional call
-      const res = await axios.post('http://localhost:5000/api/teacher/get-students', {teacherLogin: user.login});
-      setStudents(res.data.students);
+      if(user.type === 'teacher'){
+        const res = await axios.post('http://localhost:5000/api/teacher/get-students', {teacherLogin: user.login});
+        setStudents(res.data.students);
+      }
     }
     getStudents().catch((err) => console.error(err))
 

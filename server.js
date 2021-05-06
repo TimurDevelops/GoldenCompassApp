@@ -3,6 +3,20 @@ const cors = require('cors');
 const connectDB = require("./config/db");
 const app = express();
 const PORT = process.env.PORT || 5000;
+const {
+  getTeacher,
+  getStudent,
+  userJoin,
+  getCurrentUser,
+  getSocketIdByLogin,
+  getRoomUsers,
+  checkTeacherPresent,
+  checkStudentAllowed,
+  allowStudentToClass,
+  disallowStudentToClass,
+  userLeave
+} = require('./utils/users');
+
 
 connectDB();
 
@@ -31,32 +45,84 @@ const io = require('socket.io')(server, {
   }
 })
 
-io.sockets.on('connection', (socket) => {
-  // Todo Change socket id on join??
-  // Todo Store allowed student on this level??
+const disallowRequestFromStudent = {}
 
-  socket.on('joinClassRoom', ({teacherLogin, usertype}) => {
+io.sockets.on('connection', (socket) => {
+
+  socket.on('joinClassRoom', async ({userLogin, teacherLogin, usertype}) => {
     if (usertype === 'student') {
+      const userData = await getStudent(userLogin);
+      const user = await userJoin({id: socket.id, userData, room: teacherLogin});
+      if(!checkTeacherPresent(teacherLogin)){
+        io.to(user.socketId).emit('teacherNotPresent');
+      } else if(!checkStudentAllowed(teacherLogin, userLogin)){
+        io.to(user.socketId).emit('studentDisallowed');
+      } else {
+        io.to(user.socketId).emit('studentAllowed');
+      }
+
       //  TODO запросить разрешение на доступ для ученика
       //  TODO Выводить обработку при запрещении входа
-      //  TODO Сообщение о попытке входа в комнату от ученика в комнату учителя по id
+
+      if (!disallowRequestFromStudent[userLogin]) {
+        const teacherSocketId = getSocketIdByLogin(teacherLogin);
+        io.to(teacherSocketId).emit('studentRequestsEntrance', userLogin);
+      }
+      disallowRequestFromStudent[userLogin] = true;
+      setTimeout(() => disallowRequestFromStudent[userLogin] = false, 30 * 1000);
+
       //  TODO Обработка сообщения о попытке входа ученика
-    } else if(usertype === 'teacher'){
-      socket.join(teacherLogin)
+    } else if (usertype === 'teacher') {
+      const user = await getTeacher(userLogin);
+      userJoin({id: socket.id, user, room: teacherLogin});
+      socket.join(teacherLogin);
     }
   })
 
   socket.on('mouseDragged', (teacherLogin, data) => {
-    if(teacherLogin){
+    if (teacherLogin) {
       io.to(teacherLogin).emit('mouseDragged', data);
     }
   })
 
   socket.on('allowStudent', (teacherLogin, studentLogin) => {
-    if(teacherLogin){
-      io.to(teacherLogin).emit('studentAllowed', studentLogin);
+    if (teacherLogin) {
+      allowStudentToClass(teacherLogin, studentLogin);
+      const studentSocketId = getSocketIdByLogin(studentLogin);
+      io.to(studentSocketId).emit('studentAllowed');
+
+
       //  TODO Обработка разрешения по id
-      //  TODO добавление ученика в список допущеных до учителя
     }
+  })
+
+  socket.on('disallowStudent', (teacherLogin, studentLogin) => {
+    if (teacherLogin) {
+      disallowStudentToClass(teacherLogin, studentLogin);
+      const studentSocketId = getSocketIdByLogin(studentLogin);
+      io.to(studentSocketId).emit('studentDisallowed');
+
+      //  TODO Обработка разрешения по id
+    }
+  })
+
+
+  socket.on('disconnect', () => {
+    const user = getCurrentUser(socket.id);
+    if (user.user.type === 'teacher') {
+      user.allowedStudents.forEach(studentLogin => {
+        const studentSocketId = getSocketIdByLogin(studentLogin);
+        io.to(studentSocketId).emit('teacherNotPresent');
+      })
+      //  TODO Обработка отсоединения учителя
+
+    }
+    if (user.user.type === 'student') {
+      const teacherSocketId = getSocketIdByLogin(user.room);
+      io.to(teacherSocketId).emit('studentDisconnected');
+
+      //  TODO Обработка отсоединения учителя
+    }
+    userLeave(user.socketId)
   })
 })
