@@ -5,18 +5,28 @@ import sketch from "./Sketch";
 
 import "./Canvas.scss"
 
-const Canvas = ({drawWidth, drawColor}) => {
+const Canvas = ({drawWidth, drawColor, teacherLogin, login, usertype}) => {
 
   return (
     <div id='mainCanvas' className={"canvas"} style={{background: '#ccc', width: '50vw', height: '50vh'}}>
-      <P5Wrapper sketch={sketch} drawWidth={drawWidth} drawColor={drawColor}/>
+      <P5Wrapper
+        sketch={sketch}
+        drawWidth={drawWidth}
+        drawColor={drawColor}
+        login={login}
+        teacherLogin={teacherLogin}
+        usertype={usertype}
+      />
     </div>
   )
 }
 
 Canvas.propTypes = {
   drawWidth: PropTypes.number.isRequired,
-  drawColor: PropTypes.string.isRequired
+  drawColor: PropTypes.string.isRequired,
+  login: PropTypes.string.isRequired,
+  teacherLogin: PropTypes.string.isRequired,
+  usertype: PropTypes.string.isRequired,
 }
 
 export default Canvas;

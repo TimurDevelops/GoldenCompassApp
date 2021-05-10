@@ -62,7 +62,7 @@ const App = () => {
           }
 
           {/* Canvas will determine content by type and room */}
-          <PrivateRoute exact path="/canvas/:room" component={ClassRoom} auth={auth} user={user} logout={logout}/>
+          <PrivateRoute exact path="/canvas/:teacher" component={ClassRoom} auth={auth} user={user} logout={logout}/>
 
           {/* 404 Page */}
           <Route path="*" render={

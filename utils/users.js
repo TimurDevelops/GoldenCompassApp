@@ -3,14 +3,14 @@ const Student = require('../models/Student');
 
 const connections = [];
 
-const getTeacher = async (id) => {
-  const res = await Teacher.find({_id: id});
+const getTeacher = async (login) => {
+  const res = await Teacher.findOne({login: login});
   console.log(res)
   return res;
 }
 
-const getStudent = async (id) => {
-  const res = await Student.find({_id: id});
+const getStudent = async (login) => {
+  const res = await Student.findOne({login: login});
   console.log(res)
   return res;
 }

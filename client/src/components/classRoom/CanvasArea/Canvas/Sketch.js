@@ -1,5 +1,6 @@
 import {io} from 'socket.io-client';
 
+
 export default function sketch(p) {
   // TODO Разобраться с https (SSL)
   // TODO подставлять адресс
@@ -8,6 +9,11 @@ export default function sketch(p) {
   let canvas;
 
   let drawWidth = 10;
+  let drawColor = 'white';
+  let login = '';
+  let teacher = '';
+  let usertype = '';
+
 
 
   p.setup = () => {
@@ -17,10 +23,16 @@ export default function sketch(p) {
     canvas = p.createCanvas(sketchWidth, sketchHeight);
     canvas.parent("mainCanvas");
     socket.on('mouseDragged', (data) => {
-      p.noStroke();
-      p.circle(data.x, data.y, data.size);
+      pencilDraw(data);
     })
+    console.log(login, teacher, usertype)
+    socket.emit('joinClassRoom', {login, teacher, usertype});
+  }
 
+  const pencilDraw = ({x, y, pMouseX, pMouseY, size, color}) => {
+    let c = p.color(color);
+    p.fill(c)
+    p.line(x, y, pMouseX, pMouseY, size);
   }
 
   p.draw = () => {
@@ -28,25 +40,23 @@ export default function sketch(p) {
   }
 
   p.mouseDragged = () => {
-    p.noStroke();
-    p.circle(p.mouseX, p.mouseY, drawWidth);
     let data = {
       x: p.mouseX,
       y: p.mouseY,
-      size: drawWidth
+      pMouseX: p.pmouseX,
+      pMouseY: p.pmouseY,
+      size: drawWidth,
+      color: drawColor
     }
-    socket.emit("mouseDragged", data);
+    socket.emit("mouseDragged", {teacher, data});
   }
 
 
-  p.myCustomRedrawAccordingToNewPropsHandler =
-    /**
-     * @param {{drawWidth:number}} newProps
-     */
-      newProps => {
-      // if (Canvas) { //Make sure the Canvas has been created
-      //   p.fill(newProps.color);
-      // }
-      drawWidth = newProps.drawWidth;
-    }
+  p.myCustomRedrawAccordingToNewPropsHandler = newProps => {
+    drawWidth = newProps.drawWidth;
+    drawColor = newProps.drawColor;
+    login = newProps.login;
+    teacher = newProps.teacherLogin;
+    usertype = newProps.usertype;
+  }
 }

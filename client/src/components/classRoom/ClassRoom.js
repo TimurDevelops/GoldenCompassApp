@@ -1,6 +1,7 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import PropTypes from "prop-types";
 import axios from "axios";
+import {useParams} from "react-router-dom";
 
 import Header from "../ui/Header";
 import VideoArea from "./VideoArea/VideoArea";
@@ -15,10 +16,11 @@ const ClassRoom = ({user, logout}) => {
   const [lesson, setLesson] = useState({slides: []});
 
   const [students, setStudents] = useState([]);
+  const {teacher} = useParams();
 
   useEffect(() => {
     const getStudents = async () => {
-      if(user.type === 'teacher'){
+      if (user.type === 'teacher') {
         const res = await axios.post('http://localhost:5000/api/teacher/get-students', {teacherLogin: user.login});
         setStudents(res.data.students);
       }
@@ -38,7 +40,13 @@ const ClassRoom = ({user, logout}) => {
 
         <section className={"class-room-wrapper"}>
           <VideoArea/>
-          <CanvasArea userType={user.type} tip={slide.tip} slideImg={slide.img}/>
+          <CanvasArea
+            userLogin={user.login}
+            userType={user.type}
+            teacherLogin={teacher}
+            tip={slide.tip}
+            slideImg={slide.img}
+          />
           <SlidePicker setSlide={setSlide} slides={lesson.slides}/>
           <LessonPicker setLesson={setLesson}/>
         </section>

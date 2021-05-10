@@ -49,7 +49,7 @@ const disallowRequestFromStudent = {}
 
 io.sockets.on('connection', (socket) => {
 
-  socket.on('joinClassRoom', async ({userLogin, teacherLogin, usertype}) => {
+  socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
     if (usertype === 'student') {
       const userData = await getStudent(userLogin);
       const user = await userJoin({id: socket.id, userData, room: teacherLogin});
@@ -59,6 +59,8 @@ io.sockets.on('connection', (socket) => {
         io.to(user.socketId).emit('studentDisallowed');
       } else {
         io.to(user.socketId).emit('studentAllowed');
+        userJoin(socket.id, user, teacherLogin);
+        socket.join(teacherLogin);
       }
 
       //  TODO запросить разрешение на доступ для ученика
@@ -74,14 +76,14 @@ io.sockets.on('connection', (socket) => {
       //  TODO Обработка сообщения о попытке входа ученика
     } else if (usertype === 'teacher') {
       const user = await getTeacher(userLogin);
-      userJoin({id: socket.id, user, room: teacherLogin});
+      userJoin(socket.id, user, teacherLogin);
       socket.join(teacherLogin);
     }
   })
 
-  socket.on('mouseDragged', (teacherLogin, data) => {
-    if (teacherLogin) {
-      io.to(teacherLogin).emit('mouseDragged', data);
+  socket.on('mouseDragged', ({teacher, data}) => {
+    if (teacher) {
+      io.to(teacher).emit('mouseDragged', data);
     }
   })
 
