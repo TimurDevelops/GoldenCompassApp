@@ -31,6 +31,9 @@ export default function sketch(p) {
     socket.on('teacherNotPresent', (data) => {
       setAlert(`Учитель ${data.name} отсутствует на рабочем месте`, 'danger')
     })
+    socket.on('studentDisallowed', (data) => {
+      setAlert(`Отправлен запрос на вход в классную комнату учителю ${data.name}`, 'light')
+    })
 
   }
 

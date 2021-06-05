@@ -29,8 +29,6 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
   }, [user]);
 
-  console.log(user)
-
   return (
     <Fragment>
       <div className={"class-room"}>

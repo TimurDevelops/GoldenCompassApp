@@ -58,10 +58,9 @@ io.sockets.on('connection', (socket) => {
       if (!checkTeacherPresent(teacherLogin)) {
         io.to(user.socketId).emit('teacherNotPresent', {name: teacherData.name});
       } else if (!checkStudentAllowed(teacherLogin, userLogin)) {
-        io.to(user.socketId).emit('studentDisallowed');
+        io.to(user.socketId).emit('studentDisallowed', {name: teacherData.name});
       } else {
         io.to(user.socketId).emit('studentAllowed');
-        userJoin(socket.id, user, teacherLogin);
         socket.join(teacherLogin);
       }
 
@@ -113,7 +112,6 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const user = getCurrentUser(socket.id);
-    console.log("user = ", user)
     if (user.user.type === 'teacher') {
       user.allowedStudents.forEach(studentLogin => {
         const studentSocketId = getSocketIdByLogin(studentLogin);

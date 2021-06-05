@@ -5,23 +5,30 @@ const connections = [];
 
 const getTeacher = async (login) => {
   const res = await Teacher.findOne({login: login});
-  console.log(res)
-  return res;
+  return {
+    _id: res._id,
+    name: res.name,
+    login: res.login,
+    type: 'teacher'
+  };
 }
 
 const getStudent = async (login) => {
   const res = await Student.findOne({login: login});
-  console.log(res)
-  return res;
+  return {
+    _id: res._id,
+    name: res.name,
+    login: res.login,
+    type: 'student'
+  };
 }
 
 const userJoin = (id, user, room) => {
   const userObject = {socketId: id, user, room};
 
-  if(user.type === 'teacher'){
-    user.allowedStudents = [];
+  if (user.type === 'teacher') {
+    userObject.allowedStudents = [];
   }
-
   connections.push(userObject);
 
   return userObject;
@@ -29,7 +36,6 @@ const userJoin = (id, user, room) => {
 
 const getCurrentUser = id => {
   return connections.find((user) => {
-    console.log(user.socketId, " === ", id)
     return user.socketId === id
   });
 }

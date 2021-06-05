@@ -6,8 +6,6 @@ import sketch from "./Sketch";
 import "./Canvas.scss"
 
 const Canvas = ({drawWidth, drawColor, teacherLogin, login, usertype, setAlert}) => {
-  console.log(login, usertype)
-
   return (
     <div id='mainCanvas' className={"canvas"} style={{background: '#ccc', width: '50vw', height: '50vh'}}>
       <P5Wrapper

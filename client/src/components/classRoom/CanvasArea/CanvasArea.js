@@ -10,8 +10,6 @@ const CanvasArea = ({userLogin, userType, teacherLogin, tip, slideImg, setAlert}
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
 
-  console.log(userLogin, userType)
-
   return (
     <div className={"canvas-area"}>
       {userType === 'teacher' ? <TipArea tip={tip}/> : ''}
