@@ -28,7 +28,10 @@ const userJoin = (id, user, room) => {
 }
 
 const getCurrentUser = id => {
-  return connections.find((user) => user.id === id);
+  return connections.find((user) => {
+    console.log(user.socketId, " === ", id)
+    return user.socketId === id
+  });
 }
 
 const getSocketIdByLogin = login => {

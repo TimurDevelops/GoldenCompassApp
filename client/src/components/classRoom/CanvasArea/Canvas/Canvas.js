@@ -5,7 +5,8 @@ import sketch from "./Sketch";
 
 import "./Canvas.scss"
 
-const Canvas = ({drawWidth, drawColor, teacherLogin, login, usertype}) => {
+const Canvas = ({drawWidth, drawColor, teacherLogin, login, usertype, setAlert}) => {
+  console.log(login, usertype)
 
   return (
     <div id='mainCanvas' className={"canvas"} style={{background: '#ccc', width: '50vw', height: '50vh'}}>
@@ -16,7 +17,9 @@ const Canvas = ({drawWidth, drawColor, teacherLogin, login, usertype}) => {
         login={login}
         teacherLogin={teacherLogin}
         usertype={usertype}
+        setAlert={setAlert}
       />
+    {/*  TODO сделать выход при несоблюдении условий */}
     </div>
   )
 }
@@ -27,6 +30,7 @@ Canvas.propTypes = {
   login: PropTypes.string.isRequired,
   teacherLogin: PropTypes.string.isRequired,
   usertype: PropTypes.string.isRequired,
+  setAlert: PropTypes.func.isRequired,
 }
 
 export default Canvas;

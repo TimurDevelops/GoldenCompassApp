@@ -13,20 +13,25 @@ export default function sketch(p) {
   let login = '';
   let teacher = '';
   let usertype = '';
-
+  let setAlert;
 
 
   p.setup = () => {
+
     const sketchWidth = document.getElementById("mainCanvas").offsetWidth;
     const sketchHeight = document.getElementById("mainCanvas").offsetHeight;
 
     canvas = p.createCanvas(sketchWidth, sketchHeight);
     canvas.parent("mainCanvas");
+
     socket.on('mouseDragged', (data) => {
       pencilDraw(data);
     })
-    console.log(login, teacher, usertype)
-    socket.emit('joinClassRoom', {login, teacher, usertype});
+
+    socket.on('teacherNotPresent', (data) => {
+      setAlert(`Учитель ${data.name} отсутствует на рабочем месте`, 'danger')
+    })
+
   }
 
   const pencilDraw = ({x, y, pMouseX, pMouseY, size, color}) => {
@@ -55,8 +60,26 @@ export default function sketch(p) {
   p.myCustomRedrawAccordingToNewPropsHandler = newProps => {
     drawWidth = newProps.drawWidth;
     drawColor = newProps.drawColor;
-    login = newProps.login;
-    teacher = newProps.teacherLogin;
-    usertype = newProps.usertype;
+
+    setAlert = newProps.setAlert;
+
+    let newUserJoined = false;
+
+    if (login !== newProps.login) {
+      login = newProps.login;
+      newUserJoined = true;
+    }
+    if (teacher !== newProps.teacherLogin) {
+      teacher = newProps.teacherLogin;
+      newUserJoined = true;
+    }
+    if (usertype !== newProps.usertype) {
+      usertype = newProps.usertype;
+      newUserJoined = true;
+    }
+
+    if (newUserJoined) {
+      socket.emit('joinClassRoom', {login, teacher, usertype});
+    }
   }
 }

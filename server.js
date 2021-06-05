@@ -52,10 +52,12 @@ io.sockets.on('connection', (socket) => {
   socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
     if (usertype === 'student') {
       const userData = await getStudent(userLogin);
-      const user = await userJoin({id: socket.id, userData, room: teacherLogin});
-      if(!checkTeacherPresent(teacherLogin)){
-        io.to(user.socketId).emit('teacherNotPresent');
-      } else if(!checkStudentAllowed(teacherLogin, userLogin)){
+      const teacherData = await getTeacher(teacherLogin);
+      const user = await userJoin(socket.id, userData, teacherLogin);
+
+      if (!checkTeacherPresent(teacherLogin)) {
+        io.to(user.socketId).emit('teacherNotPresent', {name: teacherData.name});
+      } else if (!checkStudentAllowed(teacherLogin, userLogin)) {
         io.to(user.socketId).emit('studentDisallowed');
       } else {
         io.to(user.socketId).emit('studentAllowed');
@@ -111,6 +113,7 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const user = getCurrentUser(socket.id);
+    console.log("user = ", user)
     if (user.user.type === 'teacher') {
       user.allowedStudents.forEach(studentLogin => {
         const studentSocketId = getSocketIdByLogin(studentLogin);

@@ -11,7 +11,7 @@ import LessonPicker from "./LessonPicker/LessonPicker";
 
 import "./ClassRoom.scss";
 
-const ClassRoom = ({user, logout}) => {
+const ClassRoom = ({user, logout, setAlert}) => {
   const [slide, setSlide] = useState({img: 'Добро пожаловать', id: 1, tip: ", Учитель;)"});
   const [lesson, setLesson] = useState({slides: []});
 
@@ -29,6 +29,7 @@ const ClassRoom = ({user, logout}) => {
 
   }, [user]);
 
+  console.log(user)
 
   return (
     <Fragment>
@@ -46,6 +47,7 @@ const ClassRoom = ({user, logout}) => {
             teacherLogin={teacher}
             tip={slide.tip}
             slideImg={slide.img}
+            setAlert={setAlert}
           />
           <SlidePicker setSlide={setSlide} slides={lesson.slides}/>
           <LessonPicker setLesson={setLesson}/>
@@ -57,7 +59,8 @@ const ClassRoom = ({user, logout}) => {
 
 ClassRoom.propTypes = {
   user: PropTypes.object.isRequired,
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired
 };
 
 export default ClassRoom;

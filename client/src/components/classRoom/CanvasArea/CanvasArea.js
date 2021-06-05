@@ -6,9 +6,11 @@ import ToolPanel from "./ToolPanel";
 
 import "./CanvasArea.scss"
 
-const CanvasArea = ({userLogin, userType, teacherLogin, tip, slideImg}) => {
+const CanvasArea = ({userLogin, userType, teacherLogin, tip, slideImg, setAlert}) => {
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
+
+  console.log(userLogin, userType)
 
   return (
     <div className={"canvas-area"}>
@@ -20,6 +22,7 @@ const CanvasArea = ({userLogin, userType, teacherLogin, tip, slideImg}) => {
         login={userLogin}
         teacherLogin={teacherLogin}
         usertype={userType}
+        setAlert={setAlert}
       />
       <ToolPanel setDrawWidth={setDrawWidth} setDrawColor={setDrawColor}/>
     </div>
@@ -32,6 +35,7 @@ CanvasArea.propTypes = {
   teacherLogin: PropTypes.string.isRequired,
   tip: PropTypes.string.isRequired,
   slideImg: PropTypes.string.isRequired,
+  setAlert: PropTypes.func.isRequired,
 }
 
 export default CanvasArea;
