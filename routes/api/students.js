@@ -71,7 +71,7 @@ router.post(
 );
 
 // @route    POST api/users
-// @desc     Register user
+// @desc     Assign teacher to student
 // @access   Public
 router.post(
   '/assign-teacher',
