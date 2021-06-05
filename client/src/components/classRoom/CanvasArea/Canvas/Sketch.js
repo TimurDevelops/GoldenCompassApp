@@ -13,6 +13,7 @@ export default function sketch(p) {
   let login = '';
   let teacher = '';
   let usertype = '';
+  let allowedStudent = '';
   let setAlert;
 
 
@@ -28,12 +29,26 @@ export default function sketch(p) {
       pencilDraw(data);
     })
 
+    // TODO вместо alert выставлять экран ожидания и текст для экрана путем выставления переменных с верхнего уровня
+
     socket.on('teacherNotPresent', (data) => {
       setAlert(`Учитель ${data.name} отсутствует на рабочем месте`, 'danger')
     })
+
     socket.on('studentDisallowed', (data) => {
       setAlert(`Отправлен запрос на вход в классную комнату учителю ${data.name}`, 'light')
     })
+
+    socket.on('studentRequestsEntrance', (data) => {
+      if (usertype === 'teacher'){
+        setAlert(`Ученик ${data.name} отправил запрос на вход в класную комнату`, 'primary')
+      }
+    })
+
+    socket.on('studentAllowed', (data) => {
+      setAlert(`Вы можете присоединиться к классной комнате учителя ${data.name} `, 'success')
+    })
+
 
   }
 
@@ -83,6 +98,11 @@ export default function sketch(p) {
 
     if (newUserJoined) {
       socket.emit('joinClassRoom', {login, teacher, usertype});
+    }
+
+    if (usertype !== newProps.usertype) {
+      allowedStudent = newProps.allowedStudent;
+      socket.emit("allowStudent", {teacher, allowedStudent});
     }
   }
 }

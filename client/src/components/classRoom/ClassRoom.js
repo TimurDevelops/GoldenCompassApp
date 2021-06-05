@@ -6,8 +6,9 @@ import {useParams} from "react-router-dom";
 import Header from "../ui/Header";
 import VideoArea from "./VideoArea/VideoArea";
 import CanvasArea from "./CanvasArea/CanvasArea";
-import SlidePicker from "./Slides/SlidePicker";
+import SlidePicker from "./SlidePicker/SlidePicker";
 import LessonPicker from "./LessonPicker/LessonPicker";
+import StudentPicker from "./StudentPicker/StudentPicker";
 
 import "./ClassRoom.scss";
 
@@ -16,7 +17,14 @@ const ClassRoom = ({user, logout, setAlert}) => {
   const [lesson, setLesson] = useState({slides: []});
 
   const [students, setStudents] = useState([]);
+  const [lessons, setLessons] = useState([]);
   const {teacher} = useParams();
+
+  const [allowedStudent, setAllowedStudent] = useState();
+
+  let [studentPickerOpen, setStudentPickerOpen] = useState(false);
+  let [lessonPickerOpen, setLessonPickerOpen] = useState(false);
+
 
   useEffect(() => {
     const getStudents = async () => {
@@ -29,11 +37,20 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
   }, [user]);
 
+  useEffect(() => {
+    const getLessons = async () => {
+      if (user.type === 'teacher') {
+        const res = await axios.post('http://localhost:5000/api/teacher/get-lessons', {teacherLogin: user.login});
+        setLessons(res.data.lessons);
+      }
+    }
+    getLessons().catch((err) => console.error(err))
+
+  }, [user]);
+
   return (
     <Fragment>
       <div className={"class-room"}>
-
-        {students.map(student => <div key={student._id}>{student.name}</div>)}
 
         <Header logout={logout}/>
 
@@ -46,9 +63,21 @@ const ClassRoom = ({user, logout, setAlert}) => {
             tip={slide.tip}
             slideImg={slide.img}
             setAlert={setAlert}
+            allowedStudent={allowedStudent}
           />
           <SlidePicker setSlide={setSlide} slides={lesson.slides}/>
-          <LessonPicker setLesson={setLesson}/>
+          <div className={'menus-holder'}>
+            <LessonPicker open={lessonPickerOpen}
+                          buttonVisible={!studentPickerOpen}
+                          setOpen={setLessonPickerOpen}
+                          lessons={lessons}
+                          setLesson={setLesson}/>
+            <StudentPicker open={studentPickerOpen}
+                           buttonVisible={!lessonPickerOpen}
+                           setOpen={setStudentPickerOpen}
+                           students={students}
+                           setAllowedStudent={setAllowedStudent}/>
+          </div>
         </section>
       </div>
     </Fragment>

@@ -6,7 +6,7 @@ import ToolPanel from "./ToolPanel";
 
 import "./CanvasArea.scss"
 
-const CanvasArea = ({userLogin, userType, teacherLogin, tip, slideImg, setAlert}) => {
+const CanvasArea = ({userLogin, userType, teacherLogin, tip, slideImg, setAlert, allowedStudent}) => {
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
 
@@ -20,6 +20,7 @@ const CanvasArea = ({userLogin, userType, teacherLogin, tip, slideImg, setAlert}
         login={userLogin}
         teacherLogin={teacherLogin}
         usertype={userType}
+        allowedStudent={allowedStudent}
         setAlert={setAlert}
       />
       <ToolPanel setDrawWidth={setDrawWidth} setDrawColor={setDrawColor}/>
@@ -30,6 +31,7 @@ const CanvasArea = ({userLogin, userType, teacherLogin, tip, slideImg, setAlert}
 CanvasArea.propTypes = {
   userLogin: PropTypes.string.isRequired,
   userType: PropTypes.string.isRequired,
+  allowedStudent: PropTypes.string.isRequired,
   teacherLogin: PropTypes.string.isRequired,
   tip: PropTypes.string.isRequired,
   slideImg: PropTypes.string.isRequired,

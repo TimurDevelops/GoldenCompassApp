@@ -64,17 +64,12 @@ io.sockets.on('connection', (socket) => {
         socket.join(teacherLogin);
       }
 
-      //  TODO запросить разрешение на доступ для ученика
-      //  TODO Выводить обработку при запрещении входа
-
       if (!disallowRequestFromStudent[userLogin]) {
         const teacherSocketId = getSocketIdByLogin(teacherLogin);
-        io.to(teacherSocketId).emit('studentRequestsEntrance', userLogin);
+        io.to(teacherSocketId).emit('studentRequestsEntrance', {name: userData.name});
       }
       disallowRequestFromStudent[userLogin] = true;
       setTimeout(() => disallowRequestFromStudent[userLogin] = false, 30 * 1000);
-
-      //  TODO Обработка сообщения о попытке входа ученика
     } else if (usertype === 'teacher') {
       const user = await getTeacher(userLogin);
       userJoin(socket.id, user, teacherLogin);
@@ -88,14 +83,12 @@ io.sockets.on('connection', (socket) => {
     }
   })
 
-  socket.on('allowStudent', (teacherLogin, studentLogin) => {
+  socket.on('allowStudent', async (teacherLogin, studentLogin) => {
     if (teacherLogin) {
+      const teacherData = await getTeacher(teacherLogin);
       allowStudentToClass(teacherLogin, studentLogin);
       const studentSocketId = getSocketIdByLogin(studentLogin);
-      io.to(studentSocketId).emit('studentAllowed');
-
-
-      //  TODO Обработка разрешения по id
+      io.to(studentSocketId).emit('studentAllowed', {name: teacherData.name});
     }
   })
 

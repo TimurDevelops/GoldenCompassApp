@@ -105,6 +105,31 @@ router.post(
 );
 
 
+// @route    POST api/users
+// @desc     Get all Students of a Teacher
+// @access   Public
+router.post(
+  '/get-lessons',
+  check('teacherLogin', 'Введите Логин Учителя').notEmpty(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({errors: errors.array()});
+    }
+
+    return res.json({
+      lessons: [{
+        name: 'Урок Номер 1',
+        slides: [
+          {img: 'c image', id: 1, tip: "Tip for teacher"}, {img: 'c image two', id: 2, tip: "Tip for teacher"}
+        ]
+      }]
+    });
+
+  }
+);
+
+
 module.exports = router;
 
 

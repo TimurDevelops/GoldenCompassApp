@@ -1,43 +1,33 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
+import LessonItem from "./LessonItem";
 
-const LessonPicker = ({setLesson}) => {
+import './LessonPicker.scss';
 
+const LessonPicker = ({setLesson, lessons, open, setOpen, buttonVisible}) => {
   return (
-    <div>
-      <button onClick={
-        () => setLesson({
-          slides: [
-            {img: 'a image', id: 1, tip: "Tip for teacher"}
-          ]
-        })
-      }>Урок Номер 1
-      </button>
+    <div className={`lesson-picker ${open ? 'open' : ''}`}>
+      <div className={`picker-area`}>
+        <div className={'bg'} onClick={() => setOpen(false)}/>
 
-      <button onClick={
-        () => setLesson({
-          slides: [
-            {img: 'b image', id: 1, tip: "Tip for teacher"}, {img: 'b image two', id: 2, tip: "Tip for teacher"}
-          ]
-        })
-      }>Урок Номер 2
-      </button>
+        <div className={'lessons'}>
+          {lessons.map(lesson => <LessonItem key={lesson.id} setLesson={setLesson} lesson={lesson}/>)}
+        </div>
+      </div>
 
-      <button onClick={
-        () => setLesson({
-          slides: [
-            {img: 'c image', id: 1, tip: "Tip for teacher"}, {img: 'c image two', id: 2, tip: "Tip for teacher"}
-          ]
-        })
-      }>Урок Номер 3
-      </button>
-
+      <div className={`button-holder ${buttonVisible ? '' : 'hidden'}`}>
+        <div className={'button'} onClick={() => setOpen(!open)}>Уроки</div>
+      </div>
     </div>
   )
 }
 
 LessonPicker.propTypes = {
   setLesson: PropTypes.func.isRequired,
+  lessons: PropTypes.array.isRequired,
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  buttonVisible: PropTypes.bool.isRequired,
 }
 
 export default LessonPicker;

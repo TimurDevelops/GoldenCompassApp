@@ -5,7 +5,7 @@ import sketch from "./Sketch";
 
 import "./Canvas.scss"
 
-const Canvas = ({drawWidth, drawColor, teacherLogin, login, usertype, setAlert}) => {
+const Canvas = ({drawWidth, drawColor, teacherLogin, login, usertype, setAlert, allowedStudent}) => {
   return (
     <div id='mainCanvas' className={"canvas"} style={{background: '#ccc', width: '50vw', height: '50vh'}}>
       <P5Wrapper
@@ -15,6 +15,7 @@ const Canvas = ({drawWidth, drawColor, teacherLogin, login, usertype, setAlert})
         login={login}
         teacherLogin={teacherLogin}
         usertype={usertype}
+        allowedStudent={allowedStudent}
         setAlert={setAlert}
       />
     {/*  TODO сделать выход при несоблюдении условий */}
@@ -28,6 +29,7 @@ Canvas.propTypes = {
   login: PropTypes.string.isRequired,
   teacherLogin: PropTypes.string.isRequired,
   usertype: PropTypes.string.isRequired,
+  allowedStudent: PropTypes.string.isRequired,
   setAlert: PropTypes.func.isRequired,
 }
 
