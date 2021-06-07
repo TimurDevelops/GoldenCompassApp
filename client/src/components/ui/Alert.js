@@ -4,18 +4,26 @@ import './Alert.scss';
 
 const Alert = ({alerts}) => {
   return (
-    alerts.map((alert) => (
-      <div key={alert.id} className={`alert alert-${alert.alertType}`}>
-        {alert.msg}
-      </div>
-    ))
+    <div className={'alerts-holder'}>
+      {
+        alerts.map(
+          (alert) => (
+            <div key={alert.id} className={`alert alert-${alert.alertType}`}>
+              {alert.msg}
+            </div>
+          )
+        )
+      }
+    </div>
   )
 }
 
 
-Alert.propTypes = {
+Alert.propTypes =
+{
   alerts: PropTypes.array.isRequired
-};
+}
+;
 
 
 export default Alert;

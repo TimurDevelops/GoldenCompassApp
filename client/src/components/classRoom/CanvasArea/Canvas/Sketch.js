@@ -15,6 +15,8 @@ export default function sketch(p) {
   let usertype = '';
   let allowedStudent = '';
   let setAlert;
+  let disallowToClassRoom;
+  let setWaitingScreen;
 
 
   p.setup = () => {
@@ -25,17 +27,19 @@ export default function sketch(p) {
     canvas = p.createCanvas(sketchWidth, sketchHeight);
     canvas.parent("mainCanvas");
 
-    socket.on('mouseDragged', (data) => {
+    socket.on('draw', (data) => {
       pencilDraw(data);
     })
 
     // TODO вместо alert выставлять экран ожидания и текст для экрана путем выставления переменных с верхнего уровня
 
     socket.on('teacherNotPresent', (data) => {
+      disallowToClassRoom()
       setAlert(`Учитель ${data.name} отсутствует на рабочем месте`, 'danger')
     })
 
     socket.on('studentDisallowed', (data) => {
+      setWaitingScreen(true);
       setAlert(`Отправлен запрос на вход в классную комнату учителю ${data.name}`, 'light')
     })
 
@@ -47,6 +51,7 @@ export default function sketch(p) {
 
     socket.on('studentAllowed', (data) => {
       setAlert(`Вы можете присоединиться к классной комнате учителя ${data.name} `, 'success')
+      setWaitingScreen(false);
     })
 
 
@@ -80,6 +85,8 @@ export default function sketch(p) {
     drawColor = newProps.drawColor;
 
     setAlert = newProps.setAlert;
+    disallowToClassRoom = newProps.setAlert;
+    setWaitingScreen = newProps.setAlert;
 
     let newUserJoined = false;
 
@@ -87,7 +94,9 @@ export default function sketch(p) {
       login = newProps.login;
       newUserJoined = true;
     }
+
     if (teacher !== newProps.teacherLogin) {
+      console.log(teacher, newProps.teacherLogin)
       teacher = newProps.teacherLogin;
       newUserJoined = true;
     }
@@ -100,9 +109,10 @@ export default function sketch(p) {
       socket.emit('joinClassRoom', {login, teacher, usertype});
     }
 
-    if (usertype !== newProps.usertype) {
+    if (allowedStudent !== newProps.allowedStudent && newProps.allowedStudent) {
       allowedStudent = newProps.allowedStudent;
-      socket.emit("allowStudent", {teacher, allowedStudent});
+
+      socket.emit("allowStudent", {teacherLogin: teacher, studentLogin: allowedStudent});
     }
   }
 }

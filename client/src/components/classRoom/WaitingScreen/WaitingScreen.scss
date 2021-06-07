@@ -1,0 +1,12 @@
+.waiting-screen{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #17a2b8;
+
+  .title{
+    font-size: 2em;
+  }
+}

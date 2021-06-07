@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import LessonItem from "./LessonItem";
 
@@ -6,16 +6,18 @@ import './LessonPicker.scss';
 
 const LessonPicker = ({setLesson, lessons, open, setOpen, buttonVisible}) => {
   return (
-    <div className={`lesson-picker ${open ? 'open' : ''}`}>
+    <div className={`lesson-picker ${open ? 'open' : ''} ${buttonVisible ? '' : 'hidden'}`}>
       <div className={`picker-area`}>
         <div className={'bg'} onClick={() => setOpen(false)}/>
 
         <div className={'lessons'}>
           {lessons.map(lesson => <LessonItem key={lesson.id} setLesson={setLesson} lesson={lesson}/>)}
         </div>
+
+        <div className={'menu-bg'}/>
       </div>
 
-      <div className={`button-holder ${buttonVisible ? '' : 'hidden'}`}>
+      <div className={`button-holder`}>
         <div className={'button'} onClick={() => setOpen(!open)}>Уроки</div>
       </div>
     </div>

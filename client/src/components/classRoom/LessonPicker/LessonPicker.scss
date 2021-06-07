@@ -1,6 +1,7 @@
 $transparent-dark: #ccc3;
 $button-text-color: white;
 $button-background-color: green;
+$menus-holder-bg: #77CCE07F;
 
 .lesson-picker {
   position: relative;
@@ -18,10 +19,6 @@ $button-background-color: green;
     padding: 20px 20px 20px 20px;
     cursor: pointer;
     user-select: none;
-
-    &.hidden {
-      display: none;
-    }
 
     .button {
       position: relative;
@@ -51,12 +48,18 @@ $button-background-color: green;
 
     .bg {
       background: $transparent-dark;
-      flex: 7;
+      flex: 3;
     }
 
     .lessons {
       background: #333;
       flex: 1;
+    }
+
+    .menu-bg {
+      display: none;
+      width: 3.5em;
+      background: $menus-holder-bg;
     }
   }
 
@@ -76,6 +79,14 @@ $button-background-color: green;
       .lessons {
 
       }
+
+      .menu-bg {
+        display: block;
+      }
     }
+  }
+
+  &.hidden {
+    display: none;
   }
 }

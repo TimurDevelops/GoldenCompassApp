@@ -1,7 +1,7 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import PropTypes from "prop-types";
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 
 import Header from "../ui/Header";
 import VideoArea from "./VideoArea/VideoArea";
@@ -9,10 +9,12 @@ import CanvasArea from "./CanvasArea/CanvasArea";
 import SlidePicker from "./SlidePicker/SlidePicker";
 import LessonPicker from "./LessonPicker/LessonPicker";
 import StudentPicker from "./StudentPicker/StudentPicker";
+import WaitingScreen from "./WaitingScreen/WaitingScreen";
 
 import "./ClassRoom.scss";
 
 const ClassRoom = ({user, logout, setAlert}) => {
+  const history = useHistory();
   const [slide, setSlide] = useState({img: 'Добро пожаловать', id: 1, tip: ", Учитель;)"});
   const [lesson, setLesson] = useState({slides: []});
 
@@ -24,6 +26,11 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
   let [studentPickerOpen, setStudentPickerOpen] = useState(false);
   let [lessonPickerOpen, setLessonPickerOpen] = useState(false);
+
+  let [waitingScreen, setWaitingScreen] = useState(false);
+  let disallowToClassRoom = () => {
+    history.push("/" + user.type);
+  }
 
 
   useEffect(() => {
@@ -53,7 +60,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
       <div className={"class-room"}>
 
         <Header logout={logout}/>
-
+        {waitingScreen ? <WaitingScreen/> :
         <section className={"class-room-wrapper"}>
           <VideoArea/>
           <CanvasArea
@@ -64,21 +71,27 @@ const ClassRoom = ({user, logout, setAlert}) => {
             slideImg={slide.img}
             setAlert={setAlert}
             allowedStudent={allowedStudent}
+            disallowToClassRoom={disallowToClassRoom}
+            setWaitingScreen={setWaitingScreen}
           />
-          <SlidePicker setSlide={setSlide} slides={lesson.slides}/>
-          <div className={'menus-holder'}>
-            <LessonPicker open={lessonPickerOpen}
-                          buttonVisible={!studentPickerOpen}
-                          setOpen={setLessonPickerOpen}
-                          lessons={lessons}
-                          setLesson={setLesson}/>
-            <StudentPicker open={studentPickerOpen}
-                           buttonVisible={!lessonPickerOpen}
-                           setOpen={setStudentPickerOpen}
-                           students={students}
-                           setAllowedStudent={setAllowedStudent}/>
-          </div>
-        </section>
+          {user.type === 'teacher' ? <SlidePicker setSlide={setSlide} slides={lesson.slides}/> : ''}
+          {user.type === 'teacher' ?
+            <div className={'menus-holder'}>
+              <LessonPicker open={lessonPickerOpen}
+                            buttonVisible={!studentPickerOpen}
+                            setOpen={setLessonPickerOpen}
+                            lessons={lessons}
+                            setLesson={setLesson}/>
+              <StudentPicker open={studentPickerOpen}
+                             buttonVisible={!lessonPickerOpen}
+                             setOpen={setStudentPickerOpen}
+                             students={students}
+                             setAllowedStudent={setAllowedStudent}
+                             allowedStudent={allowedStudent}/>
+            </div>
+            : ''}
+
+        </section>}
       </div>
     </Fragment>
   )

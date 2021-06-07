@@ -50,6 +50,8 @@ const disallowRequestFromStudent = {}
 io.sockets.on('connection', (socket) => {
 
   socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
+    console.log('joinClassRoom')
+
     if (usertype === 'student') {
       const userData = await getStudent(userLogin);
       const teacherData = await getTeacher(teacherLogin);
@@ -78,21 +80,28 @@ io.sockets.on('connection', (socket) => {
   })
 
   socket.on('mouseDragged', ({teacher, data}) => {
+    console.log(teacher, data)
     if (teacher) {
-      io.to(teacher).emit('mouseDragged', data);
+      io.to(teacher).emit('draw', data);
     }
   })
 
-  socket.on('allowStudent', async (teacherLogin, studentLogin) => {
+  socket.on('allowStudent', async ({teacherLogin, studentLogin}) => {
+    console.log('allowStudent')
+
     if (teacherLogin) {
       const teacherData = await getTeacher(teacherLogin);
       allowStudentToClass(teacherLogin, studentLogin);
       const studentSocketId = getSocketIdByLogin(studentLogin);
-      io.to(studentSocketId).emit('studentAllowed', {name: teacherData.name});
+      if (studentSocketId) {
+        io.to(studentSocketId).emit('studentAllowed', {name: teacherData.name});
+      }
     }
   })
 
   socket.on('disallowStudent', (teacherLogin, studentLogin) => {
+    console.log('disallowStudent')
+
     if (teacherLogin) {
       disallowStudentToClass(teacherLogin, studentLogin);
       const studentSocketId = getSocketIdByLogin(studentLogin);
@@ -105,6 +114,7 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     const user = getCurrentUser(socket.id);
+    console.log(user)
     if (user.user.type === 'teacher') {
       user.allowedStudents.forEach(studentLogin => {
         const studentSocketId = getSocketIdByLogin(studentLogin);

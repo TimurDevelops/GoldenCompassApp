@@ -1,0 +1,41 @@
+.item-wrapper {
+  box-sizing: border-box;
+  padding: 15px 20px;
+  width: 100%;
+  border-bottom: 1px solid #eee;
+
+  .item {
+    color: #eee;
+    display: flex;
+    justify-content: space-between;
+
+    .name {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 2em;
+    }
+
+    .button {
+      cursor: pointer;
+      background: #61dafb;
+      padding: .5em;
+
+      &:hover {
+
+      }
+    }
+  }
+
+  .item.current {
+    font-weight: bold;
+
+    .name {
+      border-bottom: 2px dashed #f69c55;
+    }
+
+    .button {
+      display: none;
+    }
+  }
+}

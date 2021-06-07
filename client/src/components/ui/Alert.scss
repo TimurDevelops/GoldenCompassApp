@@ -4,6 +4,16 @@ $light-color: #f4f4f4;
 $danger-color: #dc3545;
 $success-color: #28a745;
 
+.alerts-holder {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 1vw;
+  width: 20em;
+  z-index: 100;
+}
+
+
 .alert {
   padding: 0.8rem;
   margin: 1rem 0;
