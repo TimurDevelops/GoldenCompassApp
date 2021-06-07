@@ -9,7 +9,6 @@ const {
   userJoin,
   getCurrentUser,
   getSocketIdByLogin,
-  getSocketById,
   // getRoomUsers,
   checkTeacherPresent,
   checkStudentAllowed,
@@ -51,7 +50,7 @@ const disallowRequestFromStudent = {}
 io.sockets.on('connection', (socket) => {
 
   socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
-    console.log('joinClassRoom', userLogin, teacherLogin, usertype)
+    console.log('joinClassRoom')
 
     if (usertype === 'student') {
       const userData = await getStudent(userLogin);
@@ -81,10 +80,8 @@ io.sockets.on('connection', (socket) => {
       const user = await getTeacher(userLogin);
       userJoin(socket.id, user, teacherLogin);
       socket.join(teacherLogin);
-      console.log('teacherLogin')
       io.to(socket.id).emit('joinedClassRoom');
     }
-    console.log(usertype)
   })
 
   socket.on('mouseDragged', ({teacher, data}) => {
@@ -94,10 +91,8 @@ io.sockets.on('connection', (socket) => {
   })
 
   socket.on('allowStudent', async ({teacherLogin, studentLogin}) => {
-    console.log('allowStudent')
 
     if (teacherLogin) {
-      const teacherData = await getTeacher(teacherLogin);
       allowStudentToClass(teacherLogin, studentLogin);
       const studentSocketId = getSocketIdByLogin(studentLogin);
 
@@ -108,29 +103,25 @@ io.sockets.on('connection', (socket) => {
   })
 
   socket.on('disallowStudent', (teacherLogin, studentLogin) => {
-    console.log('disallowStudent')
 
     if (teacherLogin) {
       disallowStudentToClass(teacherLogin, studentLogin);
       const studentSocketId = getSocketIdByLogin(studentLogin);
       io.to(studentSocketId).emit('studentDisallowed');
-
-      //  TODO Обработка разрешения по id
     }
   })
 
 
-  socket.on('disconnect', () => {
-    console.log('disconnect')
-
+  socket.on('disconnect', async () => {
     const user = getCurrentUser(socket.id);
     if (user === undefined) {
       return
     }
     if (user.user.type === 'teacher') {
+      const teacherData = await getTeacher(user.user.login);
       user.allowedStudents.forEach(studentLogin => {
         const studentSocketId = getSocketIdByLogin(studentLogin);
-        io.to(studentSocketId).emit('teacherNotPresent');
+        io.to(studentSocketId).emit('teacherNotPresent', {name: teacherData.name});
       })
       //  TODO Обработка отсоединения учителя
 

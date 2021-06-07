@@ -106,7 +106,7 @@ router.post(
 
 
 // @route    POST api/users
-// @desc     Get all Students of a Teacher
+// @desc     Get all Lessons of a Teacher
 // @access   Public
 router.post(
   '/get-lessons',
@@ -119,9 +119,10 @@ router.post(
 
     return res.json({
       lessons: [{
+        _id: '1',
         name: 'Урок Номер 1',
         slides: [
-          {img: 'c image', id: 1, tip: "Tip for teacher"}, {img: 'c image two', id: 2, tip: "Tip for teacher"}
+          {img: 'c image', _id: 1, tip: "Tip for teacher"}, {img: 'c image two', _id: 2, tip: "Tip for teacher"}
         ]
       }]
     });

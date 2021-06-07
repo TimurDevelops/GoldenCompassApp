@@ -49,15 +49,6 @@ const getSocketIdByLogin = login => {
   }
 }
 
-const getSocketById = socketId => {
-  const user = connections.find(i => i.user.socketId === socketId);
-  if(user){
-    return user.socket;
-  } else {
-    return null;
-  }
-}
-
 // const getRoomUsers = room => {
 //   return connections.filter(user => user.room === room)
 // }
@@ -73,7 +64,6 @@ const checkStudentAllowed = (teacherLogin, studentLogin) => {
 }
 
 const allowStudentToClass = (teacherLogin, studentLogin) => {
-
   const teacher = connections.find(i => i.user.login === teacherLogin);
   teacher.allowedStudents.push(studentLogin);
 }
@@ -96,7 +86,6 @@ module.exports = {
   userJoin,
   getCurrentUser,
   getSocketIdByLogin,
-  getSocketById,
   // getRoomUsers,
   checkTeacherPresent,
   checkStudentAllowed,

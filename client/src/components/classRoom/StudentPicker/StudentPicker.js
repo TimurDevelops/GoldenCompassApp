@@ -5,13 +5,14 @@ import StudentItem from "./StudentItem";
 import './StudentPicker.scss'
 
 const StudentPicker = ({students, setAllowedStudent, open, setOpen, buttonVisible, allowedStudent}) => {
+
   return (
     <div className={`student-picker ${open ? 'open' : ''} ${buttonVisible ? '' : 'hidden'}`}>
       <div className={'picker-area'}>
         <div className={'bg'} onClick={() => setOpen(false)}/>
 
         <div className={'students'}>
-          {students.map(student => <StudentItem key={student.id} setAllowedStudent={setAllowedStudent}
+          {students.map(student => <StudentItem key={student._id} setAllowedStudent={setAllowedStudent}
                                                 student={student} allowedStudent={allowedStudent}/>)}
         </div>
 
@@ -27,7 +28,7 @@ const StudentPicker = ({students, setAllowedStudent, open, setOpen, buttonVisibl
 
 StudentPicker.propTypes = {
   students: PropTypes.array.isRequired,
-  setAllowedStudent: PropTypes.array.isRequired,
+  setAllowedStudent: PropTypes.func.isRequired,
   allowedStudent: PropTypes.string,
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,

@@ -11,7 +11,7 @@ const LessonPicker = ({setLesson, lessons, open, setOpen, buttonVisible}) => {
         <div className={'bg'} onClick={() => setOpen(false)}/>
 
         <div className={'lessons'}>
-          {lessons.map(lesson => <LessonItem key={lesson.id} setLesson={setLesson} lesson={lesson}/>)}
+          {lessons.map(lesson => <LessonItem key={lesson._id} setLesson={setLesson} lesson={lesson}/>)}
         </div>
 
         <div className={'menu-bg'}/>

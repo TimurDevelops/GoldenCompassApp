@@ -1,19 +1,21 @@
-import {io} from 'socket.io-client';
-
+import io from 'socket.io-client';
 
 export default function sketch(p) {
   // TODO Разобраться с https (SSL)
   // TODO подставлять адресс
-  const socket = io('http://localhost:5000');
+  const socket = io('http://localhost:5000', {transports: ['websocket'], upgrade: false});
 
   let canvas;
 
   let drawWidth = 10;
   let drawColor = 'white';
+
   let login = '';
   let teacher = '';
   let usertype = '';
+
   let allowedStudent = '';
+
   let setAlert;
   let disallowToClassRoom;
   let setWaitingScreen;
@@ -28,6 +30,7 @@ export default function sketch(p) {
     canvas.parent("mainCanvas");
 
     socket.on('draw', (data) => {
+      console.log(data)
       pencilDraw(data);
     })
 
@@ -60,7 +63,8 @@ export default function sketch(p) {
 
   const pencilDraw = ({x, y, pMouseX, pMouseY, size, color}) => {
     let c = p.color(color);
-    p.fill(c)
+    p.stroke(c)
+    p.strokeWeight(size);
     p.line(x, y, pMouseX, pMouseY, size);
   }
 
