@@ -42,7 +42,11 @@ const getCurrentUser = id => {
 
 const getSocketIdByLogin = login => {
   const user = connections.find(i => i.user.login === login);
-  return user.socketId;
+  if(user){
+    return user.socketId;
+  } else {
+    return null;
+  }
 }
 
 const getRoomUsers = room => {

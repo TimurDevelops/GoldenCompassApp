@@ -61,17 +61,19 @@ io.sockets.on('connection', (socket) => {
         io.to(user.socketId).emit('teacherNotPresent', {name: teacherData.name});
       } else if (!checkStudentAllowed(teacherLogin, userLogin)) {
         io.to(user.socketId).emit('studentDisallowed', {name: teacherData.name});
+
+        if (!disallowRequestFromStudent[userLogin]) {
+          const teacherSocketId = getSocketIdByLogin(teacherLogin);
+          io.to(teacherSocketId).emit('studentRequestsEntrance', {name: userData.name});
+        }
+        disallowRequestFromStudent[userLogin] = true;
+        setTimeout(() => disallowRequestFromStudent[userLogin] = false, 30 * 1000);
+
       } else {
         io.to(user.socketId).emit('studentAllowed');
         socket.join(teacherLogin);
       }
 
-      if (!disallowRequestFromStudent[userLogin]) {
-        const teacherSocketId = getSocketIdByLogin(teacherLogin);
-        io.to(teacherSocketId).emit('studentRequestsEntrance', {name: userData.name});
-      }
-      disallowRequestFromStudent[userLogin] = true;
-      setTimeout(() => disallowRequestFromStudent[userLogin] = false, 30 * 1000);
     } else if (usertype === 'teacher') {
       const user = await getTeacher(userLogin);
       userJoin(socket.id, user, teacherLogin);
@@ -80,7 +82,6 @@ io.sockets.on('connection', (socket) => {
   })
 
   socket.on('mouseDragged', ({teacher, data}) => {
-    console.log(teacher, data)
     if (teacher) {
       io.to(teacher).emit('draw', data);
     }
@@ -113,8 +114,12 @@ io.sockets.on('connection', (socket) => {
 
 
   socket.on('disconnect', () => {
+    console.log('disconnect')
+
     const user = getCurrentUser(socket.id);
-    console.log(user)
+    if (user === undefined) {
+      return
+    }
     if (user.user.type === 'teacher') {
       user.allowedStudents.forEach(studentLogin => {
         const studentSocketId = getSocketIdByLogin(studentLogin);
@@ -125,9 +130,11 @@ io.sockets.on('connection', (socket) => {
     }
     if (user.user.type === 'student') {
       const teacherSocketId = getSocketIdByLogin(user.room);
-      io.to(teacherSocketId).emit('studentDisconnected');
+      if (teacherSocketId) {
+        io.to(teacherSocketId).emit('studentDisconnected');
+      }
 
-      //  TODO Обработка отсоединения учителя
+      //  TODO Обработка отсоединения ученика
     }
     userLeave(user.socketId)
   })

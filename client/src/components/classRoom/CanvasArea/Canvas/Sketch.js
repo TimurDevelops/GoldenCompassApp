@@ -85,8 +85,8 @@ export default function sketch(p) {
     drawColor = newProps.drawColor;
 
     setAlert = newProps.setAlert;
-    disallowToClassRoom = newProps.setAlert;
-    setWaitingScreen = newProps.setAlert;
+    disallowToClassRoom = newProps.disallowToClassRoom;
+    setWaitingScreen = newProps.setWaitingScreen;
 
     let newUserJoined = false;
 
@@ -96,7 +96,6 @@ export default function sketch(p) {
     }
 
     if (teacher !== newProps.teacherLogin) {
-      console.log(teacher, newProps.teacherLogin)
       teacher = newProps.teacherLogin;
       newUserJoined = true;
     }
