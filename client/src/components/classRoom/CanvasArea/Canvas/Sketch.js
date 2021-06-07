@@ -49,12 +49,13 @@ export default function sketch(p) {
       }
     })
 
-    socket.on('studentAllowed', (data) => {
-      setAlert(`Вы можете присоединиться к классной комнате учителя ${data.name} `, 'success')
+    socket.on('joinedClassRoom', () => {
       setWaitingScreen(false);
     })
 
-
+    socket.on('studentAllowed', () => {
+      socket.emit('joinClassRoom', {login, teacher, usertype});
+    })
   }
 
   const pencilDraw = ({x, y, pMouseX, pMouseY, size, color}) => {

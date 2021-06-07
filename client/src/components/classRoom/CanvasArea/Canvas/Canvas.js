@@ -20,7 +20,7 @@ const Canvas = ({
         usertype={usertype}
         allowedStudent={allowedStudent}
         setAlert={setAlert}
-        setAllowToClassRoom={disallowToClassRoom}
+        disallowToClassRoom={disallowToClassRoom}
         setWaitingScreen={setWaitingScreen}
       />
       {/*  TODO сделать выход при несоблюдении условий */}

@@ -27,9 +27,9 @@ const ClassRoom = ({user, logout, setAlert}) => {
   let [studentPickerOpen, setStudentPickerOpen] = useState(false);
   let [lessonPickerOpen, setLessonPickerOpen] = useState(false);
 
-  let [waitingScreen, setWaitingScreen] = useState(false);
+  let [waitingScreen, setWaitingScreen] = useState(true);
   let disallowToClassRoom = () => {
-    history.push("/" + user.type);
+    history.push("/teachers-list");
   }
 
 
@@ -58,40 +58,44 @@ const ClassRoom = ({user, logout, setAlert}) => {
   return (
     <Fragment>
       <div className={"class-room"}>
-
         <Header logout={logout}/>
-        {waitingScreen ? <WaitingScreen/> :
-        <section className={"class-room-wrapper"}>
-          <VideoArea/>
-          <CanvasArea
-            userLogin={user.login}
-            userType={user.type}
-            teacherLogin={teacher}
-            tip={slide.tip}
-            slideImg={slide.img}
-            setAlert={setAlert}
-            allowedStudent={allowedStudent}
-            disallowToClassRoom={disallowToClassRoom}
-            setWaitingScreen={setWaitingScreen}
-          />
-          {user.type === 'teacher' ? <SlidePicker setSlide={setSlide} slides={lesson.slides}/> : ''}
-          {user.type === 'teacher' ?
-            <div className={'menus-holder'}>
-              <LessonPicker open={lessonPickerOpen}
-                            buttonVisible={!studentPickerOpen}
-                            setOpen={setLessonPickerOpen}
-                            lessons={lessons}
-                            setLesson={setLesson}/>
-              <StudentPicker open={studentPickerOpen}
-                             buttonVisible={!lessonPickerOpen}
-                             setOpen={setStudentPickerOpen}
-                             students={students}
-                             setAllowedStudent={setAllowedStudent}
-                             allowedStudent={allowedStudent}/>
-            </div>
-            : ''}
+        <div className={'waiting-screen-class-room-wrapper'}>
 
-        </section>}
+          {waitingScreen ? <WaitingScreen/> : ''}
+
+          <section className={"class-room-wrapper"}>
+            <VideoArea/>
+            <CanvasArea
+              userLogin={user.login}
+              userType={user.type}
+              teacherLogin={teacher}
+              tip={slide.tip}
+              slideImg={slide.img}
+              setAlert={setAlert}
+              allowedStudent={allowedStudent}
+              disallowToClassRoom={disallowToClassRoom}
+              setWaitingScreen={setWaitingScreen}
+            />
+            {user.type === 'teacher' ? <SlidePicker setSlide={setSlide} slides={lesson.slides}/> : ''}
+            {user.type === 'teacher' ?
+              <div className={'menus-holder'}>
+                <LessonPicker open={lessonPickerOpen}
+                              buttonVisible={!studentPickerOpen}
+                              setOpen={setLessonPickerOpen}
+                              lessons={lessons}
+                              setLesson={setLesson}/>
+                <StudentPicker open={studentPickerOpen}
+                               buttonVisible={!lessonPickerOpen}
+                               setOpen={setStudentPickerOpen}
+                               students={students}
+                               setAllowedStudent={setAllowedStudent}
+                               allowedStudent={allowedStudent}/>
+              </div>
+              : ''}
+
+          </section>
+
+        </div>
       </div>
     </Fragment>
   )

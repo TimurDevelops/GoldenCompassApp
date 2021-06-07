@@ -9,7 +9,8 @@ const {
   userJoin,
   getCurrentUser,
   getSocketIdByLogin,
-  getRoomUsers,
+  getSocketById,
+  // getRoomUsers,
   checkTeacherPresent,
   checkStudentAllowed,
   allowStudentToClass,
@@ -50,12 +51,14 @@ const disallowRequestFromStudent = {}
 io.sockets.on('connection', (socket) => {
 
   socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
-    console.log('joinClassRoom')
+    console.log('joinClassRoom', userLogin, teacherLogin, usertype)
 
     if (usertype === 'student') {
       const userData = await getStudent(userLogin);
       const teacherData = await getTeacher(teacherLogin);
       const user = await userJoin(socket.id, userData, teacherLogin);
+
+      console.log(checkStudentAllowed(teacherLogin, userLogin))
 
       if (!checkTeacherPresent(teacherLogin)) {
         io.to(user.socketId).emit('teacherNotPresent', {name: teacherData.name});
@@ -70,15 +73,18 @@ io.sockets.on('connection', (socket) => {
         setTimeout(() => disallowRequestFromStudent[userLogin] = false, 30 * 1000);
 
       } else {
-        io.to(user.socketId).emit('studentAllowed');
         socket.join(teacherLogin);
+        io.to(user.socketId).emit('joinedClassRoom');
       }
 
     } else if (usertype === 'teacher') {
       const user = await getTeacher(userLogin);
       userJoin(socket.id, user, teacherLogin);
       socket.join(teacherLogin);
+      console.log('teacherLogin')
+      io.to(socket.id).emit('joinedClassRoom');
     }
+    console.log(usertype)
   })
 
   socket.on('mouseDragged', ({teacher, data}) => {
@@ -94,8 +100,9 @@ io.sockets.on('connection', (socket) => {
       const teacherData = await getTeacher(teacherLogin);
       allowStudentToClass(teacherLogin, studentLogin);
       const studentSocketId = getSocketIdByLogin(studentLogin);
+
       if (studentSocketId) {
-        io.to(studentSocketId).emit('studentAllowed', {name: teacherData.name});
+        io.to(studentSocketId).emit('studentAllowed');
       }
     }
   })
