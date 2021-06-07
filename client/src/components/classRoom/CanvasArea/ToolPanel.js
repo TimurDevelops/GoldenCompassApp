@@ -1,34 +1,40 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from "prop-types";
-import {FaPencilAlt, FaEraser, FaUndo, FaSyncAlt, FaMousePointer, FaClock} from 'react-icons/fa';
+import {FaPencilAlt, FaEraser, FaUndo, FaSyncAlt, FaMousePointer, FaClock, FaMinusCircle} from 'react-icons/fa';
 
 import "./ToolPanel.scss";
 import Switch from "../../ui/Switch";
+import useInterval from "../../../utils/useInterval";
 
 const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowedToDraw, undo}) => {
   // TODO сделать названия инструментов глобальными
 
-  const timerRunning = false;
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [minute, setMinute] = useState(0);
+  const [second, setSecond] = useState(0);
 
-  const timerClicked = () => {
-    if(timerRunning){
-      startTimer();
-    }else{
-      stopTimer();
+  const resetTimer =() => {
+    setSecond(0);
+    setMinute(0);
+    setTimerRunning(false);
+  }
+
+  useInterval(() => {
+    if (second < 59) {
+      setSecond(second + 1);
+    } else {
+      setSecond(0);
+      setMinute(minute + 1);
     }
-  }
-  const startTimer = () => {
-
-  }
-  const stopTimer = () => {
-
-  }
+  }, timerRunning ? 1000 : null)
 
   return (
 
     <div className={"tool-panel"}>
       <div className={'tool-btn'}><FaUndo/></div>
-      <div className={'tool-btn'} onClick={()=> {setActiveTool('pencil')}}><FaPencilAlt/></div>
+      <div className={'tool-btn'} onClick={() => {
+        setActiveTool('pencil')
+      }}><FaPencilAlt/></div>
       <div>
         <select onChange={e => setDrawWidth(e.target.value)}>
           <option defaultChecked={true} value={10}>10</option>
@@ -45,16 +51,38 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
         </select>
       </div>
 
-      <div className={'tool-btn'} onClick={()=> {setActiveTool('eraser')}}><FaEraser/></div>
-      <div className={'tool-btn'} onClick={()=> {setActiveTool('pointer')}}><FaMousePointer/></div>
-      <div className={'tool-btn'} onClick={()=> {timerClicked()}}><FaClock/></div>
+      <div className={'tool-btn'} onClick={() => {
+        setActiveTool('eraser')
+      }}><FaEraser/></div>
+      <div className={'tool-btn'} onClick={() => {
+        setActiveTool('pointer')
+      }}><FaMousePointer/></div>
+
+      <div className={'border'}>
+
+        <div className={'tool-btn'} onClick={() => {
+          setTimerRunning(!timerRunning);
+        }}><FaClock/></div>
+        <div className={'time-holder'}>
+          <span className={'minute'}>{minute < 10 ? '0' + minute : minute}</span>
+          <span className={'colon'}>:</span>
+          <span className={'seconds'}>{second < 10 ? '0' + second : second}</span>
+        </div>
+        <div className={'tool-btn red'} onClick={() => {
+          resetTimer();
+        }}><FaMinusCircle/></div>
+
+
+      </div>
 
       <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
               onChange={(value) => {
                 setStudentAllowedToDraw(value);
               }}/>
 
-      <div className={'tool-btn'}><FaSyncAlt/></div>
+      <div className={'tool-btn'} onClick={() => {
+        setSecond(second+1)
+      }}><FaSyncAlt/></div>
 
     </div>
   )

@@ -3,6 +3,11 @@
   flex: 1;
 }
 
+.border {
+  display: flex;
+  border: 1px solid #555;
+}
+
 .tool-btn {
   padding: .2em;
   margin: .2em;
@@ -10,13 +15,19 @@
   height: 2.5em;
   cursor: pointer;
 
-  svg{
+  svg {
     width: 100%;
     height: 100%;
     color: #28a745;
   }
 
-  &:hover{
+  &.red {
+    svg {
+      color: red;
+    }
+  }
+
+  &:hover {
     svg {
       transform: scale(1.1);
     }

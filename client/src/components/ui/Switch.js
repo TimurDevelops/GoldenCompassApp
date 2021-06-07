@@ -24,8 +24,8 @@ const Switch = ({labelOne, labelTwo, onChange, valueOne, valueTwo}) => {
 Switch.propTypes = {
   labelOne: PropTypes.string.isRequired,
   labelTwo: PropTypes.string.isRequired,
-  valueOne: PropTypes.string.isRequired,
-  valueTwo: PropTypes.string.isRequired,
+  valueOne: PropTypes.any.isRequired,
+  valueTwo: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired
 }
 

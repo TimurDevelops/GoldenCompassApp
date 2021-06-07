@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-export default function useUser() {
+const useUser = () => {
   const getUser = () => {
     const userString = sessionStorage.getItem('user');
     const user = JSON.parse(userString);
@@ -24,3 +24,5 @@ export default function useUser() {
     unsetUser: unsetUser
   }
 }
+
+export default useUser;
