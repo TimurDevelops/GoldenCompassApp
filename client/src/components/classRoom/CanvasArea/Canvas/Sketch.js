@@ -7,6 +7,9 @@ export default function sketch(p) {
 
   let canvas;
 
+  let activeTool = 'pencil';
+  let allowStudentToDraw = false;
+
   let drawWidth = 10;
   let drawColor = 'white';
 
@@ -47,7 +50,7 @@ export default function sketch(p) {
     })
 
     socket.on('studentRequestsEntrance', (data) => {
-      if (usertype === 'teacher'){
+      if (usertype === 'teacher') {
         setAlert(`Ученик ${data.name} отправил запрос на вход в класную комнату`, 'primary')
       }
     })
@@ -93,6 +96,8 @@ export default function sketch(p) {
     disallowToClassRoom = newProps.disallowToClassRoom;
     setWaitingScreen = newProps.setWaitingScreen;
 
+    activeTool = newProps.activeTool;
+
     let newUserJoined = false;
 
     if (login !== newProps.login) {
@@ -111,6 +116,11 @@ export default function sketch(p) {
 
     if (newUserJoined) {
       socket.emit('joinClassRoom', {login, teacher, usertype});
+    }
+
+    if (allowStudentToDraw !== newProps.allowStudentToDraw) {
+      allowStudentToDraw = newProps.allowStudentToDraw;
+      socket.emit("allowStudentToDraw", {allowStudentToDraw});
     }
 
     if (allowedStudent !== newProps.allowedStudent && newProps.allowedStudent) {

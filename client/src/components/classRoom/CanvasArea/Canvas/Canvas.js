@@ -6,8 +6,17 @@ import sketch from "./Sketch";
 import "./Canvas.scss"
 
 const Canvas = ({
-                  drawWidth, drawColor, teacherLogin, login, usertype, setAlert, allowedStudent, disallowToClassRoom,
-                  setWaitingScreen
+                  drawWidth,
+                  drawColor,
+                  teacherLogin,
+                  login,
+                  usertype,
+                  setAlert,
+                  allowedStudent,
+                  disallowToClassRoom,
+                  setWaitingScreen,
+                  activeTool,
+                  allowStudentToDraw,
                 }) => {
   return (
     <div id='mainCanvas' className={"canvas"}>
@@ -22,11 +31,15 @@ const Canvas = ({
         setAlert={setAlert}
         disallowToClassRoom={disallowToClassRoom}
         setWaitingScreen={setWaitingScreen}
+        activeTool={activeTool}
+        allowStudentToDraw={allowStudentToDraw}
       />
       {/*  TODO сделать выход при несоблюдении условий */}
     </div>
   )
 }
+
+export default Canvas;
 
 Canvas.propTypes = {
   drawWidth: PropTypes.number.isRequired,
@@ -38,6 +51,6 @@ Canvas.propTypes = {
   setAlert: PropTypes.func.isRequired,
   disallowToClassRoom: PropTypes.func.isRequired,
   setWaitingScreen: PropTypes.func.isRequired,
+  activeTool: PropTypes.string.isRequired,
+  allowStudentToDraw: PropTypes.bool.isRequired,
 }
-
-export default Canvas;

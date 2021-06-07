@@ -12,6 +12,11 @@ const CanvasArea = ({
                     }) => {
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
+  const [activeTool, setActiveTool] = useState('pencil');
+  const [allowStudentToDraw, setStudentAllowedToDraw] = useState(true);
+  const undo = () => {
+    setAlert('В разработке', 'danger')
+  };
 
   return (
     <div className={"canvas-area"}>
@@ -27,8 +32,17 @@ const CanvasArea = ({
         setAlert={setAlert}
         disallowToClassRoom={disallowToClassRoom}
         setWaitingScreen={setWaitingScreen}
+        activeTool={activeTool}
+        allowStudentToDraw={allowStudentToDraw}
       />
-      <ToolPanel setDrawWidth={setDrawWidth} setDrawColor={setDrawColor}/>
+      {userType === 'teacher' ?
+        <ToolPanel
+          setActiveTool={setActiveTool}
+          setDrawWidth={setDrawWidth}
+          setDrawColor={setDrawColor}
+          setStudentAllowedToDraw={setStudentAllowedToDraw}
+          undo={undo}
+         /> : ''}
     </div>
   )
 }

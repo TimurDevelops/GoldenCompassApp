@@ -16,7 +16,7 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 2);
 
 .switch{
   display: flex;
-  width: 100%;
+  //width: 100%;
   justify-content: center;
   margin: 10px 0;
 }

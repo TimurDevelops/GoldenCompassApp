@@ -9,13 +9,14 @@ const Switch = ({labelOne, labelTwo, onChange, valueOne, valueTwo}) => {
 
   return (
     <div className="switch">
-      <div className="label">{labelOne}</div>
+      {labelOne !== '' ? <div className="label">{labelOne}</div> : ''}
 
       <label className="toggle-control">
         <input type="checkbox" onChange={e => switchChange(e.target.checked)}/>
         <span className="control"/>
       </label>
-      <div className="label">{labelTwo}</div>
+
+      {labelTwo !== '' ? <div className="label">{labelTwo}</div> : ''}
     </div>
   );
 }

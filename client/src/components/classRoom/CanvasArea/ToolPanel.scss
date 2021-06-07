@@ -1,18 +1,25 @@
 .tool-panel {
+  display: flex;
   flex: 1;
 }
 
 .tool-btn {
   padding: .2em;
   margin: .2em;
-  width: 1.5em;
-  height: 1.5em;
+  width: 2.5em;
+  height: 2.5em;
   cursor: pointer;
 
   svg{
     width: 100%;
     height: 100%;
     color: #28a745;
+  }
+
+  &:hover{
+    svg {
+      transform: scale(1.1);
+    }
   }
 
 }
