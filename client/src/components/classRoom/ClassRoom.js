@@ -36,7 +36,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
   useEffect(() => {
     const getStudents = async () => {
       if (user.type === 'teacher') {
-        const res = await axios.post('http://localhost:5000/api/teacher/get-students', {teacherLogin: user.login});
+        const res = await axios.post('http://161.35.232.115:5000/api/teacher/get-students', {teacherLogin: user.login});
         setStudents(res.data.students);
       }
     }
@@ -47,7 +47,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
   useEffect(() => {
     const getLessons = async () => {
       if (user.type === 'teacher') {
-        const res = await axios.post('http://localhost:5000/api/teacher/get-lessons', {teacherLogin: user.login});
+        const res = await axios.post('http://161.35.232.115:5000/api/teacher/get-lessons', {teacherLogin: user.login});
         setLessons(res.data.lessons);
       }
     }

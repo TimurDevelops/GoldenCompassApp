@@ -10,7 +10,7 @@ const TeachersList = ({student: {login}}) => {
 
   useEffect(() => {
     const getTeachers = async () => {
-      const res = await axios.post('http://localhost:5000/api/student/get-teachers', {studentLogin: login});
+      const res = await axios.post('http://161.35.232.115:5000/api/student/get-teachers', {studentLogin: login});
       setTeachers(res.data.teachers);
     }
     getTeachers().catch((err)=> console.error(err))

@@ -35,7 +35,7 @@ app.get('/ping', (req, res) => {
 });
 
 // TODO make urls be from config
-const server = app.listen(PORT, 'localhost', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`Sever started on port ${PORT}`);
 });
 

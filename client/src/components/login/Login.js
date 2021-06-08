@@ -9,10 +9,10 @@ import Switch from "../ui/Switch";
 const loginUser = async ({credentials, type}) => {
   try {
     if (type === 'teacher') {
-      const res = await axios.post('http://localhost:5000/api/auth/teacher', credentials);
+      const res = await axios.post('http://161.35.232.115:5000/api/auth/teacher', credentials);
       return res.data;
     } else if (type === 'student') {
-      const res = await axios.post('http://localhost:5000/api/auth/student', credentials);
+      const res = await axios.post('http://161.35.232.115:5000/api/auth/student', credentials);
       return res.data;
     }
   } catch (e) {
