@@ -27,7 +27,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
   let [studentPickerOpen, setStudentPickerOpen] = useState(false);
   let [lessonPickerOpen, setLessonPickerOpen] = useState(false);
 
-  let [waitingScreen, setWaitingScreen] = useState(true);
+  let [waitingScreen, setWaitingScreen] = useState(false);
   let disallowToClassRoom = () => {
     history.push("/teachers-list");
   }

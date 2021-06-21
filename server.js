@@ -95,6 +95,12 @@ io.sockets.on('connection', (socket) => {
     }
   })
 
+  socket.on('clientCursor', ({teacher, data}) => {
+    if (teacher) {
+      io.to(teacher).emit('serverCursor', data);
+    }
+  })
+
   socket.on('allowStudent', async ({teacherLogin, studentLogin}) => {
 
     if (teacherLogin) {
