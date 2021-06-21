@@ -34,7 +34,6 @@ const Canvas = ({
         activeTool={activeTool}
         allowStudentToDraw={allowStudentToDraw}
       />
-      {/*  TODO сделать выход при несоблюдении условий */}
     </div>
   )
 }

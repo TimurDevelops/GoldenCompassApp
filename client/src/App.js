@@ -48,9 +48,6 @@ const App = () => {
           <PrivateRoute exact path="/teacher" component={TeacherMenu} auth={auth} user={user} logout={logout}/>
           }
 
-          {/* TODO Links for teachers */}
-          {/*<PrivateRoute exact path="/teacher/note" component={}/>*/}
-
           {/* Student Available Teachers */}
           {user && user.type === 'student' &&
           <PrivateRoute exact path="/student" component={StudentMenu} auth={auth} student={user} logout={logout}/>

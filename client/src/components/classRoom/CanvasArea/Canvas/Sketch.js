@@ -1,13 +1,13 @@
 import io from 'socket.io-client';
+import {TOOLS} from '../../../../utils/types'
 
 export default function sketch(p) {
   // TODO Разобраться с https (SSL)
-  // TODO подставлять адресс
-  const socket = io('http://161.35.232.115:5000', {transports: ['websocket'], upgrade: false});
+  const socket = io('http://localhost:5000', {transports: ['websocket'], upgrade: false});
 
   let canvas;
 
-  let activeTool = 'pencil';
+  let activeTool = TOOLS.DEFAULT;
   let allowStudentToDraw = false;
 
   let drawWidth = 10;
@@ -32,12 +32,14 @@ export default function sketch(p) {
     canvas = p.createCanvas(sketchWidth, sketchHeight);
     canvas.parent("mainCanvas");
 
-    socket.on('draw', (data) => {
-      console.log(data)
+    socket.on('serverPencilDraw', (data) => {
       pencilDraw(data);
     })
 
-    // TODO вместо alert выставлять экран ожидания и текст для экрана путем выставления переменных с верхнего уровня
+    socket.on('serverEraser', (data) => {
+      console.log(data)
+      eraser(data);
+    })
 
     socket.on('teacherNotPresent', (data) => {
       disallowToClassRoom()
@@ -71,20 +73,50 @@ export default function sketch(p) {
     p.line(x, y, pMouseX, pMouseY, size);
   }
 
+  const eraser = ({x, y}) => {
+    p.erase();
+    p.circle(x, y, 30);
+    p.noErase();
+  }
+
   p.draw = () => {
 
   }
 
   p.mouseDragged = () => {
-    let data = {
-      x: p.mouseX,
-      y: p.mouseY,
-      pMouseX: p.pmouseX,
-      pMouseY: p.pmouseY,
-      size: drawWidth,
-      color: drawColor
+    if (activeTool === TOOLS.PENCIL) {
+      let data = {
+        x: p.mouseX,
+        y: p.mouseY,
+        pMouseX: p.pmouseX,
+        pMouseY: p.pmouseY,
+        size: drawWidth,
+        color: drawColor
+      }
+      socket.emit("clientPencilDraw", {teacher, data});
+    } else if (activeTool === TOOLS.ERASER) {
+      let data = {
+        x: p.mouseX,
+        y: p.mouseY,
+      }
+      socket.emit("clientEraser", {teacher, data});
+    } else if (activeTool === TOOLS.CURSOR) {
+      let data = {
+        x: p.mouseX,
+        y: p.mouseY,
+      }
+      socket.emit("clientEraser", {teacher, data});
     }
-    socket.emit("mouseDragged", {teacher, data});
+  }
+
+  p.mouseClicked = () => {
+    if (activeTool === TOOLS.ERASER) {
+      let data = {
+        x: p.mouseX,
+        y: p.mouseY,
+      }
+      socket.emit("clientEraser", {teacher, data});
+    }
   }
 
 

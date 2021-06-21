@@ -5,9 +5,9 @@ import {FaPencilAlt, FaEraser, FaUndo, FaSyncAlt, FaMousePointer, FaClock, FaMin
 import "./ToolPanel.scss";
 import Switch from "../../ui/Switch";
 import useInterval from "../../../utils/useInterval";
+import {TOOLS} from "../../../utils/types";
 
-const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowedToDraw, undo}) => {
-  // TODO сделать названия инструментов глобальными
+const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowedToDraw}) => {
 
   const [timerRunning, setTimerRunning] = useState(false);
   const [minute, setMinute] = useState(0);
@@ -33,7 +33,7 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
     <div className={"tool-panel"}>
       <div className={'tool-btn'}><FaUndo/></div>
       <div className={'tool-btn'} onClick={() => {
-        setActiveTool('pencil')
+        setActiveTool(TOOLS.PENCIL)
       }}><FaPencilAlt/></div>
       <div>
         <select onChange={e => setDrawWidth(e.target.value)}>
@@ -52,10 +52,10 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
       </div>
 
       <div className={'tool-btn'} onClick={() => {
-        setActiveTool('eraser')
+        setActiveTool(TOOLS.ERASER)
       }}><FaEraser/></div>
       <div className={'tool-btn'} onClick={() => {
-        setActiveTool('pointer')
+        setActiveTool(TOOLS.CURSOR)
       }}><FaMousePointer/></div>
 
       <div className={'border'}>

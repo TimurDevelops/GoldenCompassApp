@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import './TeachersList.scss'
 import TeacherItem from "./TeacherItem";
-import axios from "axios";
+import api from "../../utils/api";
 
 
 const TeachersList = ({student: {login}}) => {
@@ -10,7 +10,7 @@ const TeachersList = ({student: {login}}) => {
 
   useEffect(() => {
     const getTeachers = async () => {
-      const res = await axios.post('http://161.35.232.115:5000/api/student/get-teachers', {studentLogin: login});
+      const res = await api.post('/student/get-teachers', {studentLogin: login});
       setTeachers(res.data.teachers);
     }
     getTeachers().catch((err)=> console.error(err))

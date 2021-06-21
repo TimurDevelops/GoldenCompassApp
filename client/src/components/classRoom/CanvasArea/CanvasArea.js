@@ -5,6 +5,7 @@ import Canvas from "./Canvas/Canvas";
 import ToolPanel from "./ToolPanel";
 
 import "./CanvasArea.scss"
+import {TOOLS} from "../../../utils/types";
 
 const CanvasArea = ({
                       userLogin, userType, teacherLogin, tip, slideImg, setAlert, allowedStudent, disallowToClassRoom,
@@ -12,7 +13,7 @@ const CanvasArea = ({
                     }) => {
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
-  const [activeTool, setActiveTool] = useState('pencil');
+  const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
   const [allowStudentToDraw, setStudentAllowedToDraw] = useState(true);
   const undo = () => {
     setAlert('В разработке', 'danger')

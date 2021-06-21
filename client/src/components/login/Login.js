@@ -1,18 +1,19 @@
 import React, {useState} from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
+import api from "../../utils/api";
 
-import axios from 'axios';
-import './Login.scss'
 import Switch from "../ui/Switch";
+
+import './Login.scss'
 
 const loginUser = async ({credentials, type}) => {
   try {
     if (type === 'teacher') {
-      const res = await axios.post('http://161.35.232.115:5000/api/auth/teacher', credentials);
+      const res = await api.post('/auth/teacher', credentials);
       return res.data;
     } else if (type === 'student') {
-      const res = await axios.post('http://161.35.232.115:5000/api/auth/student', credentials);
+      const res = await api.post('/auth/student', credentials);
       return res.data;
     }
   } catch (e) {

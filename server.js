@@ -34,8 +34,7 @@ app.get('/ping', (req, res) => {
   res.send(`Pong`);
 });
 
-// TODO make urls be from config
-const server = app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, () => {
   console.log(`Sever started on port ${PORT}`);
 });
 
@@ -84,9 +83,15 @@ io.sockets.on('connection', (socket) => {
     }
   })
 
-  socket.on('mouseDragged', ({teacher, data}) => {
+  socket.on('clientPencilDraw', ({teacher, data}) => {
     if (teacher) {
-      io.to(teacher).emit('draw', data);
+      io.to(teacher).emit('serverPencilDraw', data);
+    }
+  })
+
+  socket.on('clientEraser', ({teacher, data}) => {
+    if (teacher) {
+      io.to(teacher).emit('serverEraser', data);
     }
   })
 
