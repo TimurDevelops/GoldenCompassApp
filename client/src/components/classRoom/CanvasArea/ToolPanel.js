@@ -2,10 +2,13 @@ import React, {useState} from 'react';
 import PropTypes from "prop-types";
 import {FaPencilAlt, FaEraser, FaUndo, FaSyncAlt, FaMousePointer, FaClock, FaMinusCircle} from 'react-icons/fa';
 
-import "./ToolPanel.scss";
-import Switch from "../../ui/Switch";
 import useInterval from "../../../utils/useInterval";
+import Switch from "../../ui/Switch";
 import {TOOLS} from "../../../utils/types";
+import ButtonExample from "../../ui/ColorPicker";
+
+import "./ToolPanel.scss";
+
 
 const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowedToDraw}) => {
 
@@ -13,7 +16,7 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
   const [minute, setMinute] = useState(0);
   const [second, setSecond] = useState(0);
 
-  const resetTimer =() => {
+  const resetTimer = () => {
     setSecond(0);
     setMinute(0);
     setTimerRunning(false);
@@ -42,6 +45,16 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
           <option value={50}>50</option>
           <option value={150}>150</option>
         </select>
+
+        <ButtonExample
+          color={'red'}
+          onChangeComplete={
+            color => {
+              console.log(color);
+              setDrawColor(color)
+            }
+          }
+        />
 
         <select onChange={e => setDrawColor(e.target.value)}>
           <option defaultChecked={true} value={'red'}>Red</option>
@@ -81,7 +94,7 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
               }}/>
 
       <div className={'tool-btn'} onClick={() => {
-        setSecond(second+1)
+        setSecond(second + 1)
       }}><FaSyncAlt/></div>
 
     </div>
