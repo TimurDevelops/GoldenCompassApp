@@ -1,41 +1,58 @@
-import React from 'react'
-import { ChromePicker } from 'react-color'
+import React, {useState} from "react";
+import PropTypes from "prop-types";
 
-class ButtonExample extends React.Component {
-  state = {
-    displayColorPicker: false,
-  };
+import './ColorPicker.scss';
 
-  handleClick = () => {
-    this.setState({ displayColorPicker: !this.state.displayColorPicker })
-  };
+const ColorPicker = ({onChangeComplete, color}) => {
+  const [open, setOpen] = useState(false)
+  const [activeColor, setActiveColor] = useState(color)
+  let colors = [
+    'red',
+    'blue',
+    'yellow',
+    'green',
+    'black',
+    'grey',
+    'white',
+  ]
 
-  handleClose = () => {
-    this.setState({ displayColorPicker: false })
-  };
 
-  render() {
-    const popover = {
-      position: 'absolute',
-      zIndex: '2',
-    }
-    const cover = {
-      position: 'fixed',
-      top: '0px',
-      right: '0px',
-      bottom: '0px',
-      left: '0px',
-    }
-    return (
-      <div>
-        <button onClick={ this.handleClick }>Pick Color</button>
-        { this.state.displayColorPicker ? <div style={ popover }>
-          <div style={ cover } onClick={ this.handleClose }/>
-          <ChromePicker />
-        </div> : null }
+  return (
+
+    <div className={'wrapper'}>
+      <div className={'trigger'} onClick={() => {
+        setOpen(!open)
+      }}>
+        <div className={'trigger-color-wrapper'}>
+          <span className={'trigger-color ' + activeColor}/>
+        </div>
       </div>
-    )
-  }
+
+
+      {open && <div className={'color-picker-wrapper'}>
+        {colors.map(i =>
+          <div onClick={
+            () => {
+              onChangeComplete(i);
+              setActiveColor(i);
+              setOpen(false)
+            }
+          } className={`color-wrapper ${activeColor === i && 'active'}`} key={i}>
+            <span className={'color ' + i}/>
+          </div>
+        )
+        }
+      </div>}
+
+    </div>
+
+  )
 }
 
-export default ButtonExample
+ColorPicker.propTypes =
+  {
+    onChangeComplete: PropTypes.func.isRequired,
+    color: PropTypes.string.isRequired,
+}
+
+export default ColorPicker;

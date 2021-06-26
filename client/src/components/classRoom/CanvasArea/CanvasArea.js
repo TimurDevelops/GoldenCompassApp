@@ -38,6 +38,7 @@ const CanvasArea = ({
       />
       {userType === 'teacher' ?
         <ToolPanel
+          drawColor={drawColor}
           setActiveTool={setActiveTool}
           setDrawWidth={setDrawWidth}
           setDrawColor={setDrawColor}

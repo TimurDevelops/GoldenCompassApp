@@ -5,12 +5,12 @@ import {FaPencilAlt, FaEraser, FaUndo, FaSyncAlt, FaMousePointer, FaClock, FaMin
 import useInterval from "../../../utils/useInterval";
 import Switch from "../../ui/Switch";
 import {TOOLS} from "../../../utils/types";
-import ButtonExample from "../../ui/ColorPicker";
+import ColorPicker from "../../ui/ColorPicker";
 
 import "./ToolPanel.scss";
 
 
-const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowedToDraw}) => {
+const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor, setStudentAllowedToDraw}) => {
 
   const [timerRunning, setTimerRunning] = useState(false);
   const [minute, setMinute] = useState(0);
@@ -45,23 +45,17 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
           <option value={50}>50</option>
           <option value={150}>150</option>
         </select>
-
-        <ButtonExample
-          color={'red'}
+      </div>
+      <div>
+        <ColorPicker
+          color={drawColor}
           onChangeComplete={
             color => {
               console.log(color);
-              setDrawColor(color)
+              setDrawColor(color);
             }
           }
         />
-
-        <select onChange={e => setDrawColor(e.target.value)}>
-          <option defaultChecked={true} value={'red'}>Red</option>
-          <option value={'white'}>White</option>
-          <option value={'black'}>Black</option>
-          <option value={'grey'}>Grey</option>
-        </select>
       </div>
 
       <div className={'tool-btn'} onClick={() => {
@@ -84,8 +78,6 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
         <div className={'tool-btn red'} onClick={() => {
           resetTimer();
         }}><FaMinusCircle/></div>
-
-
       </div>
 
       <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
@@ -102,6 +94,7 @@ const ToolPanel = ({setActiveTool, setDrawWidth, setDrawColor, setStudentAllowed
 }
 
 ToolPanel.propTypes = {
+  drawColor: PropTypes.string.isRequired,
   setActiveTool: PropTypes.func.isRequired,
   setStudentAllowedToDraw: PropTypes.func.isRequired,
   setDrawWidth: PropTypes.func.isRequired,

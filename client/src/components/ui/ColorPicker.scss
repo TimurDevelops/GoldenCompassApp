@@ -1,0 +1,112 @@
+.wrapper {
+  position: relative;
+
+  .color-picker-wrapper {
+    position: absolute;
+    bottom: 100%;
+  }
+}
+
+.color-picker-wrapper {
+  border: 1px solid #ccc;
+  background: #fff;
+
+  .color-wrapper {
+    border-bottom: 1px solid #ccc;
+    width: 4em;
+    box-sizing: border-box;
+
+    .color {
+      margin: 5px;
+      padding: 0;
+      height: 3em;
+      display: block;
+      box-sizing: border-box;
+
+      &.red {
+        background: red;
+      }
+
+      &.blue {
+        background: blue;
+      }
+
+      &.yellow {
+        background: yellow;
+      }
+
+      &.green {
+        background: green;
+      }
+
+      &.black {
+        background: black;
+      }
+
+      &.grey {
+        background: grey;
+      }
+
+      &.white {
+        background: white;
+
+      }
+    }
+
+
+    &:hover {
+      border: 3px solid blue;
+
+      .color {
+        height: calc(3em - 5px);
+      }
+    }
+  }
+}
+
+
+.trigger {
+
+  .trigger-color-wrapper {
+    border: 1px solid #ccc;
+    width: 4em;
+    box-sizing: border-box;
+
+    .trigger-color {
+      margin: 5px;
+      padding: 0;
+      height: 3em;
+      display: block;
+      box-sizing: border-box;
+
+      &.red {
+        background: red;
+      }
+
+      &.blue {
+        background: blue;
+      }
+
+      &.yellow {
+        background: yellow;
+      }
+
+      &.green {
+        background: green;
+      }
+
+      &.black {
+        background: black;
+      }
+
+      &.grey {
+        background: grey;
+      }
+
+      &.white {
+        background: white;
+
+      }
+    }
+  }
+}
