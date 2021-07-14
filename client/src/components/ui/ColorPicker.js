@@ -45,16 +45,13 @@ const ColorPicker = ({onChangeComplete, color}) => {
           </div>
         )}
       </div>}
-
     </div>
-
   )
 }
 
-ColorPicker.propTypes =
-  {
-    onChangeComplete: PropTypes.func.isRequired,
-    color: PropTypes.string.isRequired,
-  }
+ColorPicker.propTypes = {
+  onChangeComplete: PropTypes.func.isRequired,
+  color: PropTypes.string.isRequired,
+}
 
 export default ColorPicker;

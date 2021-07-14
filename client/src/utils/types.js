@@ -8,8 +8,3 @@ export const TOOLS = {
   RELOAD: "RELOAD",
   DEFAULT: "PENCIL"
 }
-
-
-export default {
-  TOOLS
-}
