@@ -7,14 +7,25 @@
   }
 }
 
+.wrapper-bg{
+  z-index: 400;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .color-picker-wrapper {
   border: 1px solid #ccc;
   background: #fff;
+  z-index: 500;
 
   .color-wrapper {
     border-bottom: 1px solid #ccc;
     width: 4em;
     box-sizing: border-box;
+    cursor: pointer;
 
     .color {
       margin: 5px;
@@ -71,6 +82,7 @@
     border: 1px solid #ccc;
     width: 4em;
     box-sizing: border-box;
+    cursor: pointer;
 
     .trigger-color {
       margin: 5px;

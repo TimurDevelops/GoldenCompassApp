@@ -28,8 +28,11 @@ const ColorPicker = ({onChangeComplete, color}) => {
         </div>
       </div>
 
-
+      {open && <div className={'wrapper-bg'} onClick={() => {
+        setOpen(false)
+      }}/>}
       {open && <div className={'color-picker-wrapper'}>
+
         {colors.map(i =>
           <div onClick={
             () => {
@@ -40,8 +43,7 @@ const ColorPicker = ({onChangeComplete, color}) => {
           } className={`color-wrapper ${activeColor === i && 'active'}`} key={i}>
             <span className={'color ' + i}/>
           </div>
-        )
-        }
+        )}
       </div>}
 
     </div>
@@ -53,6 +55,6 @@ ColorPicker.propTypes =
   {
     onChangeComplete: PropTypes.func.isRequired,
     color: PropTypes.string.isRequired,
-}
+  }
 
 export default ColorPicker;
