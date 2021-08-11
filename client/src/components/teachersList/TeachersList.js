@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import './TeachersList.scss'
+
 import TeacherItem from "./TeacherItem";
+import GoBack from "../ui/GoBack";
+
 import api from "../../utils/api";
+
+import './TeachersList.scss'
 
 
 const TeachersList = ({student: {login}}) => {
@@ -13,16 +17,23 @@ const TeachersList = ({student: {login}}) => {
       const res = await api.post('/student/get-teachers', {studentLogin: login});
       setTeachers(res.data.teachers);
     }
-    getTeachers().catch((err)=> console.error(err))
+    getTeachers().catch((err) => console.error(err))
 
   }, [login]);
 
   return (
-    <div>
-      Список учителей
-      {teachers.map(teacher => <TeacherItem key={teacher._id} teacher={teacher}/>)}
-    </div>
-  )
+    <div className={"menu-bg"} id={'resetPassForm'}>
+      <div className={"menu-wrapper"}>
+        <div className="login-header">
+          <p>{teachers.length ? 'Выберите учителя...' : 'Для вас не назначено ни одного учителя...'}</p>
+        </div>
+
+        {teachers.map(teacher => <TeacherItem key={teacher._id} teacher={teacher}/>)}
+
+        <GoBack/>
+
+      </div>
+    </div>)
 }
 
 TeachersList.propTypes = {

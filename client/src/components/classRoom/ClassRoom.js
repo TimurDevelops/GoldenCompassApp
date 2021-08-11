@@ -4,12 +4,12 @@ import api from "../../utils/api";
 import {useHistory, useParams} from "react-router-dom";
 
 import Header from "../ui/Header";
-import VideoArea from "./VideoArea/VideoArea";
-import CanvasArea from "./CanvasArea/CanvasArea";
-import SlidePicker from "./SlidePicker/SlidePicker";
-import LessonPicker from "./LessonPicker/LessonPicker";
-import StudentPicker from "./StudentPicker/StudentPicker";
-import WaitingScreen from "./WaitingScreen/WaitingScreen";
+import VideoArea from "./videoArea/VideoArea";
+import CanvasArea from "./canvasArea/CanvasArea";
+import SlidePicker from "./slidePicker/SlidePicker";
+import LessonPicker from "./lessonPicker/LessonPicker";
+import StudentPicker from "./studentPicker/StudentPicker";
+import WaitingScreen from "./waitingScreen/WaitingScreen";
 
 import "./ClassRoom.scss";
 
@@ -24,12 +24,12 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
   const [allowedStudent, setAllowedStudent] = useState();
 
-  let [studentPickerOpen, setStudentPickerOpen] = useState(false);
   let [lessonPickerOpen, setLessonPickerOpen] = useState(false);
+  let [studentPickerOpen, setStudentPickerOpen] = useState(false);
 
   let [waitingScreen, setWaitingScreen] = useState(false);
   let disallowToClassRoom = () => {
-    history.push("/teachers-list");
+    history.goBack();
   }
 
 
@@ -47,7 +47,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
   useEffect(() => {
     const getLessons = async () => {
       if (user.type === 'teacher') {
-        const res = await api.post('/teacher/get-lessons', {teacherLogin: user.login});
+        const res = await api.post('/teacher/get-levels', {teacherLogin: user.login});
         setLessons(res.data.lessons);
       }
     }
@@ -63,6 +63,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
           {waitingScreen ? <WaitingScreen/> : ''}
 
+
           <section className={"class-room-wrapper"}>
             <VideoArea/>
             <CanvasArea
@@ -76,21 +77,34 @@ const ClassRoom = ({user, logout, setAlert}) => {
               disallowToClassRoom={disallowToClassRoom}
               setWaitingScreen={setWaitingScreen}
             />
-            {user.type === 'teacher' ? <SlidePicker setSlide={setSlide} slides={lesson.slides}/> : ''}
+            {/*{user.type === 'teacher' ? <SlidePicker setSlide={setSlide} slides={lesson.slides}/> : ''}*/}
             {user.type === 'teacher' ?
-              <div className={'menus-holder'}>
+              <div className={'pickers'}>
+
                 <LessonPicker open={lessonPickerOpen}
-                              buttonVisible={!studentPickerOpen}
                               setOpen={setLessonPickerOpen}
                               lessons={lessons}
                               setLesson={setLesson}/>
-                <StudentPicker open={studentPickerOpen}
-                               buttonVisible={!lessonPickerOpen}
-                               setOpen={setStudentPickerOpen}
-                               students={students}
-                               setAllowedStudent={setAllowedStudent}
-                               allowedStudent={allowedStudent}/>
+
+                {/*<StudentPicker open={studentPickerOpen}*/}
+                {/*               setOpen={setStudentPickerOpen}*/}
+                {/*               students={students}*/}
+                {/*               setAllowedStudent={setAllowedStudent}*/}
+                {/*               allowedStudent={allowedStudent}/>*/}
+
+                <div className={'menus-buttons'}>
+
+                  {!studentPickerOpen && <div className={`button-holder`} >
+                    <div className={'button'} onClick={() => setLessonPickerOpen(!lessonPickerOpen)}>Уровни</div>
+                  </div>}
+
+                  {!lessonPickerOpen && <div className={`button-holder`}>
+                    <div className={'button'} onClick={() => setStudentPickerOpen(!studentPickerOpen)}>Ученики</div>
+                  </div>}
+
+                </div>
               </div>
+
               : ''}
 
           </section>

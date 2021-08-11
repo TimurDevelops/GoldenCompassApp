@@ -11,6 +11,7 @@ import TeachersList from "./components/teachersList/TeachersList";
 import StudentMenu from "./components/studentMenu/StudentMenu"
 import PrivateRoute from "./components/ui/PrivateRoute";
 import ClassRoom from "./components/classRoom/ClassRoom";
+import ResetPassword from "./components/resetPassword/ResetPassword";
 import {v4 as uuidv4} from 'uuid';
 
 const App = () => {
@@ -26,7 +27,7 @@ const App = () => {
   };
 
   function removeAlert(id) {
-    setAlerts(alerts.filter((alert) => alert.id !== id));
+    setAlerts(alerts => alerts.filter((alert) => alert.id !== id));
   }
 
   const logout = () => {
@@ -50,7 +51,7 @@ const App = () => {
 
           {/* Student Available Teachers */}
           {user && user.type === 'student' &&
-          <PrivateRoute exact path="/student" component={StudentMenu} auth={auth} student={user} logout={logout}/>
+          <PrivateRoute exact path="/student" component={StudentMenu} auth={auth} user={user} logout={logout}/>
           }
 
           {/* Student Available Teachers */}
@@ -62,6 +63,14 @@ const App = () => {
           <PrivateRoute exact path="/canvas/:teacher"
                         setAlert={setAlert}
                         component={ClassRoom}
+                        auth={auth}
+                        user={user}
+                        logout={logout}/>
+
+          {/* Reset pass word */}
+          <PrivateRoute exact path="/reset-password/:user/:type"
+                        setAlert={setAlert}
+                        component={ResetPassword}
                         auth={auth}
                         user={user}
                         logout={logout}/>

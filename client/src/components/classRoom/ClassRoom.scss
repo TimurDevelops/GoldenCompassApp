@@ -1,4 +1,4 @@
-$menus-holder-bg: #77CCE07F;
+$menus-buttons-bg: #77CCE07F;
 
 .class-room {
   height: 100vh;
@@ -14,16 +14,153 @@ $menus-holder-bg: #77CCE07F;
       height: 100%;
       display: flex;
       overflow: hidden;
+    }
+  }
+}
 
-      .menus-holder {
+
+// PICKERS BUTTONS
+
+$transparent-dark: #ccc3;
+$button-text-color: white;
+$button-background-color: green;
+$menus-buttons-bg: #77CCE07F;
+
+.button-holder {
+  position: relative;
+  right: -1em;
+  background: $button-background-color;
+  clip-path: polygon(0% 10%, 1% 9%, 3% 8%, 100% 0%, 100% 100%, 3% 90%, 1% 89%, 0% 88%);
+  width: 1em;
+  height: 8em;
+  display: flex;
+  padding: 20px 20px 20px 20px;
+  cursor: pointer;
+  user-select: none;
+
+  .button {
+    position: relative;
+    left: -.5em;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+
+
+    padding: 15px 0;
+    margin: 0;
+    box-sizing: border-box;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+// AREAS
+.video-wrapper{
+  height: 100%;
+  width: 30%;
+
+  .video{
+    background-color: #ccc;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .teacher-video{
+  }
+  .student-video{
+
+  }
+}
+
+.canvas-area{
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+// PICKERS
+$menu-bg: rgba(204, 243, 255, 0.24);
+$menu-items: rgb(91, 151, 164);
+
+.pickers {
+  width: 3.5em;
+  display: flex;
+  position: relative;
+
+  .item-picker {
+    visibility: hidden;
+    transition: visibility 0s ease-in-out .5s;
+
+    position: absolute;
+    width: calc(100vw - 3.5em);
+    height: 100%;
+    right: 3.5em;
+    z-index: 100;
+
+    .picker-area {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      justify-content: flex-end;
+
+      .picker-menu-bg {
+        opacity: 0;
+        transition: opacity .5s ease-in-out;
+
+        z-index: 100;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: $menu-bg;
+      }
+
+      .picker-items {
+        z-index: 200;
         position: relative;
-        top: 0;
-        right: 0;
-        width: 3.5em;
-        background: $menus-holder-bg;
+        left: 100%;
+        transition: left .5s ease-in-out;
+
+        border-left: 2px solid #ccc;
+        box-shadow: 3px 6px 20px 10px rgba(86, 86, 86, 0.65);
+
+        height: 100%;
+        width: 30%;
+        background: $menu-items;
+      }
+    }
+
+    &.open {
+      visibility: visible;
+      transition: visibility 0s ease-in-out;
+
+      .picker-area {
+
+        .picker-menu-bg {
+          opacity: 1;
+
+        }
+
+        .picker-items {
+          left: 0;
+
+        }
       }
     }
   }
 
+  .menus-buttons {
+    z-index: 200;
 
+    width: 3.5em;
+    background: $menus-buttons-bg;
+    height: 100%;
+  }
 }

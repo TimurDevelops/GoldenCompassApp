@@ -4,7 +4,6 @@ import TipArea from "./TipArea";
 import Canvas from "./Canvas/Canvas";
 import ToolPanel from "./ToolPanel";
 
-import "./CanvasArea.scss"
 import {TOOLS} from "../../../utils/types";
 
 const CanvasArea = ({

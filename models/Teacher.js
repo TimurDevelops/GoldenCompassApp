@@ -13,6 +13,8 @@ const TeacherSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  students: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Students' }],
+  levels: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Levels' }],
 })
 
 

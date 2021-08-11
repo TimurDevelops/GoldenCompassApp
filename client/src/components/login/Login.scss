@@ -32,6 +32,11 @@ $gray: #9b9b9b;
   padding: 30px 20px;
   box-sizing: border-box;
 }
+#resetPassForm{
+  .form{
+    width: auto;
+  }
+}
 .login-image{
   background: url("../../img/compass.jpg");
   background-size: cover;

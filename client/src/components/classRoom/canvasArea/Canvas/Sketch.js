@@ -1,10 +1,11 @@
 import io from 'socket.io-client';
 import image from '../../../../img/cursor.png'
 import {TOOLS} from '../../../../utils/types'
+import {serverUrl} from '../../../../config.json';
 
 export default function sketch(p) {
   // TODO Разобраться с https (SSL)
-  const socket = io('http://localhost:5000', {transports: ['websocket'], upgrade: false});
+  const socket = io(serverUrl, {transports: ['websocket'], upgrade: false});
 
   let canvas;
   let drawingCanvas;
@@ -73,6 +74,7 @@ export default function sketch(p) {
     })
 
     socket.on('studentAllowed', () => {
+      console.log('studentAllowed')
       socket.emit('joinClassRoom', {login, teacher, usertype});
     })
   }

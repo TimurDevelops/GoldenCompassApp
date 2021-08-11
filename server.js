@@ -26,6 +26,7 @@ app.use(express.json())
 app.use(cors());
 
 // Define Routes
+app.use('/api/level', require('./routes/api/levels'));
 app.use('/api/student', require('./routes/api/students'));
 app.use('/api/teacher', require('./routes/api/teacher'));
 app.use('/api/auth', require('./routes/api/auth'));
@@ -54,9 +55,7 @@ io.sockets.on('connection', (socket) => {
     if (usertype === 'student') {
       const userData = await getStudent(userLogin);
       const teacherData = await getTeacher(teacherLogin);
-      const user = await userJoin(socket.id, userData, teacherLogin);
-
-      console.log(checkStudentAllowed(teacherLogin, userLogin))
+      const user = userJoin(socket.id, userData, teacherLogin);
 
       if (!checkTeacherPresent(teacherLogin)) {
         io.to(user.socketId).emit('teacherNotPresent', {name: teacherData.name});

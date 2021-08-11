@@ -9,6 +9,10 @@ const SlideSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  hasAbacus: {
+    type: Boolean,
+    default: false
+  },
 })
 
 
