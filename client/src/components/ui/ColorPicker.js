@@ -19,7 +19,7 @@ const ColorPicker = ({onChangeComplete, color}) => {
 
   return (
 
-    <div className={'wrapper'}>
+    <div className={'my-color-picker-wrapper'}>
       <div className={'trigger'} onClick={() => {
         setOpen(!open)
       }}>

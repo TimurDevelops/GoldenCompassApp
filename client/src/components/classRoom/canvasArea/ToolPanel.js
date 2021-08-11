@@ -6,9 +6,17 @@ import useInterval from "../../../utils/useInterval";
 import Switch from "../../ui/Switch";
 import {TOOLS} from "../../../utils/types";
 import ColorPicker from "../../ui/ColorPicker";
+import Picker from "../../ui/Picker";
 
 
-const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor, setStudentAllowedToDraw}) => {
+const ToolPanel = ({
+                     drawColor,
+                     setActiveTool,
+                     setDrawWidth,
+                     setDrawColor,
+                     setStudentAllowedToDraw,
+                     displayTeacherTools
+                   }) => {
 
   const [timerRunning, setTimerRunning] = useState(false);
   const [minute, setMinute] = useState(0);
@@ -32,39 +40,50 @@ const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor, setStu
   return (
 
     <div className={"tool-panel"}>
-      <div className={'tool-btn'} onClick={() => {
+      <div className={'tool-btn salad'} onClick={() => {
         setActiveTool(TOOLS.PENCIL)
       }}><FaPencilAlt/></div>
+
       <div>
-        <select onChange={e => setDrawWidth(e.target.value)}>
-          <option defaultChecked={true} value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={50}>50</option>
-          <option value={150}>150</option>
-        </select>
+        <Picker
+          defaultValue={10}
+          valueField={'value'}
+          labelField={'label'}
+          values={[
+            {label: '10px', value: 10},
+            {label: '20px', value: 20},
+            {label: '50px', value: 50},
+            {label: '150px', value: 150}
+          ]}
+          onChangeComplete={
+            width => {
+              setDrawWidth(width)
+            }
+          }
+        />
       </div>
       <div>
         <ColorPicker
           color={drawColor}
           onChangeComplete={
             color => {
-              console.log(color);
               setDrawColor(color);
             }
           }
         />
       </div>
 
-      <div className={'tool-btn'} onClick={() => {
+      <div className={'tool-btn '} onClick={() => {
         setActiveTool(TOOLS.ERASER)
       }}><FaEraser/></div>
-      <div className={'tool-btn'} onClick={() => {
+
+      {displayTeacherTools && <div className={'tool-btn'} onClick={() => {
         setActiveTool(TOOLS.CURSOR)
-      }}><FaMousePointer/></div>
+      }}><FaMousePointer/></div>}
 
-      <div className={'border'}>
+      {displayTeacherTools && <div className={'border'}>
 
-        <div className={'tool-btn'} onClick={() => {
+        <div className={'tool-btn green'} onClick={() => {
           setTimerRunning(!timerRunning);
         }}><FaClock/></div>
         <div className={'time-holder'}>
@@ -75,16 +94,16 @@ const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor, setStu
         <div className={'tool-btn red'} onClick={() => {
           resetTimer();
         }}><FaMinusCircle/></div>
-      </div>
+      </div>}
 
-      <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
-              onChange={(value) => {
-                setStudentAllowedToDraw(value);
-              }}/>
+      {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
+                                      onChange={(value) => {
+                                        setStudentAllowedToDraw(value);
+                                      }}/>}
 
-      <div className={'tool-btn'} onClick={() => {
+      {displayTeacherTools && <div className={'tool-btn'} onClick={() => {
         setSecond(second + 1)
-      }}><FaSyncAlt/></div>
+      }}><FaSyncAlt/></div>}
 
     </div>
   )
@@ -96,6 +115,7 @@ ToolPanel.propTypes = {
   setStudentAllowedToDraw: PropTypes.func.isRequired,
   setDrawWidth: PropTypes.func.isRequired,
   setDrawColor: PropTypes.func.isRequired,
+  displayTeacherTools: PropTypes.bool.isRequired
 }
 
 export default ToolPanel;

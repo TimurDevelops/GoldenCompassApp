@@ -24,7 +24,7 @@ const CanvasArea = ({
   const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
   const [allowStudentToDraw, setStudentAllowedToDraw] = useState(true);
 
-  if(!slide.img){
+  if (!slide.img) {
     return (
       <div className={"canvas-area"}/>
     )
@@ -51,14 +51,15 @@ const CanvasArea = ({
         activeTool={activeTool}
         allowStudentToDraw={allowStudentToDraw}
       />
-      {userType === 'teacher' ?
-        <ToolPanel
-          drawColor={drawColor}
-          setActiveTool={setActiveTool}
-          setDrawWidth={setDrawWidth}
-          setDrawColor={setDrawColor}
-          setStudentAllowedToDraw={setStudentAllowedToDraw}
-        /> : ''}
+
+      <ToolPanel
+        displayTeacherTools={userType === 'teacher'}
+        drawColor={drawColor}
+        setActiveTool={setActiveTool}
+        setDrawWidth={setDrawWidth}
+        setDrawColor={setDrawColor}
+        setStudentAllowedToDraw={setStudentAllowedToDraw}
+      />
     </div>
   )
 }

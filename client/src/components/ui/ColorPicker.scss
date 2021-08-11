@@ -1,124 +1,124 @@
-.wrapper {
+.my-color-picker-wrapper {
   position: relative;
+
+  .wrapper-bg {
+    z-index: 400;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
 
   .color-picker-wrapper {
     position: absolute;
     bottom: 100%;
-  }
-}
+    width: calc(100% - 2px);
+    border: 1px solid #ccc;
+    background: #fff;
+    z-index: 500;
 
-.wrapper-bg{
-  z-index: 400;
-  height: 100vh;
-  width: 100vw;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.color-picker-wrapper {
-  border: 1px solid #ccc;
-  background: #fff;
-  z-index: 500;
-
-  .color-wrapper {
-    border-bottom: 1px solid #ccc;
-    width: 4em;
-    box-sizing: border-box;
-    cursor: pointer;
-
-    .color {
-      margin: 5px;
-      padding: 0;
-      height: 3em;
-      display: block;
+    .color-wrapper {
+      border-bottom: 1px solid #ccc;
       box-sizing: border-box;
-
-      &.red {
-        background: red;
-      }
-
-      &.blue {
-        background: blue;
-      }
-
-      &.yellow {
-        background: yellow;
-      }
-
-      &.green {
-        background: green;
-      }
-
-      &.black {
-        background: black;
-      }
-
-      &.grey {
-        background: grey;
-      }
-
-      &.white {
-        background: white;
-
-      }
-    }
-
-
-    &:hover {
-      border: 3px solid blue;
+      cursor: pointer;
 
       .color {
-        height: calc(3em - 5px);
+        margin: 5px;
+        padding: 0;
+        height: 3em;
+        display: block;
+        box-sizing: border-box;
+
+        &.red {
+          background: red;
+        }
+
+        &.blue {
+          background: blue;
+        }
+
+        &.yellow {
+          background: yellow;
+        }
+
+        &.green {
+          background: green;
+        }
+
+        &.black {
+          background: black;
+        }
+
+        &.grey {
+          background: grey;
+        }
+
+        &.white {
+          background: white;
+
+        }
+      }
+
+
+      &:hover {
+        border: 3px solid blue;
+
+        .color {
+          height: calc(3em - 5px);
+        }
       }
     }
   }
-}
 
+  .trigger {
 
-.trigger {
-
-  .trigger-color-wrapper {
-    border: 1px solid #ccc;
-    width: 4em;
-    box-sizing: border-box;
-    cursor: pointer;
-
-    .trigger-color {
-      margin: 5px;
-      padding: 0;
-      height: 3em;
-      display: block;
+    .trigger-color-wrapper {
+      border: 1px solid #ccc;
+      width: 4em;
       box-sizing: border-box;
+      cursor: pointer;
 
-      &.red {
-        background: red;
-      }
+      .trigger-color {
+        margin: 5px;
+        padding: 0;
+        height: 3em;
+        display: block;
+        box-sizing: border-box;
 
-      &.blue {
-        background: blue;
-      }
+        &.red {
+          background: red;
+        }
 
-      &.yellow {
-        background: yellow;
-      }
+        &.blue {
+          background: blue;
+        }
 
-      &.green {
-        background: green;
-      }
+        &.yellow {
+          background: yellow;
+        }
 
-      &.black {
-        background: black;
-      }
+        &.green {
+          background: green;
+        }
 
-      &.grey {
-        background: grey;
-      }
+        &.black {
+          background: black;
+        }
 
-      &.white {
-        background: white;
+        &.grey {
+          background: grey;
+        }
 
+        &.white {
+          background: white;
+
+        }
       }
     }
   }
 }
+
+
+
+
