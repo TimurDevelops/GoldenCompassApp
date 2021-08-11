@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
-import image from '../../../../img/cursor.png'
-import {TOOLS} from '../../../../utils/types'
-import {serverUrl} from '../../../../config.json';
+import image from '../../../img/cursor.png'
+import {TOOLS} from '../../../utils/types'
+import {serverUrl} from '../../../config.json';
 
 export default function sketch(p) {
   // TODO Разобраться с https (SSL)

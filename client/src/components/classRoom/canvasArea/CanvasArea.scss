@@ -1,0 +1,77 @@
+// TIP AREA
+$tip-bg: #91a999;
+$tip-color: #232323;
+$tip-text-bg: #efda7f;
+
+.tip-area {
+  height: 10%;
+  background-color: $tip-bg;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  .tip-text {
+    background-color: $tip-text-bg;
+    padding: 0;
+
+    p {
+      font-family: 'Roboto', sans-serif;
+      color: $tip-color;
+      margin: 0;
+      padding: .5em 1.5em;
+      font-size: 1.2em;
+    }
+  }
+}
+
+// CANVAS
+
+.canvas {
+  flex: 1;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+// TOOLS PANEL
+
+.tool-panel {
+  padding: .3em;
+  display: flex;
+  justify-content: space-between;
+
+  .border {
+    display: flex;
+    border: 1px solid #555;
+  }
+
+  .tool-btn {
+    padding: .2em;
+    margin: .2em;
+    width: 2.5em;
+    height: 2.5em;
+    cursor: pointer;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      color: #28a745;
+    }
+
+    &.red {
+      svg {
+        color: red;
+      }
+    }
+
+    &:hover {
+      svg {
+        transform: scale(1.1);
+      }
+    }
+
+  }
+
+}
+
+

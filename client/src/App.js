@@ -14,6 +14,8 @@ import ClassRoom from "./components/classRoom/ClassRoom";
 import ResetPassword from "./components/resetPassword/ResetPassword";
 import {v4 as uuidv4} from 'uuid';
 
+import './App.css'
+
 const App = () => {
   const {user, setUser, unsetUser} = useUser()
   const [auth, setAuth] = useState({isAuthenticated: Boolean(user && user.token), isLoading: false});
@@ -59,7 +61,7 @@ const App = () => {
           <PrivateRoute exact path="/teachers-list" component={TeachersList} auth={auth} student={user}/>
           }
 
-          {/* Canvas will determine content by type and room */}
+          {/* canvas will determine content by type and room */}
           <PrivateRoute exact path="/canvas/:teacher"
                         setAlert={setAlert}
                         component={ClassRoom}

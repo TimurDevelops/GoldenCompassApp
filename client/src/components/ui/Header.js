@@ -1,16 +1,24 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import Logo from './Logo';
+import {FaSignOutAlt} from "react-icons/all";
+
 import './Header.scss'
+import logo from "../../img/logo.png";
 
 const Header = ({logout}) => {
 
   return (
     <header className='header'>
       <div className='logo'>
-        <Logo/>
+        <div className='logo-icon'>
+          <img src={logo} alt="Золотой компас"/>
+        </div>
       </div>
-      <button id='logoutBtn' onClick={logout}>Выйти</button>
+      <div className={'logout'}>
+        <div id='logoutBtn' onClick={logout}>
+          <FaSignOutAlt/>
+        </div>
+      </div>
     </header>
   )
 }

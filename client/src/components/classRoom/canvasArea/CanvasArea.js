@@ -1,16 +1,19 @@
 import React, {useState} from 'react';
 import PropTypes from "prop-types";
+
 import TipArea from "./TipArea";
-import Canvas from "./Canvas/Canvas";
+import Canvas from "./Canvas";
 import ToolPanel from "./ToolPanel";
 
 import {TOOLS} from "../../../utils/types";
+
+import './CanvasArea.scss'
 
 const CanvasArea = ({
                       userLogin,
                       userType,
                       teacherLogin,
-                      slide: {img, tip},
+                      slide,
                       allowedStudent,
                       disallowToClassRoom,
                       setWaitingScreen,
@@ -21,39 +24,41 @@ const CanvasArea = ({
   const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
   const [allowStudentToDraw, setStudentAllowedToDraw] = useState(true);
 
-
-  if (!img){
-
+  if(!slide.img){
+    return (
+      <div className={"canvas-area"}/>
+    )
   }
+
+  const {img, tip} = slide;
 
   return (
     <div className={"canvas-area"}>
 
-      {/*{userType === 'teacher' ? <TipArea tip={tip}/> : ''}*/}
+      <TipArea tip={tip} displayTip={userType === 'teacher'}/>
 
-
-      {/*{img ? img : ''}*/}
-      {/*<Canvas*/}
-      {/*  drawWidth={drawWidth}*/}
-      {/*  drawColor={drawColor}*/}
-      {/*  login={userLogin}*/}
-      {/*  teacherLogin={teacherLogin}*/}
-      {/*  usertype={userType}*/}
-      {/*  allowedStudent={allowedStudent}*/}
-      {/*  setAlert={setAlert}*/}
-      {/*  disallowToClassRoom={disallowToClassRoom}*/}
-      {/*  setWaitingScreen={setWaitingScreen}*/}
-      {/*  activeTool={activeTool}*/}
-      {/*  allowStudentToDraw={allowStudentToDraw}*/}
-      {/*/>*/}
-      {/*{userType === 'teacher' ?*/}
-      {/*  <ToolPanel*/}
-      {/*    drawColor={drawColor}*/}
-      {/*    setActiveTool={setActiveTool}*/}
-      {/*    setDrawWidth={setDrawWidth}*/}
-      {/*    setDrawColor={setDrawColor}*/}
-      {/*    setStudentAllowedToDraw={setStudentAllowedToDraw}*/}
-      {/*  /> : ''}*/}
+      <Canvas
+        img={img}
+        drawWidth={drawWidth}
+        drawColor={drawColor}
+        login={userLogin}
+        teacherLogin={teacherLogin}
+        usertype={userType}
+        allowedStudent={allowedStudent}
+        setAlert={setAlert}
+        disallowToClassRoom={disallowToClassRoom}
+        setWaitingScreen={setWaitingScreen}
+        activeTool={activeTool}
+        allowStudentToDraw={allowStudentToDraw}
+      />
+      {userType === 'teacher' ?
+        <ToolPanel
+          drawColor={drawColor}
+          setActiveTool={setActiveTool}
+          setDrawWidth={setDrawWidth}
+          setDrawColor={setDrawColor}
+          setStudentAllowedToDraw={setStudentAllowedToDraw}
+        /> : ''}
     </div>
   )
 }
@@ -67,10 +72,6 @@ CanvasArea.propTypes = {
   disallowToClassRoom: PropTypes.func.isRequired,
   setWaitingScreen: PropTypes.func.isRequired,
   setAlert: PropTypes.func.isRequired,
-}
-
-CanvasArea.defaultProps = {
-  slide: {},
 }
 
 export default CanvasArea;

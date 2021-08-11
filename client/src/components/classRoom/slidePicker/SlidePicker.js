@@ -9,7 +9,7 @@ const SlidePicker = ({open, setOpen, slides, setSlide}) => {
         <div className={'picker-menu-bg'} onClick={() => setOpen(false)}/>
 
         <div className={'picker-items slides'}>
-          {slides.map(slide => <SlideItem key={slide._id} setSlide={setSlide} slide={slide}/>)}
+          {slides.map(slide => <SlideItem key={slide._id} setSlide={() => setSlide(slide)} slide={slide}/>)}
         </div>
       </div>
     </div>

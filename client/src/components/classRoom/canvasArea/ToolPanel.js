@@ -7,8 +7,6 @@ import Switch from "../../ui/Switch";
 import {TOOLS} from "../../../utils/types";
 import ColorPicker from "../../ui/ColorPicker";
 
-import "./ToolPanel.scss";
-
 
 const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor, setStudentAllowedToDraw}) => {
 

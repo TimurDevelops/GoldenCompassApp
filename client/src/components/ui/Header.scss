@@ -1,20 +1,70 @@
-$main: #ddd;
+$main: #e5dec1;
 $compass-primary: #fa752a;
-$compass-secondary: #ee8d5c;
+$sign-out-color: #688b73;
 
 header {
   width: 100%;
-  height: 70px;
+  height: 80px;
   background: $main;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
-  .logo{
-    width: 70px;
-    padding: 5px;
+  .logo {
+    height: 100%;
+
+    .logo-icon {
+      height: 100%;
+      position: relative;
+
+      img {
+        position: relative;
+
+        z-index: 200;
+        height: 100%;
+      }
+
+      &:after{
+        z-index: 0;
+        display: block;
+        content: '';
+
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        box-sizing: border-box;
+        margin: .75em;
+
+        width: 70%;
+        height: 70%;
+
+        background: white;
+        border-radius: 50%;
+      }
+
+    }
   }
 
-  #logoutBtn {
+  .logout {
+
+    #logoutBtn {
+      cursor: pointer;
+      color: $sign-out-color;
+      width: 100%;
+      height: 100%;
+      padding: .5em;
+      box-sizing: border-box;
+
+      svg {
+        width: 3em;
+        height: 3em;
+      }
+      &:hover{
+        transform: scale(1.1);
+      }
+
+    }
 
   }
 }

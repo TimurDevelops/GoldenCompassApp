@@ -1,19 +1,20 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-import "./TipArea.scss"
-
-const TipArea = ({tip}) => {
+const TipArea = ({tip, displayTip}) => {
 
   return (
     <div className={"tip-area"}>
-      {tip}
+      <div className={"tip-text"}>
+        {displayTip && <p>{tip}</p>}
+      </div>
     </div>
   )
 }
 
 TipArea.propTypes = {
   tip: PropTypes.string.isRequired,
+  displayTip: PropTypes.bool.isRequired,
 }
 
 export default TipArea;

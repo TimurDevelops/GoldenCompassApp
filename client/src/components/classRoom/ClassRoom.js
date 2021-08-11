@@ -69,18 +69,21 @@ const ClassRoom = ({user, logout, setAlert}) => {
   }
 
   const levelPicked = (newLevel) => {
-    setLevel(newLevel)
-    setLevelPickerOpen(false)
-    setLessonPickerOpen(true)
+    setLevel(newLevel);
+    setLevelPickerOpen(false);
+    setLessonPickerOpen(true);
   }
 
   const lessonPicked = (newLesson) => {
-    console.log(newLesson)
-    setLesson(newLesson)
-    setLessonPickerOpen(false)
-    setSlidePickerOpen(true)
+    setLesson(newLesson);
+    setLessonPickerOpen(false);
+    setSlidePickerOpen(true);
   }
 
+  const slidePicked = (newSlide) => {
+    setSlide(newSlide);
+    setSlidePickerOpen(false);
+  }
 
   return (
     <Fragment>
@@ -114,7 +117,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
                 {lesson.slides && <SlidePicker open={slidePickerOpen}
                                                setOpen={setSlidePickerOpen}
                                                slides={lesson.slides}
-                                               setSlide={setSlide}/>}
+                                               setSlide={slidePicked}/>}
 
                 {level.lessons && <LessonPicker open={lessonPickerOpen}
                                                 setOpen={setLessonPickerOpen}
@@ -135,11 +138,11 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
                 <div className={'menus-buttons'}>
 
-                  {!studentPickerOpen && <div className={`button-holder`}>
+                  {!studentPickerOpen && <div className={'button-holder levels'}>
                     <div className={'button'} onClick={() => setLevelPickerOpen(!levelPickerOpen)}>Уровни</div>
                   </div>}
 
-                  {!lessonPickerOpen && <div className={`button-holder`}>
+                  {!lessonPickerOpen && <div className={'button-holder students'}>
                     <div className={'button'} onClick={() => setStudentPickerOpen(!studentPickerOpen)}>Ученики</div>
                   </div>}
 

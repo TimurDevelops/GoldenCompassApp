@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import P5Wrapper from "react-p5-wrapper";
 import sketch from "./Sketch";
 
-import "./Canvas.scss"
-
 const Canvas = ({
+                  img,
                   drawWidth,
                   drawColor,
                   teacherLogin,
@@ -18,8 +17,10 @@ const Canvas = ({
                   activeTool,
                   allowStudentToDraw,
                 }) => {
+
   return (
-    <div id='mainCanvas' className={"canvas"}>
+    <div id='mainCanvas' className={"canvas"}
+         style={{backgroundImage: `url(${img})`}}>
       <P5Wrapper
         sketch={sketch}
         drawWidth={drawWidth}
@@ -41,6 +42,7 @@ const Canvas = ({
 export default Canvas;
 
 Canvas.propTypes = {
+  img: PropTypes.string.isRequired,
   drawWidth: PropTypes.number.isRequired,
   drawColor: PropTypes.string.isRequired,
   login: PropTypes.string.isRequired,
