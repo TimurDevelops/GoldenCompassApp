@@ -1,15 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const LessonItem = ({setLevel, level}) => {
+const LessonItem = ({setLesson, lesson}) => {
   return (
-    <button onClick={setLevel}>{level.name}</button>
+    <div className={'item-wrapper'} onClick={setLesson}>
+      <div className={'item'}>{lesson.name}</div>
+    </div>
   )
 }
 
 LessonItem.propTypes = {
-  setLevel: PropTypes.func.isRequired,
-  level: PropTypes.object.isRequired,
+  setLesson: PropTypes.func.isRequired,
+  lesson: PropTypes.object.isRequired,
 }
 
 export default LessonItem;

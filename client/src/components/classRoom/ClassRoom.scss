@@ -59,25 +59,27 @@ $menus-buttons-bg: #77CCE07F;
 }
 
 // AREAS
-.video-wrapper{
+.video-wrapper {
   height: 100%;
   width: 30%;
 
-  .video{
+  .video {
     background-color: #ccc;
     height: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  .teacher-video{
+
+  .teacher-video {
   }
-  .student-video{
+
+  .student-video {
 
   }
 }
 
-.canvas-area{
+.canvas-area {
   flex: 1;
   height: 100%;
   display: flex;
@@ -164,3 +166,44 @@ $menu-items: rgb(91, 151, 164);
     height: 100%;
   }
 }
+
+// PICKER ITEMS
+.item-picker {
+
+  .item-wrapper {
+    width: 100%;
+    cursor: pointer;
+    background: #e87373;
+
+    .item {
+      color: #343a40;
+    }
+
+    &:hover {
+      background: #e8e673;
+    }
+  }
+
+  .item-wrapper.slide {
+    padding: .1em;
+
+    .img-wrapper {
+      width: 100%;
+
+      img {
+        display: block;
+        width: 100%;
+      }
+    }
+
+    .item {
+      color: #343a40;
+    }
+
+    &:hover {
+      background: #e8e673;
+    }
+  }
+
+}
+

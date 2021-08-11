@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 
 const LevelItem = ({setLevel, level}) => {
   return (
-    <button onClick={() => setLevel(level)}>{level.name}</button>
+    <div className={'item-wrapper'} onClick={setLevel}>
+      <div className={'item'}>{level.name}</div>
+    </div>
   )
 }
 

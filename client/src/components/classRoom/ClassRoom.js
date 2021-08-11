@@ -70,12 +70,15 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
   const levelPicked = (newLevel) => {
     setLevel(newLevel)
+    setLevelPickerOpen(false)
     setLessonPickerOpen(true)
   }
 
   const lessonPicked = (newLesson) => {
+    console.log(newLesson)
     setLesson(newLesson)
-    setLevelPickerOpen(true)
+    setLessonPickerOpen(false)
+    setSlidePickerOpen(true)
   }
 
 
@@ -109,14 +112,14 @@ const ClassRoom = ({user, logout, setAlert}) => {
               <div className={'pickers'}>
 
                 {lesson.slides && <SlidePicker open={slidePickerOpen}
-                             setOpen={setSlidePickerOpen}
-                             slides={lesson.slides}
-                             setSlide={setSlide}/>}
+                                               setOpen={setSlidePickerOpen}
+                                               slides={lesson.slides}
+                                               setSlide={setSlide}/>}
 
                 {level.lessons && <LessonPicker open={lessonPickerOpen}
-                             setOpen={setLessonPickerOpen}
-                             lessons={level.lessons}
-                             setLessons={lessonPicked}/>}
+                                                setOpen={setLessonPickerOpen}
+                                                lessons={level.lessons}
+                                                setLesson={lessonPicked}/>}
 
                 <LevelPicker open={levelPickerOpen}
                              setOpen={setLevelPickerOpen}
@@ -132,7 +135,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
                 <div className={'menus-buttons'}>
 
-                  {!studentPickerOpen && <div className={`button-holder`} >
+                  {!studentPickerOpen && <div className={`button-holder`}>
                     <div className={'button'} onClick={() => setLevelPickerOpen(!levelPickerOpen)}>Уровни</div>
                   </div>}
 

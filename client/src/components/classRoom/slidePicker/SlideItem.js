@@ -4,9 +4,12 @@ import PropTypes from "prop-types";
 const SlideItem = ({setSlide, slide}) => {
 
   return (
-    <button onClick={() => setSlide(slide)}>
-      <div>{slide.img}</div>
-    </button>
+    <div className={'item-wrapper slide'} onClick={setSlide}>
+      <div className={'img-wrapper'}>
+        <img src={slide.img} alt="Слайд"/>
+      </div>
+      <div className={'item'}>{slide.name}</div>
+    </div>
   )
 }
 
