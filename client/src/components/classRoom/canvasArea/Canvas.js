@@ -5,6 +5,7 @@ import sketch from "./Sketch";
 
 const Canvas = ({
                   img,
+                  setSlideImg,
                   drawWidth,
                   drawColor,
                   teacherLogin,
@@ -23,6 +24,8 @@ const Canvas = ({
          style={{backgroundImage: `url(${img})`}}>
       <P5Wrapper
         sketch={sketch}
+        slideImg={img}
+        setSlideImg={setSlideImg}
         drawWidth={drawWidth}
         drawColor={drawColor}
         login={login}
@@ -43,6 +46,7 @@ export default Canvas;
 
 Canvas.propTypes = {
   img: PropTypes.string.isRequired,
+  setSlideImg: PropTypes.func.isRequired,
   drawWidth: PropTypes.number.isRequired,
   drawColor: PropTypes.string.isRequired,
   login: PropTypes.string.isRequired,

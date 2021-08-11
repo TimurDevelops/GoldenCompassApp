@@ -14,6 +14,7 @@ const CanvasArea = ({
                       userType,
                       teacherLogin,
                       slide,
+                      setSlideImg,
                       allowedStudent,
                       disallowToClassRoom,
                       setWaitingScreen,
@@ -39,6 +40,7 @@ const CanvasArea = ({
 
       <Canvas
         img={img}
+        setSlideImg={setSlideImg}
         drawWidth={drawWidth}
         drawColor={drawColor}
         login={userLogin}
@@ -69,6 +71,7 @@ CanvasArea.propTypes = {
   userType: PropTypes.string.isRequired,
   teacherLogin: PropTypes.string,
   slide: PropTypes.object.isRequired,
+  setSlideImg: PropTypes.func.isRequired,
   allowedStudent: PropTypes.string,
   disallowToClassRoom: PropTypes.func.isRequired,
   setWaitingScreen: PropTypes.func.isRequired,

@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import api from "../../utils/api";
+import Checkbox from "../ui/Checkbox";
 
-import Switch from "../ui/Switch";
 
 import './Login.scss'
 
@@ -77,10 +77,20 @@ const Login = ({setUser, setAuth, setAlert}) => {
                 <label htmlFor="password" className="form-label">Пароль</label>
               </div>
 
-              <Switch labelOne="Учитель" labelTwo="Ученик" valueOne="teacher" valueTwo="student"
-                      onChange={(value) => {
-                        setType(value);
-                      }}/>
+              <Checkbox onChange={(value) => setType(value)}
+                        label={'Учитель'}
+                        name={'type'}
+                        value={'teacher'}/>
+
+              <Checkbox onChange={(value) => setType(value)}
+                        label={'Ученик'}
+                        name={'type'}
+                        value={'student'}/>
+
+              {/*<Switch labelOne="Учитель" labelTwo="Ученик" valueOne="teacher" valueTwo="student"*/}
+              {/*        onChange={(value) => {*/}
+              {/*          setType(value);*/}
+              {/*        }}/>*/}
 
               <div className='submit-btn-wrapper'>
                 <button type="submit" className='btn' id='loginBtn'>

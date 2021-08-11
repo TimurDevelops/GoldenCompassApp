@@ -8,7 +8,6 @@ const SlideItem = ({setSlide, slide}) => {
       <div className={'img-wrapper'}>
         <img src={slide.img} alt="Слайд"/>
       </div>
-      <div className={'item'}>{slide.name}</div>
     </div>
   )
 }

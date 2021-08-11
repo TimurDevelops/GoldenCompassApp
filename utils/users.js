@@ -73,6 +73,11 @@ const disallowStudentToClass = (teacherLogin, studentLogin) => {
   teacher.allowedStudents.splice(teacher.allowedStudents.indexOf(studentLogin), 1)
 }
 
+const getAllowedStudents = (teacherLogin) => {
+  const teacher = connections.find(i => i.user.login === teacherLogin);
+  return teacher.allowedStudents;
+}
+
 const userLeave = (id) => {
   const index = connections.findIndex(user => user.id === id);
   if (index !== -1) {
@@ -91,5 +96,6 @@ module.exports = {
   checkStudentAllowed,
   allowStudentToClass,
   disallowStudentToClass,
+  getAllowedStudents,
   userLeave
 }

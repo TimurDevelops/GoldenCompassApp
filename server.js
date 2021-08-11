@@ -14,6 +14,7 @@ const {
   checkStudentAllowed,
   allowStudentToClass,
   disallowStudentToClass,
+  getAllowedStudents,
   userLeave
 } = require('./utils/users');
 
@@ -109,6 +110,22 @@ io.sockets.on('connection', (socket) => {
       if (studentSocketId) {
         io.to(studentSocketId).emit('studentAllowed');
       }
+    }
+  })
+
+  socket.on('changeSlide', async ({teacherLogin, slideImg}) => {
+
+    if (teacherLogin) {
+      const allowedStudents = getAllowedStudents(teacherLogin);
+      allowedStudents.forEach(studentId=>{
+        const student = getStudent(studentId);
+        if(student){
+          const studentSocketId = getSocketIdByLogin(student._id);
+          if (studentSocketId) {
+            io.to(studentSocketId).emit('slideChanged', {slideImg});
+          }
+        }
+      })
     }
   })
 

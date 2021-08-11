@@ -1,10 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import MenuItem from "../ui/MenuItem";
-import GoBack from "../ui/GoBack";
 
-import './StudentMenu.scss'
+import GoBack from "../ui/GoBack";
 
 const StudentMenu = ({user, logout}) => {
 

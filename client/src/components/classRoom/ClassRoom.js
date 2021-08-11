@@ -64,8 +64,12 @@ const ClassRoom = ({user, logout, setAlert}) => {
   }, [user]);
 
 
-  let disallowToClassRoom = () => {
+  const disallowToClassRoom = () => {
     history.goBack();
+  }
+
+  const setSlideImg = (img) => {
+    setSlide({tip:'', img})
   }
 
   const levelPicked = (newLevel) => {
@@ -102,6 +106,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
               userType={user.type}
               teacherLogin={teacher}
               slide={slide}
+              setSlideImg={setSlideImg}
               allowedStudent={allowedStudent}
               disallowToClassRoom={disallowToClassRoom}
               setWaitingScreen={setWaitingScreen}

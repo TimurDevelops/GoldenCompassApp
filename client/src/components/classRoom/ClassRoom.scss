@@ -213,6 +213,22 @@ $menu-items: rgb(91, 151, 164);
     &:hover {
       background: #e8e673;
     }
+
+    &.empty{
+      padding: 2px;
+      height: 10em;
+      display: flex;
+
+      .content{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #eee;
+        height: 100%;
+        width: 100%;
+
+      }
+    }
   }
 
 }

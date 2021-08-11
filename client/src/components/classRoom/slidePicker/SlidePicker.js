@@ -10,6 +10,13 @@ const SlidePicker = ({open, setOpen, slides, setSlide}) => {
 
         <div className={'picker-items slides'}>
           {slides.map(slide => <SlideItem key={slide._id} setSlide={() => setSlide(slide)} slide={slide}/>)}
+          <div className={'item-wrapper slide empty'} onClick={() => setSlide({img: '', tip: ''})}>
+            <div className={'img-wrapper'}>
+              <div className={'content'}>
+                Пустой слайд
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -11,6 +11,8 @@ export default function sketch(p) {
   let drawingCanvas;
   let cursorCanvas;
 
+  let slideImg;
+
   let cursorImg;
 
   let activeTool = TOOLS.DEFAULT;
@@ -28,6 +30,7 @@ export default function sketch(p) {
   let setAlert;
   let disallowToClassRoom;
   let setWaitingScreen;
+  let setSlideImg;
 
 
   p.setup = () => {
@@ -71,6 +74,10 @@ export default function sketch(p) {
 
     socket.on('joinedClassRoom', () => {
       setWaitingScreen(false);
+    })
+
+    socket.on('slideChanged', (img) => {
+      setSlideImg(img);
     })
 
     socket.on('studentAllowed', () => {
@@ -170,6 +177,7 @@ export default function sketch(p) {
     setAlert = newProps.setAlert;
     disallowToClassRoom = newProps.disallowToClassRoom;
     setWaitingScreen = newProps.setWaitingScreen;
+    setSlideImg = newProps.setSlideImg;
 
     activeTool = newProps.activeTool;
 
@@ -202,6 +210,12 @@ export default function sketch(p) {
       allowedStudent = newProps.allowedStudent;
 
       socket.emit("allowStudent", {teacherLogin: teacher, studentLogin: allowedStudent});
+    }
+
+    if (slideImg !== newProps.slideImg && newProps.slideImg) {
+      slideImg = newProps.slideImg;
+
+      socket.emit("changeSlide", {teacherLogin: teacher, slideImg: slideImg});
     }
   }
 }

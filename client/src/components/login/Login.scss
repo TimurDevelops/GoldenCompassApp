@@ -1,13 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
-$primary: #fa752a;
-$secondary: #ee8d5c;
+//$primary: #fa752a;
+//$secondary: #ee8d5c;
+
+$primary: #91a999;
+$secondary: #eed97e;
+
+
 $white: #fff;
 $gray: #9b9b9b;
 .login-wrapper {
   min-height: 100vh;
   font-size: 1.5rem;
   //background-color: #222222;
-  background: url("../../img/loginBg.png");
+  //background: url("../../img/loginBg.png");
+  background: linear-gradient(125.08deg, #eed97e 8.49%, #3d716f 98.1%);
   font-family: 'Roboto', sans-serif;
 
 }
