@@ -2,14 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import LessonItem from "./LessonItem";
 
-const LessonPicker = ({open, setOpen, lessons, setLesson}) => {
+const LessonPicker = ({open, setOpen, setLessons, lessons}) => {
   return (
     <div className={`item-picker lesson-picker ${open ? 'open' : ''}`}>
       <div className={`picker-area`}>
         <div className={'picker-menu-bg'} onClick={() => setOpen(false)}/>
 
         <div className={'picker-items levels'}>
-          {lessons.map(lesson => <LessonItem key={lesson._id} setLesson={setLesson} lesson={lesson}/>)}
+          {lessons.map(lesson => <LessonItem key={lesson._id} setLevel={setLessons} level={lesson}/>)}
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@ const LessonPicker = ({open, setOpen, lessons, setLesson}) => {
 }
 
 LessonPicker.propTypes = {
-  setLesson: PropTypes.func.isRequired,
+  setLessons: PropTypes.func.isRequired,
   lessons: PropTypes.array.isRequired,
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,

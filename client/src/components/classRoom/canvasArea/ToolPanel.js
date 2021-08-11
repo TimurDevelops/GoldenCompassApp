@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from "prop-types";
-import {FaPencilAlt, FaEraser, FaUndo, FaSyncAlt, FaMousePointer, FaClock, FaMinusCircle} from 'react-icons/fa';
+import {FaPencilAlt, FaEraser, FaSyncAlt, FaMousePointer, FaClock, FaMinusCircle} from 'react-icons/fa';
 
 import useInterval from "../../../utils/useInterval";
 import Switch from "../../ui/Switch";
@@ -34,7 +34,6 @@ const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor, setStu
   return (
 
     <div className={"tool-panel"}>
-      <div className={'tool-btn'}><FaUndo/></div>
       <div className={'tool-btn'} onClick={() => {
         setActiveTool(TOOLS.PENCIL)
       }}><FaPencilAlt/></div>

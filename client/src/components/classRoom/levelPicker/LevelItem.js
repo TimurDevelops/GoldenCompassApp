@@ -1,15 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const LessonItem = ({setLevel, level}) => {
+const LevelItem = ({setLevel, level}) => {
   return (
-    <button onClick={setLevel}>{level.name}</button>
+    <button onClick={() => setLevel(level)}>{level.name}</button>
   )
 }
 
-LessonItem.propTypes = {
+LevelItem.propTypes = {
   setLevel: PropTypes.func.isRequired,
   level: PropTypes.object.isRequired,
 }
 
-export default LessonItem;
+export default LevelItem;
