@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import LevelItem from "./LevelItem";
 
 const LevelPicker = ({open, setOpen, levels, setLevel}) => {
+  console.log(levels)
   return (
     <div className={`item-picker level-picker ${open ? 'open' : ''}`}>
       <div className={`picker-area`}>

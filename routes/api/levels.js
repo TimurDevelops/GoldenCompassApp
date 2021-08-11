@@ -9,22 +9,29 @@ const Slide = require("../../models/Slide");
 
 const getLevel = async (levelId) => {
   const level = await Level.findById(levelId).lean();
+  const lessons = []
 
-  level.lessons = level.lessons.map(async i => await getLesson(i))
+  for (let i = 0; i < level.lessons.length; i++) {
+    const res = await getLesson(level.lessons[i]);
+    lessons.push(res)
+  }
 
+  level.lessons = lessons
   return level
 }
 
 const getLesson = async (lessonId) => {
   const lesson = await Lesson.findById(lessonId).lean();
+  const slides = []
 
-  lesson.slides = lesson.slides.map(async i => await getSlide(i))
+  for (let i = 0; i < lesson.slides.length; i++) {
+    const slide = await Slide.findById(lesson.slides[i]).lean();
+    slides.push(slide)
+  }
+
+  lesson.slides = slides
 
   return lesson
-}
-
-const getSlide = (slideId) => {
-  return Slide.findById(slideId).lean();
 }
 
 // @route    POST api/users
@@ -42,7 +49,13 @@ router.post(
 
     try {
       const teacher = await Teacher.findOne({login}).lean();
-      const levels = teacher.levels.map(async i => await getLevel(i))
+      const levels = []
+
+      for (let i = 0; i < teacher.levels.length; i++) {
+
+        const res = await getLevel(teacher.levels[i]);
+        levels.push(res)
+      }
 
       res.json({levels});
     } catch (err) {

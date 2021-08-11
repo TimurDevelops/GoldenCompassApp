@@ -141,7 +141,6 @@ io.sockets.on('connection', (socket) => {
       if (teacherSocketId) {
         io.to(teacherSocketId).emit('studentDisconnected');
       }
-
       //  TODO Обработка отсоединения ученика
     }
     userLeave(user.socketId)

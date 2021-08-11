@@ -55,7 +55,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
   useEffect(() => {
     const getLevels = async () => {
       if (user.type === 'teacher') {
-        const res = await api.post('/levels/get-levels', {teacherLogin: user.login});
+        const res = await api.post('/level/get-levels', {login: user.login});
         setLevels(res.data.levels);
       }
     }
