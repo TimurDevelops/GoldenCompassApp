@@ -10,50 +10,49 @@ import {TOOLS} from "../../../utils/types";
 import './CanvasArea.scss'
 
 const CanvasArea = ({
-                      userLogin,
-                      userType,
-                      teacherLogin,
+                      socket,
+                      room,
+
                       slide,
-                      setSlideImg,
-                      allowedStudent,
-                      disallowToClassRoom,
-                      setAllowedStudent,
-                      setWaitingScreen,
-                      setAlert,
+
+                      canvasActive,
+                      userType,
+                      setAlert
                     }) => {
+
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
   const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
-  const [allowStudentToDraw, setStudentAllowedToDraw] = useState(true);
+  const [allowedToDraw, setAllowedToDraw] = useState(true);
 
-  // if (!slide.img) {
-  //   return (
-  //     <div className={"canvas-area"}/>
-  //   )
-  // }
+  const studentAllowedToDrawChanged = (value) => {
+    socket.emit("allowStudentToDraw", {teacherLogin: room, allowStudentToDraw: value});
+  }
+
+  socket.on('allowToDraw', ({allowStudentToDraw}) => {
+    if (allowStudentToDraw) setAlert("Вы можете рисовать")
+    else setAlert("Учитель отключил вам возможность рисовать")
+
+    setAllowedToDraw(allowStudentToDraw);
+  })
+
 
   const {img, tip} = slide || {};
-
   return (
     <div className={"canvas-area"}>
 
       <TipArea tip={tip} displayTip={userType === 'teacher'}/>
 
       <Canvas
+        socket={socket}
+        room={room}
+
         img={img}
-        setSlideImg={setSlideImg}
+
+        active={canvasActive && allowedToDraw}
+        activeTool={activeTool}
         drawWidth={drawWidth}
         drawColor={drawColor}
-        login={userLogin}
-        teacherLogin={teacherLogin}
-        usertype={userType}
-        allowedStudent={allowedStudent}
-        setAlert={setAlert}
-        disallowToClassRoom={disallowToClassRoom}
-        setAllowedStudent={setAllowedStudent}
-        setWaitingScreen={setWaitingScreen}
-        activeTool={activeTool}
-        isStudentAllowedToDraw={allowStudentToDraw}
       />
 
       <ToolPanel
@@ -62,22 +61,20 @@ const CanvasArea = ({
         setActiveTool={setActiveTool}
         setDrawWidth={setDrawWidth}
         setDrawColor={setDrawColor}
-        setStudentAllowedToDraw={setStudentAllowedToDraw}
+        setStudentAllowedToDraw={studentAllowedToDrawChanged}
       />
     </div>
   )
 }
 
 CanvasArea.propTypes = {
-  userLogin: PropTypes.string.isRequired,
-  userType: PropTypes.string.isRequired,
-  teacherLogin: PropTypes.string,
+  socket: PropTypes.object.isRequired,
+  room: PropTypes.string.isRequired,
+
   slide: PropTypes.object.isRequired,
-  setSlideImg: PropTypes.func.isRequired,
-  allowedStudent: PropTypes.string,
-  disallowToClassRoom: PropTypes.func.isRequired,
-  setAllowedStudent: PropTypes.func.isRequired,
-  setWaitingScreen: PropTypes.func.isRequired,
+
+  canvasActive: PropTypes.bool.isRequired,
+  userType: PropTypes.string.isRequired,
   setAlert: PropTypes.func.isRequired,
 }
 

@@ -82,15 +82,16 @@ io.sockets.on('connection', (socket) => {
     }
   })
 
-  socket.on('clientPencilDraw', ({teacher, data}) => {
-    if (teacher) {
-      io.to(teacher).emit('serverPencilDraw', data);
+  socket.on('clientPencilDraw', ({room, data}) => {
+    console.log(room)
+    if (room) {
+      io.to(room).emit('serverPencilDraw', data);
     }
   })
 
-  socket.on('clientEraser', ({teacher, data}) => {
-    if (teacher) {
-      io.to(teacher).emit('serverEraser', data);
+  socket.on('clientEraser', ({room, data}) => {
+    if (room) {
+      io.to(room).emit('serverEraser', data);
     }
   })
 

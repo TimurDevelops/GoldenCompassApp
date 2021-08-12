@@ -1,39 +1,21 @@
-import io from 'socket.io-client';
 import image from '../../../img/cursor.png'
 import {TOOLS} from '../../../utils/types'
-import {serverUrl} from '../../../config.json';
 
 export default function sketch(p) {
-  // TODO Разобраться с https (SSL)
-  const socket = io(serverUrl, {transports: ['websocket'], upgrade: false});
+  let socket;
+  let room;
 
   let canvas;
   let drawingCanvas;
   let cursorCanvas;
 
-  let slideImg;
-
   let cursorImg;
 
   let activeTool = TOOLS.DEFAULT;
-  let isStudentAllowedToDraw;
-  let allowedToDraw = true;
+  let active = true;
 
   let drawWidth = 10;
   let drawColor = 'white';
-
-  let login = '';
-  let teacher = '';
-  let usertype = '';
-
-  let allowedStudent = '';
-
-  let setAlert;
-  let disallowToClassRoom;
-  let setAllowedStudent;
-  let setWaitingScreen;
-  let setSlideImg;
-
 
   p.setup = () => {
     cursorImg = p.loadImage(image);
@@ -46,8 +28,10 @@ export default function sketch(p) {
     cursorCanvas = p.createGraphics(sketchWidth, sketchHeight);
     canvas.parent("mainCanvas");
 
+    if(!socket){
+      return
+    }
     socket.on('serverPencilDraw', (data) => {
-      if (!allowedToDraw) return
       pencilDraw(data);
     })
 
@@ -57,45 +41,6 @@ export default function sketch(p) {
 
     socket.on('serverCursor', (data) => {
       cursor(data);
-    })
-
-    socket.on('teacherNotPresent', (data) => {
-      disallowToClassRoom()
-      setAlert(`Учитель ${data.name} отсутствует на рабочем месте`, 'danger')
-    })
-
-    socket.on('studentDisallowed', (data) => {
-      setWaitingScreen(true);
-      setAlert(`Отправлен запрос на вход в классную комнату учителю ${data.name}`, 'light')
-    })
-
-    socket.on('studentRequestsEntrance', (data) => {
-      if (usertype === 'teacher') {
-        setAlert(`Ученик ${data.name} отправил запрос на вход в класную комнату`, 'primary')
-      }
-    })
-
-    socket.on('joinedClassRoom', ({user}) => {
-      setWaitingScreen(false);
-      if (usertype === 'teacher' && user.allowedStudents.length) {
-        setAllowedStudent(user.allowedStudents[0])
-      }
-    })
-
-    socket.on('slideChanged', ({slideImg}) => {
-      setSlideImg(slideImg);
-    })
-
-    socket.on('allowToDraw', ({allowStudentToDraw}) => {
-      console.log(allowStudentToDraw)
-      if (allowStudentToDraw) setAlert("Вы можете рисовать")
-      else setAlert("Учитель отключил вам возможность рисовать")
-
-      allowedToDraw = allowStudentToDraw;
-    })
-
-    socket.on('studentAllowed', () => {
-      socket.emit('joinClassRoom', {login, teacher, usertype});
     })
   }
 
@@ -112,7 +57,7 @@ export default function sketch(p) {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("clientCursor", {teacher, data});
+      socket.emit("clientCursor", {room, data});
 
     } else {
 
@@ -126,6 +71,7 @@ export default function sketch(p) {
   }
 
   p.mouseDragged = () => {
+    if (!active) return
     if (activeTool === TOOLS.PENCIL) {
       let data = {
         x: p.mouseX,
@@ -135,13 +81,13 @@ export default function sketch(p) {
         size: drawWidth,
         color: drawColor
       }
-      socket.emit("clientPencilDraw", {teacher, data});
+      socket.emit("clientPencilDraw", {room, data});
     } else if (activeTool === TOOLS.ERASER) {
       let data = {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("clientEraser", {teacher, data});
+      socket.emit("clientEraser", {room, data});
     }
   }
 
@@ -151,7 +97,7 @@ export default function sketch(p) {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("clientEraser", {teacher, data});
+      socket.emit("clientEraser", {room, data});
     }
   }
 
@@ -185,53 +131,12 @@ export default function sketch(p) {
   }
 
   p.myCustomRedrawAccordingToNewPropsHandler = newProps => {
+    socket = newProps.socket;
+    room = newProps.room;
+
+    active = newProps.active;
+    activeTool = newProps.activeTool;
     drawWidth = newProps.drawWidth;
     drawColor = newProps.drawColor;
-
-    setAlert = newProps.setAlert;
-    disallowToClassRoom = newProps.disallowToClassRoom;
-    setAllowedStudent = newProps.setAllowedStudent;
-    setWaitingScreen = newProps.setWaitingScreen;
-    setSlideImg = newProps.setSlideImg;
-
-    activeTool = newProps.activeTool;
-
-    let newUserJoined = false;
-
-    if (login !== newProps.login) {
-      login = newProps.login;
-      newUserJoined = true;
-    }
-
-    if (teacher !== newProps.teacherLogin) {
-      teacher = newProps.teacherLogin;
-      newUserJoined = true;
-    }
-    if (usertype !== newProps.usertype) {
-      usertype = newProps.usertype;
-      newUserJoined = true;
-    }
-
-    if (newUserJoined) {
-      socket.emit('joinClassRoom', {login, teacher, usertype});
-    }
-
-    if (isStudentAllowedToDraw !== newProps.isStudentAllowedToDraw) {
-      isStudentAllowedToDraw = newProps.isStudentAllowedToDraw;
-
-      socket.emit("allowStudentToDraw", {teacherLogin: teacher, allowStudentToDraw: isStudentAllowedToDraw});
-    }
-
-    if (allowedStudent !== newProps.allowedStudent && newProps.allowedStudent) {
-      allowedStudent = newProps.allowedStudent;
-
-      socket.emit("allowStudent", {teacherLogin: teacher, studentLogin: allowedStudent});
-    }
-
-    if (slideImg !== newProps.slideImg && newProps.slideImg) {
-      slideImg = newProps.slideImg;
-
-      socket.emit("changeSlide", {teacherLogin: teacher, slideImg: slideImg});
-    }
   }
 }

@@ -4,20 +4,15 @@ import P5Wrapper from "react-p5-wrapper";
 import sketch from "./Sketch";
 
 const Canvas = ({
+                  socket,
+                  room,
+
                   img,
-                  setSlideImg,
+
+                  active,
+                  activeTool,
                   drawWidth,
                   drawColor,
-                  teacherLogin,
-                  login,
-                  usertype,
-                  setAlert,
-                  allowedStudent,
-                  disallowToClassRoom,
-                  setAllowedStudent,
-                  setWaitingScreen,
-                  activeTool,
-                  isStudentAllowedToDraw,
                 }) => {
 
   return (
@@ -25,20 +20,13 @@ const Canvas = ({
          style={{backgroundImage: img ? `url(${img})` : 'none'}}>
       <P5Wrapper
         sketch={sketch}
-        slideImg={img}
-        setSlideImg={setSlideImg}
+        socket={socket}
+        room={room}
+
+        active={active}
+        activeTool={activeTool}
         drawWidth={drawWidth}
         drawColor={drawColor}
-        login={login}
-        teacherLogin={teacherLogin}
-        usertype={usertype}
-        allowedStudent={allowedStudent}
-        setAlert={setAlert}
-        disallowToClassRoom={disallowToClassRoom}
-        setAllowedStudent={setAllowedStudent}
-        setWaitingScreen={setWaitingScreen}
-        activeTool={activeTool}
-        isStudentAllowedToDraw={isStudentAllowedToDraw}
       />
     </div>
   )
@@ -47,18 +35,12 @@ const Canvas = ({
 export default Canvas;
 
 Canvas.propTypes = {
+  socket: PropTypes.object.isRequired,
+  room: PropTypes.string.isRequired,
   img: PropTypes.string,
-  setSlideImg: PropTypes.func.isRequired,
+
+  active: PropTypes.bool.isRequired,
+  activeTool: PropTypes.string.isRequired,
   drawWidth: PropTypes.number.isRequired,
   drawColor: PropTypes.string.isRequired,
-  login: PropTypes.string.isRequired,
-  teacherLogin: PropTypes.string.isRequired,
-  usertype: PropTypes.string.isRequired,
-  allowedStudent: PropTypes.string,
-  setAlert: PropTypes.func.isRequired,
-  disallowToClassRoom: PropTypes.func.isRequired,
-  setAllowedStudent: PropTypes.func.isRequired,
-  setWaitingScreen: PropTypes.func.isRequired,
-  activeTool: PropTypes.string.isRequired,
-  isStudentAllowedToDraw: PropTypes.bool.isRequired,
 }

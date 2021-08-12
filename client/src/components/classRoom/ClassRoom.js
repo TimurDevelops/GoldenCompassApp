@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from "prop-types";
 import {useHistory, useParams} from "react-router-dom";
+import io from 'socket.io-client';
 
 import Header from "../ui/Header";
 
@@ -17,18 +18,20 @@ import SlidePicker from "./slidePicker/SlidePicker";
 
 import api from "../../utils/api";
 
+import {serverUrl} from '../../config.json';
+
 import "./ClassRoom.scss";
+
 
 const ClassRoom = ({user, logout, setAlert}) => {
   const history = useHistory();
   const {teacher} = useParams();
 
-  const [waitingScreen, setWaitingScreenState] = useState(true);
+  const socket = io(serverUrl, {transports: ['websocket'], upgrade: false});
 
-  const setWaitingScreen = (value) => {
-    console.log(value)
-    setWaitingScreenState(value)
-  }
+  console.log(socket)
+
+  const [waitingScreen, setWaitingScreen] = useState(true);
 
   const [slide, setSlide] = useState({});
   const [lesson, setLesson] = useState({});
@@ -38,6 +41,12 @@ const ClassRoom = ({user, logout, setAlert}) => {
   const [levels, setLevels] = useState([]);
 
   const [allowedStudent, setAllowedStudent] = useState();
+
+  const studentPicked = (value) => {
+    setAllowedStudent(value)
+    socket.emit("allowStudent", {teacherLogin: teacher, studentLogin: value});
+  }
+
 
   const [slidePickerOpen, setSlidePickerOpen] = useState(false);
   const [lessonPickerOpen, setLessonPickerOpen] = useState(false);
@@ -69,13 +78,43 @@ const ClassRoom = ({user, logout, setAlert}) => {
   }, [user]);
 
 
+  useEffect(() => {
+    socket.emit('joinClassRoom', {login: user.login, teacher: teacher, usertype: user.type});
+  }, [teacher, user.login, user.type]);
+
+  socket.on('joinedClassRoom', ({user}) => {
+    setWaitingScreen(false);
+    if (user.type === 'teacher' && user.allowedStudents.length) {
+      setAllowedStudent(user.allowedStudents[0])
+    }
+  })
+  socket.on('studentRequestsEntrance', (data) => {
+    if (user.type === 'teacher') {
+      setAlert(`Ученик ${data.name} отправил запрос на вход в класную комнату`, 'primary')
+    }
+  })
+
+
+  socket.on('studentAllowed', () => {
+    socket.emit('joinClassRoom', {login: user.login, teacher, usertype: user.type});
+  })
+  socket.on('teacherNotPresent', (data) => {
+    disallowToClassRoom()
+    setAlert(`Учитель ${data.name} отсутствует на рабочем месте`, 'danger')
+  })
+  socket.on('studentDisallowed', (data) => {
+    setWaitingScreen(true);
+    setAlert(`Отправлен запрос на вход в классную комнату учителю ${data.name}`, 'light')
+  })
+
   const disallowToClassRoom = () => {
     history.goBack();
   }
 
-  const setSlideImg = (img) => {
-    setSlide({tip: '', img})
-  }
+  // Для ученика когда учитель выбирает слайд
+  socket.on('slideChanged', ({slide}) => {
+    setSlide(slide);
+  })
 
   const levelPicked = (newLevel) => {
     setLevel(newLevel);
@@ -92,6 +131,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
   const slidePicked = (newSlide) => {
     setSlide(newSlide);
     setSlidePickerOpen(false);
+    socket.emit("changeSlide", {teacherLogin: teacher, slide: newSlide});
   }
 
   return (
@@ -106,15 +146,13 @@ const ClassRoom = ({user, logout, setAlert}) => {
           <VideoArea/>
 
           <CanvasArea
-            userLogin={user.login}
-            userType={user.type}
-            teacherLogin={teacher}
+            socket={socket}
+            room={teacher}
+
             slide={slide}
-            setSlideImg={setSlideImg}
-            allowedStudent={allowedStudent}
-            setAllowedStudent={setAllowedStudent}
-            disallowToClassRoom={disallowToClassRoom}
-            setWaitingScreen={setWaitingScreen}
+
+            canvasActive={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
+            userType={user.type}
             setAlert={setAlert}
           />
 
@@ -143,7 +181,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
               <StudentPicker open={studentPickerOpen}
                              setOpen={setStudentPickerOpen}
                              students={students}
-                             setAllowedStudent={setAllowedStudent}
+                             setAllowedStudent={studentPicked}
                              allowedStudent={allowedStudent}/>
 
               <div className={'menus-buttons'}>

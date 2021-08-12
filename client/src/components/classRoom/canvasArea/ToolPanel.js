@@ -15,7 +15,7 @@ const ToolPanel = ({
                      setDrawWidth,
                      setDrawColor,
                      setStudentAllowedToDraw,
-                     displayTeacherTools
+                     displayTeacherTools,
                    }) => {
 
   const [timerRunning, setTimerRunning] = useState(false);
@@ -98,7 +98,6 @@ const ToolPanel = ({
 
       {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
                                       onChange={(value) => {
-                                        console.log(value)
                                         setStudentAllowedToDraw(value);
                                       }}/>}
 
