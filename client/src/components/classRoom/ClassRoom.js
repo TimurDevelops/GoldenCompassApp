@@ -26,7 +26,6 @@ const ClassRoom = ({user, logout, setAlert}) => {
   const [waitingScreen, setWaitingScreenState] = useState(true);
 
   const setWaitingScreen = (value) => {
-    console.log(value)
     setWaitingScreenState(value)
   }
 

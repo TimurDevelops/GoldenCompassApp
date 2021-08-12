@@ -25,6 +25,11 @@ const CanvasArea = ({
   const [drawColor, setDrawColor] = useState('red');
   const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
   const [allowStudentToDraw, setStudentAllowedToDraw] = useState(true);
+  const [resetStudentCanvasFlag, setResetStudentCanvasFlag] = useState(true);
+
+  const toggleResetStudentCanvasFlag = () => {
+    setResetStudentCanvasFlag(!resetStudentCanvasFlag)
+  }
 
   // if (!slide.img) {
   //   return (
@@ -54,6 +59,7 @@ const CanvasArea = ({
         setWaitingScreen={setWaitingScreen}
         activeTool={activeTool}
         isStudentAllowedToDraw={allowStudentToDraw}
+        resetStudentCanvas={resetStudentCanvasFlag}
       />
 
       <ToolPanel
@@ -63,6 +69,7 @@ const CanvasArea = ({
         setDrawWidth={setDrawWidth}
         setDrawColor={setDrawColor}
         setStudentAllowedToDraw={setStudentAllowedToDraw}
+        toggleResetStudentCanvasFlag={toggleResetStudentCanvasFlag}
       />
     </div>
   )

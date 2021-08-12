@@ -126,6 +126,19 @@ io.sockets.on('connection', (socket) => {
 
   })
 
+  socket.on('resetStudentCanvas', async ({teacherLogin}) => {
+    if (teacherLogin) {
+      const allowedStudents = getAllowedStudents(teacherLogin);
+      for (const studentLogin of allowedStudents) {
+        const studentSocketId = getSocketIdByLogin(studentLogin);
+        if (studentSocketId) {
+          io.to(studentSocketId).emit('resetCanvas');
+        }
+      }
+    }
+
+  })
+
   socket.on('changeSlide', async ({teacherLogin, slideImg}) => {
 
     if (teacherLogin) {

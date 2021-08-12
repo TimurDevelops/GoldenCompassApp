@@ -17,6 +17,7 @@ export default function sketch(p) {
 
   let activeTool = TOOLS.DEFAULT;
   let isStudentAllowedToDraw;
+  let resetStudentCanvas;
   let allowedToDraw = true;
 
   let drawWidth = 10;
@@ -87,11 +88,16 @@ export default function sketch(p) {
     })
 
     socket.on('allowToDraw', ({allowStudentToDraw}) => {
-      console.log(allowStudentToDraw)
       if (allowStudentToDraw) setAlert("Вы можете рисовать")
       else setAlert("Учитель отключил вам возможность рисовать")
 
       allowedToDraw = allowStudentToDraw;
+    })
+
+    socket.on('resetCanvas', () => {
+      setAlert("Учитель перезапустил ваш холст")
+
+      resetCanvas();
     })
 
     socket.on('studentAllowed', () => {
@@ -153,6 +159,10 @@ export default function sketch(p) {
       }
       socket.emit("clientEraser", {teacher, data});
     }
+  }
+
+  const resetCanvas = () => {
+    drawingCanvas.clear();
   }
 
   const pencilDraw = ({x, y, pMouseX, pMouseY, size, color}) => {
@@ -222,6 +232,12 @@ export default function sketch(p) {
       socket.emit("allowStudentToDraw", {teacherLogin: teacher, allowStudentToDraw: isStudentAllowedToDraw});
     }
 
+    if (resetStudentCanvas !== newProps.resetStudentCanvas) {
+      resetStudentCanvas = newProps.resetStudentCanvas;
+
+      socket.emit("resetStudentCanvas", {teacherLogin: teacher});
+    }
+
     if (allowedStudent !== newProps.allowedStudent && newProps.allowedStudent) {
       allowedStudent = newProps.allowedStudent;
 
@@ -233,5 +249,7 @@ export default function sketch(p) {
 
       socket.emit("changeSlide", {teacherLogin: teacher, slideImg: slideImg});
     }
+
+
   }
 }

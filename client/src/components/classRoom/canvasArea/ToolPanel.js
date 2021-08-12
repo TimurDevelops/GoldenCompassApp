@@ -15,7 +15,8 @@ const ToolPanel = ({
                      setDrawWidth,
                      setDrawColor,
                      setStudentAllowedToDraw,
-                     displayTeacherTools
+                     displayTeacherTools,
+                     toggleResetStudentCanvasFlag
                    }) => {
 
   const [timerRunning, setTimerRunning] = useState(false);
@@ -98,12 +99,11 @@ const ToolPanel = ({
 
       {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
                                       onChange={(value) => {
-                                        console.log(value)
                                         setStudentAllowedToDraw(value);
                                       }}/>}
 
       {displayTeacherTools && <div className={'tool-btn'} onClick={() => {
-        setSecond(second + 1)
+        toggleResetStudentCanvasFlag()
       }}><FaSyncAlt/></div>}
 
     </div>
@@ -116,7 +116,8 @@ ToolPanel.propTypes = {
   setStudentAllowedToDraw: PropTypes.func.isRequired,
   setDrawWidth: PropTypes.func.isRequired,
   setDrawColor: PropTypes.func.isRequired,
-  displayTeacherTools: PropTypes.bool.isRequired
+  displayTeacherTools: PropTypes.bool.isRequired,
+  toggleResetStudentCanvasFlag: PropTypes.func.isRequired,
 }
 
 export default ToolPanel;

@@ -18,6 +18,7 @@ const Canvas = ({
                   setWaitingScreen,
                   activeTool,
                   isStudentAllowedToDraw,
+                  resetStudentCanvas,
                 }) => {
 
   return (
@@ -39,6 +40,7 @@ const Canvas = ({
         setWaitingScreen={setWaitingScreen}
         activeTool={activeTool}
         isStudentAllowedToDraw={isStudentAllowedToDraw}
+        resetStudentCanvas={resetStudentCanvas}
       />
     </div>
   )
@@ -61,4 +63,5 @@ Canvas.propTypes = {
   setWaitingScreen: PropTypes.func.isRequired,
   activeTool: PropTypes.string.isRequired,
   isStudentAllowedToDraw: PropTypes.bool.isRequired,
+  resetStudentCanvas: PropTypes.bool.isRequired,
 }
