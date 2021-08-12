@@ -17,7 +17,6 @@ const {
   getAllowedStudents,
   userLeave
 } = require('./utils/users');
-const {log} = require("nodemon/lib/utils");
 
 
 connectDB();
@@ -82,15 +81,15 @@ io.sockets.on('connection', (socket) => {
     }
   })
 
-  socket.on('clientPencilDraw', ({room, data}) => {
-    if (room) {
-      io.to(room).emit('serverPencilDraw', data);
+  socket.on('clientPencilDraw', ({teacher, data}) => {
+    if (teacher) {
+      io.to(teacher).emit('serverPencilDraw', data);
     }
   })
 
-  socket.on('clientEraser', ({room, data}) => {
-    if (room) {
-      io.to(room).emit('serverEraser', data);
+  socket.on('clientEraser', ({teacher, data}) => {
+    if (teacher) {
+      io.to(teacher).emit('serverEraser', data);
     }
   })
 
