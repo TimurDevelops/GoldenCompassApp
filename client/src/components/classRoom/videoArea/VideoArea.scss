@@ -1,0 +1,54 @@
+.video-wrapper {
+
+  .video {
+    background-color: #ccc;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .teacher-video {
+    background-color: black;
+    position: relative;
+
+    video {
+      height: 100%;
+      width: 100%;
+    }
+
+    .video-off-screen {
+      width: 5em;
+      height: 5em;
+      color: yellow;
+      display: flex;
+      align-items: center;
+
+      svg{
+        width: 100%;
+        height: 100%;
+      }
+
+    }
+
+    .video-buttons {
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+
+      .video-button {
+        padding: .3em;
+        color: white;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+
+  .student-video {
+
+  }
+}

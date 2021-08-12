@@ -166,22 +166,20 @@ io.sockets.on('connection', (socket) => {
     if (user === undefined) {
       return
     }
-    if (user.user.type === 'teacher') {
-      const teacherData = await getTeacher(user.user.login);
-      user.allowedStudents.forEach(studentLogin => {
-        const studentSocketId = getSocketIdByLogin(studentLogin);
-        io.to(studentSocketId).emit('teacherNotPresent', {name: teacherData.name});
-      })
-      //  TODO Обработка отсоединения учителя
-
-    }
-    if (user.user.type === 'student') {
-      const teacherSocketId = getSocketIdByLogin(user.room);
-      if (teacherSocketId) {
-        io.to(teacherSocketId).emit('studentDisconnected');
-      }
-      //  TODO Обработка отсоединения ученика
-    }
+    // if (user.user.type === 'teacher') {
+    //   const teacherData = await getTeacher(user.user.login);
+    //   user.allowedStudents.forEach(studentLogin => {
+    //     const studentSocketId = getSocketIdByLogin(studentLogin);
+    //     io.to(studentSocketId).emit('teacherNotPresent', {name: teacherData.name});
+    //   })
+    //
+    // }
+    // if (user.user.type === 'student') {
+    //   const teacherSocketId = getSocketIdByLogin(user.room);
+    //   if (teacherSocketId) {
+    //     io.to(teacherSocketId).emit('studentDisconnected');
+    //   }
+    // }
     userLeave(user.socketId)
   })
 })
