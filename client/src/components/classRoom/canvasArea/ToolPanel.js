@@ -98,6 +98,7 @@ const ToolPanel = ({
 
       {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
                                       onChange={(value) => {
+                                        console.log(value)
                                         setStudentAllowedToDraw(value);
                                       }}/>}
 

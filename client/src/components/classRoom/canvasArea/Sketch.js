@@ -16,7 +16,8 @@ export default function sketch(p) {
   let cursorImg;
 
   let activeTool = TOOLS.DEFAULT;
-  let allowStudentToDraw = false;
+  let isStudentAllowedToDraw;
+  let allowedToDraw = true;
 
   let drawWidth = 10;
   let drawColor = 'white';
@@ -29,6 +30,7 @@ export default function sketch(p) {
 
   let setAlert;
   let disallowToClassRoom;
+  let setAllowedStudent;
   let setWaitingScreen;
   let setSlideImg;
 
@@ -45,6 +47,7 @@ export default function sketch(p) {
     canvas.parent("mainCanvas");
 
     socket.on('serverPencilDraw', (data) => {
+      if (!allowedToDraw) return
       pencilDraw(data);
     })
 
@@ -72,16 +75,26 @@ export default function sketch(p) {
       }
     })
 
-    socket.on('joinedClassRoom', () => {
+    socket.on('joinedClassRoom', ({user}) => {
       setWaitingScreen(false);
+      if (usertype === 'teacher' && user.allowedStudents.length) {
+        setAllowedStudent(user.allowedStudents[0])
+      }
     })
 
-    socket.on('slideChanged', (img) => {
-      setSlideImg(img);
+    socket.on('slideChanged', ({slideImg}) => {
+      setSlideImg(slideImg);
+    })
+
+    socket.on('allowToDraw', ({allowStudentToDraw}) => {
+      console.log(allowStudentToDraw)
+      if (allowStudentToDraw) setAlert("Вы можете рисовать")
+      else setAlert("Учитель отключил вам возможность рисовать")
+
+      allowedToDraw = allowStudentToDraw;
     })
 
     socket.on('studentAllowed', () => {
-      console.log('studentAllowed')
       socket.emit('joinClassRoom', {login, teacher, usertype});
     })
   }
@@ -89,7 +102,7 @@ export default function sketch(p) {
   p.draw = () => {
     p.clear();
     p.image(drawingCanvas, 0, 0);
-    p.image(cursorCanvas,0,0);
+    p.image(cursorCanvas, 0, 0);
 
     if (activeTool === TOOLS.CURSOR) {
 
@@ -143,6 +156,7 @@ export default function sketch(p) {
   }
 
   const pencilDraw = ({x, y, pMouseX, pMouseY, size, color}) => {
+
     let c = drawingCanvas.color(color);
     drawingCanvas.stroke(c)
     drawingCanvas.strokeWeight(size);
@@ -158,7 +172,7 @@ export default function sketch(p) {
   const cursor = ({x, y}) => {
     cursorCanvas.clear();
 
-    cursorCanvas.image(cursorImg, x, y, cursorImg.width/50, cursorImg.height/50)
+    cursorCanvas.image(cursorImg, x, y, cursorImg.width / 50, cursorImg.height / 50)
 
     p.image(cursorCanvas, 0, 0);
   }
@@ -176,6 +190,7 @@ export default function sketch(p) {
 
     setAlert = newProps.setAlert;
     disallowToClassRoom = newProps.disallowToClassRoom;
+    setAllowedStudent = newProps.setAllowedStudent;
     setWaitingScreen = newProps.setWaitingScreen;
     setSlideImg = newProps.setSlideImg;
 
@@ -201,9 +216,10 @@ export default function sketch(p) {
       socket.emit('joinClassRoom', {login, teacher, usertype});
     }
 
-    if (allowStudentToDraw !== newProps.allowStudentToDraw) {
-      allowStudentToDraw = newProps.allowStudentToDraw;
-      socket.emit("allowStudentToDraw", {allowStudentToDraw});
+    if (isStudentAllowedToDraw !== newProps.isStudentAllowedToDraw) {
+      isStudentAllowedToDraw = newProps.isStudentAllowedToDraw;
+
+      socket.emit("allowStudentToDraw", {teacherLogin: teacher, allowStudentToDraw: isStudentAllowedToDraw});
     }
 
     if (allowedStudent !== newProps.allowedStudent && newProps.allowedStudent) {

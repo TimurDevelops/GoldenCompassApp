@@ -14,14 +14,15 @@ const Canvas = ({
                   setAlert,
                   allowedStudent,
                   disallowToClassRoom,
+                  setAllowedStudent,
                   setWaitingScreen,
                   activeTool,
-                  allowStudentToDraw,
+                  isStudentAllowedToDraw,
                 }) => {
 
   return (
     <div id='mainCanvas' className={"canvas"}
-         style={{backgroundImage: `url(${img})`}}>
+         style={{backgroundImage: img ? `url(${img})` : 'none'}}>
       <P5Wrapper
         sketch={sketch}
         slideImg={img}
@@ -34,9 +35,10 @@ const Canvas = ({
         allowedStudent={allowedStudent}
         setAlert={setAlert}
         disallowToClassRoom={disallowToClassRoom}
+        setAllowedStudent={setAllowedStudent}
         setWaitingScreen={setWaitingScreen}
         activeTool={activeTool}
-        allowStudentToDraw={allowStudentToDraw}
+        isStudentAllowedToDraw={isStudentAllowedToDraw}
       />
     </div>
   )
@@ -45,7 +47,7 @@ const Canvas = ({
 export default Canvas;
 
 Canvas.propTypes = {
-  img: PropTypes.string.isRequired,
+  img: PropTypes.string,
   setSlideImg: PropTypes.func.isRequired,
   drawWidth: PropTypes.number.isRequired,
   drawColor: PropTypes.string.isRequired,
@@ -55,7 +57,8 @@ Canvas.propTypes = {
   allowedStudent: PropTypes.string,
   setAlert: PropTypes.func.isRequired,
   disallowToClassRoom: PropTypes.func.isRequired,
+  setAllowedStudent: PropTypes.func.isRequired,
   setWaitingScreen: PropTypes.func.isRequired,
   activeTool: PropTypes.string.isRequired,
-  allowStudentToDraw: PropTypes.bool.isRequired,
+  isStudentAllowedToDraw: PropTypes.bool.isRequired,
 }

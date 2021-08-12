@@ -51,7 +51,6 @@ const disallowRequestFromStudent = {}
 io.sockets.on('connection', (socket) => {
 
   socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
-    console.log('joinClassRoom')
 
     if (usertype === 'student') {
       const userData = await getStudent(userLogin);
@@ -66,20 +65,20 @@ io.sockets.on('connection', (socket) => {
         if (!disallowRequestFromStudent[userLogin]) {
           const teacherSocketId = getSocketIdByLogin(teacherLogin);
           io.to(teacherSocketId).emit('studentRequestsEntrance', {name: userData.name});
+          setTimeout(() => disallowRequestFromStudent[userLogin] = false, 30 * 1000);
         }
         disallowRequestFromStudent[userLogin] = true;
-        setTimeout(() => disallowRequestFromStudent[userLogin] = false, 30 * 1000);
 
       } else {
         socket.join(teacherLogin);
-        io.to(user.socketId).emit('joinedClassRoom');
+        io.to(user.socketId).emit('joinedClassRoom', {user});
       }
 
     } else if (usertype === 'teacher') {
       const user = await getTeacher(userLogin);
-      userJoin(socket.id, user, teacherLogin);
+      const userObject = userJoin(socket.id, user, teacherLogin);
       socket.join(teacherLogin);
-      io.to(socket.id).emit('joinedClassRoom');
+      io.to(socket.id).emit('joinedClassRoom', {user: userObject});
     }
   })
 
@@ -113,20 +112,32 @@ io.sockets.on('connection', (socket) => {
     }
   })
 
+  socket.on('allowStudentToDraw', async ({teacherLogin, allowStudentToDraw}) => {
+    console.log('allowStudentToDraw', allowStudentToDraw)
+    if (teacherLogin) {
+      const allowedStudents = getAllowedStudents(teacherLogin);
+      for (const studentLogin of allowedStudents) {
+        const studentSocketId = getSocketIdByLogin(studentLogin);
+        if (studentSocketId) {
+          io.to(studentSocketId).emit('allowToDraw', {allowStudentToDraw});
+        }
+      }
+    }
+
+  })
+
   socket.on('changeSlide', async ({teacherLogin, slideImg}) => {
 
     if (teacherLogin) {
       const allowedStudents = getAllowedStudents(teacherLogin);
-      allowedStudents.forEach(studentId=>{
-        const student = getStudent(studentId);
-        if(student){
-          const studentSocketId = getSocketIdByLogin(student._id);
-          if (studentSocketId) {
-            io.to(studentSocketId).emit('slideChanged', {slideImg});
-          }
+      for (const studentLogin of allowedStudents) {
+        const studentSocketId = getSocketIdByLogin(studentLogin);
+        if (studentSocketId) {
+          io.to(studentSocketId).emit('slideChanged', {slideImg});
         }
-      })
+      }
     }
+
   })
 
   socket.on('disallowStudent', (teacherLogin, studentLogin) => {

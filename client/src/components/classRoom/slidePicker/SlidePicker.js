@@ -9,7 +9,7 @@ const SlidePicker = ({open, setOpen, slides, setSlide}) => {
         <div className={'picker-menu-bg'} onClick={() => setOpen(false)}/>
 
         <div className={'picker-items slides'}>
-          {slides.map(slide => <SlideItem key={slide._id} setSlide={() => setSlide(slide)} slide={slide}/>)}
+          {slides && slides.map(slide => <SlideItem key={slide._id} setSlide={() => setSlide(slide)} slide={slide}/>)}
           <div className={'item-wrapper slide empty'} onClick={() => setSlide({img: '', tip: ''})}>
             <div className={'img-wrapper'}>
               <div className={'content'}>
@@ -24,7 +24,7 @@ const SlidePicker = ({open, setOpen, slides, setSlide}) => {
 }
 
 SlidePicker.propTypes = {
-  slides: PropTypes.array.isRequired,
+  slides: PropTypes.array,
   setSlide: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,

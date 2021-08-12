@@ -1,7 +1,7 @@
 const Teacher = require('../models/Teacher');
 const Student = require('../models/Student');
 
-const connections = [];
+let connections = [];
 
 const getTeacher = async (login) => {
   const res = await Teacher.findOne({login: login});
@@ -28,7 +28,16 @@ const userJoin = (id, user, room) => {
 
   if (user.type === 'teacher') {
     userObject.allowedStudents = [];
+
+    for (let i = 0; i < connections.length; i++) {
+      if (connections[i].user.login === user.login) {
+        userObject.allowedStudents = connections[i].allowedStudents
+      }
+    }
   }
+
+  connections = connections.filter((i) => i.user.login !== user.login)
+
   connections.push(userObject);
 
   return userObject;
@@ -42,7 +51,7 @@ const getCurrentUser = id => {
 
 const getSocketIdByLogin = login => {
   const user = connections.find(i => i.user.login === login);
-  if(user){
+  if (user) {
     return user.socketId;
   } else {
     return null;
@@ -75,7 +84,7 @@ const disallowStudentToClass = (teacherLogin, studentLogin) => {
 
 const getAllowedStudents = (teacherLogin) => {
   const teacher = connections.find(i => i.user.login === teacherLogin);
-  return teacher.allowedStudents;
+  return teacher ? teacher.allowedStudents : '';
 }
 
 const userLeave = (id) => {

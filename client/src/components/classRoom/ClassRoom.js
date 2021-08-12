@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from "prop-types";
 import {useHistory, useParams} from "react-router-dom";
 
@@ -23,7 +23,12 @@ const ClassRoom = ({user, logout, setAlert}) => {
   const history = useHistory();
   const {teacher} = useParams();
 
-  const [waitingScreen, setWaitingScreen] = useState(false);
+  const [waitingScreen, setWaitingScreenState] = useState(true);
+
+  const setWaitingScreen = (value) => {
+    console.log(value)
+    setWaitingScreenState(value)
+  }
 
   const [slide, setSlide] = useState({});
   const [lesson, setLesson] = useState({});
@@ -69,7 +74,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
   }
 
   const setSlideImg = (img) => {
-    setSlide({tip:'', img})
+    setSlide({tip: '', img})
   }
 
   const levelPicked = (newLevel) => {
@@ -90,77 +95,76 @@ const ClassRoom = ({user, logout, setAlert}) => {
   }
 
   return (
-    <Fragment>
-      <div className={"class-room"}>
-        <Header logout={logout}/>
-        <div className={'waiting-screen-class-room-wrapper'}>
+    <div className={"class-room"}>
+      <Header logout={logout}/>
+      <div className={'waiting-screen-class-room-wrapper'}>
 
-          {waitingScreen ? <WaitingScreen/> : ''}
-
-
-          <section className={"class-room-wrapper"}>
-            <VideoArea/>
-
-            <CanvasArea
-              userLogin={user.login}
-              userType={user.type}
-              teacherLogin={teacher}
-              slide={slide}
-              setSlideImg={setSlideImg}
-              allowedStudent={allowedStudent}
-              disallowToClassRoom={disallowToClassRoom}
-              setWaitingScreen={setWaitingScreen}
-              setAlert={setAlert}
-            />
-
-            {/*{user.type === 'teacher' ? <SlidePicker setSlide={setSlide} slides={lesson.slides}/> : ''}*/}
+        {waitingScreen ? <WaitingScreen/> : ''}
 
 
-            {user.type === 'teacher' ?
-              <div className={'pickers'}>
+        <section className={"class-room-wrapper"}>
+          <VideoArea/>
 
-                {lesson.slides && <SlidePicker open={slidePickerOpen}
-                                               setOpen={setSlidePickerOpen}
-                                               slides={lesson.slides}
-                                               setSlide={slidePicked}/>}
+          <CanvasArea
+            userLogin={user.login}
+            userType={user.type}
+            teacherLogin={teacher}
+            slide={slide}
+            setSlideImg={setSlideImg}
+            allowedStudent={allowedStudent}
+            setAllowedStudent={setAllowedStudent}
+            disallowToClassRoom={disallowToClassRoom}
+            setWaitingScreen={setWaitingScreen}
+            setAlert={setAlert}
+          />
 
-                {level.lessons && <LessonPicker open={lessonPickerOpen}
-                                                setOpen={setLessonPickerOpen}
-                                                lessons={level.lessons}
-                                                setLesson={lessonPicked}/>}
-
-                <LevelPicker open={levelPickerOpen}
-                             setOpen={setLevelPickerOpen}
-                             levels={levels}
-                             setLevel={levelPicked}/>
+          {/*{user.type === 'teacher' ? <SlidePicker setSlide={setSlide} slides={lesson.slides}/> : ''}*/}
 
 
-                <StudentPicker open={studentPickerOpen}
-                               setOpen={setStudentPickerOpen}
-                               students={students}
-                               setAllowedStudent={setAllowedStudent}
-                               allowedStudent={allowedStudent}/>
+          {user.type === 'teacher' ?
+            <div className={'pickers'}>
 
-                <div className={'menus-buttons'}>
+              <SlidePicker open={slidePickerOpen}
+                           setOpen={setSlidePickerOpen}
+                           slides={lesson.slides}
+                           setSlide={slidePicked}/>
 
-                  {!studentPickerOpen && <div className={'button-holder levels'}>
-                    <div className={'button'} onClick={() => setLevelPickerOpen(!levelPickerOpen)}>Уровни</div>
-                  </div>}
+              <LessonPicker open={lessonPickerOpen}
+                            setOpen={setLessonPickerOpen}
+                            lessons={level.lessons}
+                            setLesson={lessonPicked}/>
 
-                  {!lessonPickerOpen && <div className={'button-holder students'}>
-                    <div className={'button'} onClick={() => setStudentPickerOpen(!studentPickerOpen)}>Ученики</div>
-                  </div>}
+              <LevelPicker open={levelPickerOpen}
+                           setOpen={setLevelPickerOpen}
+                           levels={levels}
+                           setLevel={levelPicked}/>
 
-                </div>
+
+              <StudentPicker open={studentPickerOpen}
+                             setOpen={setStudentPickerOpen}
+                             students={students}
+                             setAllowedStudent={setAllowedStudent}
+                             allowedStudent={allowedStudent}/>
+
+              <div className={'menus-buttons'}>
+
+                {!studentPickerOpen && <div className={'button-holder levels'}>
+                  <div className={'button'} onClick={() => setLevelPickerOpen(!levelPickerOpen)}>Уровни</div>
+                </div>}
+
+                {!lessonPickerOpen && <div className={'button-holder students'}>
+                  <div className={'button'} onClick={() => setStudentPickerOpen(!studentPickerOpen)}>Ученики</div>
+                </div>}
+
               </div>
+            </div>
 
-              : ''}
+            : ''}
 
-          </section>
+        </section>
 
-        </div>
       </div>
-    </Fragment>
+    </div>
   )
 }
 

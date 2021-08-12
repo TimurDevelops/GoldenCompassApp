@@ -17,6 +17,7 @@ const CanvasArea = ({
                       setSlideImg,
                       allowedStudent,
                       disallowToClassRoom,
+                      setAllowedStudent,
                       setWaitingScreen,
                       setAlert,
                     }) => {
@@ -25,13 +26,13 @@ const CanvasArea = ({
   const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
   const [allowStudentToDraw, setStudentAllowedToDraw] = useState(true);
 
-  if (!slide.img) {
-    return (
-      <div className={"canvas-area"}/>
-    )
-  }
+  // if (!slide.img) {
+  //   return (
+  //     <div className={"canvas-area"}/>
+  //   )
+  // }
 
-  const {img, tip} = slide;
+  const {img, tip} = slide || {};
 
   return (
     <div className={"canvas-area"}>
@@ -49,9 +50,10 @@ const CanvasArea = ({
         allowedStudent={allowedStudent}
         setAlert={setAlert}
         disallowToClassRoom={disallowToClassRoom}
+        setAllowedStudent={setAllowedStudent}
         setWaitingScreen={setWaitingScreen}
         activeTool={activeTool}
-        allowStudentToDraw={allowStudentToDraw}
+        isStudentAllowedToDraw={allowStudentToDraw}
       />
 
       <ToolPanel
@@ -74,6 +76,7 @@ CanvasArea.propTypes = {
   setSlideImg: PropTypes.func.isRequired,
   allowedStudent: PropTypes.string,
   disallowToClassRoom: PropTypes.func.isRequired,
+  setAllowedStudent: PropTypes.func.isRequired,
   setWaitingScreen: PropTypes.func.isRequired,
   setAlert: PropTypes.func.isRequired,
 }

@@ -9,7 +9,7 @@ const LessonPicker = ({open, setOpen, lessons, setLesson}) => {
         <div className={'picker-menu-bg'} onClick={() => setOpen(false)}/>
 
         <div className={'picker-items levels'}>
-          {lessons.map(lesson => <LessonItem key={lesson._id} setLesson={() => setLesson(lesson)} lesson={lesson}/>)}
+          {lessons && lessons.map(lesson => <LessonItem key={lesson._id} setLesson={() => setLesson(lesson)} lesson={lesson}/>)}
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@ const LessonPicker = ({open, setOpen, lessons, setLesson}) => {
 }
 
 LessonPicker.propTypes = {
-  lessons: PropTypes.array.isRequired,
+  lessons: PropTypes.array,
   setLesson: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,

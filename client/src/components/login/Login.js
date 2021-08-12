@@ -25,7 +25,7 @@ const Login = ({setUser, setAuth, setAlert}) => {
   const history = useHistory();
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
-  const [type, setType] = useState("teacher");
+  const [type, setType] = useState("student");
 
   const outputErrors = (errors) => {
     errors.forEach(err => {
@@ -85,7 +85,8 @@ const Login = ({setUser, setAuth, setAlert}) => {
               <Checkbox onChange={(value) => setType(value)}
                         label={'Ученик'}
                         name={'type'}
-                        value={'student'}/>
+                        value={'student'}
+                        checked={true}/>
 
               {/*<Switch labelOne="Учитель" labelTwo="Ученик" valueOne="teacher" valueTwo="student"*/}
               {/*        onChange={(value) => {*/}
