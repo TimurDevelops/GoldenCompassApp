@@ -5,6 +5,8 @@ import sketch from "./Sketch";
 
 const Canvas = ({
                   img,
+                  active,
+
                   setSlideImg,
                   drawWidth,
                   drawColor,
@@ -28,6 +30,8 @@ const Canvas = ({
         sketch={sketch}
         slideImg={img}
         setSlideImg={setSlideImg}
+        active={active}
+        activeTool={activeTool}
         drawWidth={drawWidth}
         drawColor={drawColor}
         login={login}
@@ -38,7 +42,6 @@ const Canvas = ({
         disallowToClassRoom={disallowToClassRoom}
         setAllowedStudent={setAllowedStudent}
         setWaitingScreen={setWaitingScreen}
-        activeTool={activeTool}
         isStudentAllowedToDraw={isStudentAllowedToDraw}
         resetStudentCanvas={resetStudentCanvas}
       />
@@ -50,6 +53,7 @@ export default Canvas;
 
 Canvas.propTypes = {
   img: PropTypes.string,
+  active: PropTypes.bool.isRequired,
   setSlideImg: PropTypes.func.isRequired,
   drawWidth: PropTypes.number.isRequired,
   drawColor: PropTypes.string.isRequired,

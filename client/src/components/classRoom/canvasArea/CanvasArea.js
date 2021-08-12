@@ -11,6 +11,7 @@ import './CanvasArea.scss'
 
 const CanvasArea = ({
                       userLogin,
+                      canvasActive,
                       userType,
                       teacherLogin,
                       slide,
@@ -24,7 +25,7 @@ const CanvasArea = ({
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
   const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
-  const [allowStudentToDraw, setStudentAllowedToDraw] = useState(true);
+  const [allowedToDraw, setAllowedToDraw] = useState(true);
   const [resetStudentCanvasFlag, setResetStudentCanvasFlag] = useState(true);
 
   const toggleResetStudentCanvasFlag = () => {
@@ -46,6 +47,7 @@ const CanvasArea = ({
 
       <Canvas
         img={img}
+        active={canvasActive && allowedToDraw}
         setSlideImg={setSlideImg}
         drawWidth={drawWidth}
         drawColor={drawColor}
@@ -58,7 +60,7 @@ const CanvasArea = ({
         setAllowedStudent={setAllowedStudent}
         setWaitingScreen={setWaitingScreen}
         activeTool={activeTool}
-        isStudentAllowedToDraw={allowStudentToDraw}
+        isStudentAllowedToDraw={allowedToDraw}
         resetStudentCanvas={resetStudentCanvasFlag}
       />
 
@@ -68,7 +70,7 @@ const CanvasArea = ({
         setActiveTool={setActiveTool}
         setDrawWidth={setDrawWidth}
         setDrawColor={setDrawColor}
-        setStudentAllowedToDraw={setStudentAllowedToDraw}
+        setStudentAllowedToDraw={setAllowedToDraw}
         toggleResetStudentCanvasFlag={toggleResetStudentCanvasFlag}
       />
     </div>
@@ -79,7 +81,10 @@ CanvasArea.propTypes = {
   userLogin: PropTypes.string.isRequired,
   userType: PropTypes.string.isRequired,
   teacherLogin: PropTypes.string,
+
   slide: PropTypes.object.isRequired,
+
+  canvasActive: PropTypes.bool.isRequired,
   setSlideImg: PropTypes.func.isRequired,
   allowedStudent: PropTypes.string,
   disallowToClassRoom: PropTypes.func.isRequired,

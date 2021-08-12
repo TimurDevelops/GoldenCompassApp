@@ -19,6 +19,7 @@ export default function sketch(p) {
   let isStudentAllowedToDraw;
   let resetStudentCanvas;
   let allowedToDraw = true;
+  let active = true;
 
   let drawWidth = 10;
   let drawColor = 'white';
@@ -48,7 +49,6 @@ export default function sketch(p) {
     canvas.parent("mainCanvas");
 
     socket.on('serverPencilDraw', (data) => {
-      if (!allowedToDraw) return
       pencilDraw(data);
     })
 
@@ -59,6 +59,13 @@ export default function sketch(p) {
     socket.on('serverCursor', (data) => {
       cursor(data);
     })
+
+    socket.on('resetCanvas', () => {
+      setAlert("Учитель перезапустил ваш холст")
+
+      resetCanvas();
+    })
+
 
     socket.on('teacherNotPresent', (data) => {
       disallowToClassRoom()
@@ -94,11 +101,6 @@ export default function sketch(p) {
       allowedToDraw = allowStudentToDraw;
     })
 
-    socket.on('resetCanvas', () => {
-      setAlert("Учитель перезапустил ваш холст")
-
-      resetCanvas();
-    })
 
     socket.on('studentAllowed', () => {
       socket.emit('joinClassRoom', {login, teacher, usertype});
@@ -132,6 +134,7 @@ export default function sketch(p) {
   }
 
   p.mouseDragged = () => {
+    if (!active) return
     if (activeTool === TOOLS.PENCIL) {
       let data = {
         x: p.mouseX,
@@ -152,6 +155,7 @@ export default function sketch(p) {
   }
 
   p.mouseClicked = () => {
+    if (!active) return
     if (activeTool === TOOLS.ERASER) {
       let data = {
         x: p.mouseX,
@@ -203,7 +207,7 @@ export default function sketch(p) {
     setAllowedStudent = newProps.setAllowedStudent;
     setWaitingScreen = newProps.setWaitingScreen;
     setSlideImg = newProps.setSlideImg;
-
+    active = newProps.active;
     activeTool = newProps.activeTool;
 
     let newUserJoined = false;

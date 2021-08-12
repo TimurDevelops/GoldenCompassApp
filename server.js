@@ -49,6 +49,14 @@ const io = require('socket.io')(server, {
 const disallowRequestFromStudent = {}
 
 io.sockets.on('connection', (socket) => {
+  socket.emit('me', socket.id);
+
+  socket.on("callUser", ({ userToCall, signalData, from, name }) => {
+    io.to(userToCall).emit("callUser", { signal: signalData, from, name });
+  });
+
+
+
 
   socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
     if (usertype === 'student') {

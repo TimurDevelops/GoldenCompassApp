@@ -106,6 +106,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
           <CanvasArea
             userLogin={user.login}
+            canvasActive={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
             userType={user.type}
             teacherLogin={teacher}
             slide={slide}
