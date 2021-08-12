@@ -17,6 +17,7 @@ const {
   getAllowedStudents,
   userLeave
 } = require('./utils/users');
+const {log} = require("nodemon/lib/utils");
 
 
 connectDB();
@@ -51,7 +52,6 @@ const disallowRequestFromStudent = {}
 io.sockets.on('connection', (socket) => {
 
   socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
-
     if (usertype === 'student') {
       const userData = await getStudent(userLogin);
       const teacherData = await getTeacher(teacherLogin);
@@ -83,7 +83,6 @@ io.sockets.on('connection', (socket) => {
   })
 
   socket.on('clientPencilDraw', ({room, data}) => {
-    console.log(room)
     if (room) {
       io.to(room).emit('serverPencilDraw', data);
     }
@@ -114,7 +113,6 @@ io.sockets.on('connection', (socket) => {
   })
 
   socket.on('allowStudentToDraw', async ({teacherLogin, allowStudentToDraw}) => {
-    console.log('allowStudentToDraw', allowStudentToDraw)
     if (teacherLogin) {
       const allowedStudents = getAllowedStudents(teacherLogin);
       for (const studentLogin of allowedStudents) {

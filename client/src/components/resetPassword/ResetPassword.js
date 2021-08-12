@@ -21,7 +21,6 @@ const ResetPassword = ({setAlert}) => {
       setAlert('Пароль сменен успешно', 'primary')
 
     } catch (e) {
-      console.log(e)
       e.response.data.errors.forEach(err => {
         setAlert(err.msg, 'danger')
       })

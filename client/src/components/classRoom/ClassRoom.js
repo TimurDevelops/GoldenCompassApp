@@ -22,14 +22,12 @@ import {serverUrl} from '../../config.json';
 
 import "./ClassRoom.scss";
 
+const socket = io(serverUrl, {transports: ['websocket'], upgrade: false});
 
 const ClassRoom = ({user, logout, setAlert}) => {
   const history = useHistory();
   const {teacher} = useParams();
 
-  const socket = io(serverUrl, {transports: ['websocket'], upgrade: false});
-
-  console.log(socket)
 
   const [waitingScreen, setWaitingScreen] = useState(true);
 
@@ -80,11 +78,12 @@ const ClassRoom = ({user, logout, setAlert}) => {
 
   useEffect(() => {
     socket.emit('joinClassRoom', {login: user.login, teacher: teacher, usertype: user.type});
+
   }, [teacher, user.login, user.type]);
 
   socket.on('joinedClassRoom', ({user}) => {
     setWaitingScreen(false);
-    if (user.type === 'teacher' && user.allowedStudents.length) {
+    if (user.user.type === 'teacher' && user.allowedStudents.length) {
       setAllowedStudent(user.allowedStudents[0])
     }
   })
