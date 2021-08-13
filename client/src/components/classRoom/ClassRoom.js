@@ -4,24 +4,32 @@ import {useHistory, useParams} from "react-router-dom";
 
 import Header from "../ui/Header";
 
-import WaitingScreen from "./waitingScreen/WaitingScreen";
+import WaitingScreen from "../ui/WaitingScreen";
 
 import VideoArea from "./videoArea/VideoArea";
 import CanvasArea from "./canvasArea/CanvasArea";
 
-import StudentPicker from "./studentPicker/StudentPicker";
+import StudentPicker from "./pickersArea/studentPicker/StudentPicker";
 
-import LevelPicker from "./levelPicker/LevelPicker";
-import LessonPicker from "./lessonPicker/LessonPicker";
-import SlidePicker from "./slidePicker/SlidePicker";
+import LevelPicker from "./pickersArea/levelPicker/LevelPicker";
+import LessonPicker from "./pickersArea/lessonPicker/LessonPicker";
+import SlidePicker from "./pickersArea/slidePicker/SlidePicker";
 
 import api from "../../utils/api";
 
+//  TODO привести к одному виду
+import {useAlerts} from "../../hooks/useAlerts";
+import {useSocket} from "../../hooks/useSocket";
+import useUser from "../../hooks/useUser";
+
 import "./ClassRoom.scss";
 
-const ClassRoom = ({user, logout, setAlert}) => {
+const ClassRoom = ({logout}) => {
   const history = useHistory();
   const {teacher} = useParams();
+  const {setAlert} = useAlerts()
+  const {socket} = useSocket();
+  const {user} = useUser();
 
   const [waitingScreen, setWaitingScreenState] = useState(true);
 
@@ -29,20 +37,26 @@ const ClassRoom = ({user, logout, setAlert}) => {
     setWaitingScreenState(value)
   }
 
-  const [slide, setSlide] = useState({});
+  // TODO получать slide из context
   const [lesson, setLesson] = useState({});
   const [level, setLevel] = useState({});
 
   const [students, setStudents] = useState([]);
   const [levels, setLevels] = useState([]);
 
-  const [allowedStudent, setAllowedStudent] = useState();
+  // TODO получать allowedStudent из context
 
   const [slidePickerOpen, setSlidePickerOpen] = useState(false);
   const [lessonPickerOpen, setLessonPickerOpen] = useState(false);
   const [levelPickerOpen, setLevelPickerOpen] = useState(false);
 
   const [studentPickerOpen, setStudentPickerOpen] = useState(false);
+
+
+  const studentPicked = (value) => {
+    socket.emit("allowStudent", {teacherLogin: teacher, studentLogin: value});
+  }
+
 
 
   useEffect(() => {
@@ -68,14 +82,6 @@ const ClassRoom = ({user, logout, setAlert}) => {
   }, [user]);
 
 
-  const disallowToClassRoom = () => {
-    history.goBack();
-  }
-
-  const setSlideImg = (img) => {
-    setSlide({tip: '', img})
-  }
-
   const levelPicked = (newLevel) => {
     setLevel(newLevel);
     setLevelPickerOpen(false);
@@ -88,8 +94,9 @@ const ClassRoom = ({user, logout, setAlert}) => {
     setSlidePickerOpen(true);
   }
 
-  const slidePicked = (newSlide) => {
-    setSlide(newSlide);
+  const slidePicked = (value) => {
+    // TODO name better
+    socket.emit("slidePicked", {teacherLogin: teacher, studentLogin: value});
     setSlidePickerOpen(false);
   }
 
@@ -105,21 +112,9 @@ const ClassRoom = ({user, logout, setAlert}) => {
           <VideoArea/>
 
           <CanvasArea
-            userLogin={user.login}
-            canvasActive={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
-            userType={user.type}
-            teacherLogin={teacher}
-            slide={slide}
-            setSlideImg={setSlideImg}
-            allowedStudent={allowedStudent}
-            setAllowedStudent={setAllowedStudent}
-            disallowToClassRoom={disallowToClassRoom}
-            setWaitingScreen={setWaitingScreen}
-            setAlert={setAlert}
+            room={teacher}
+            sidebarOpen={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
           />
-
-          {/*{user.type === 'teacher' ? <SlidePicker setSlide={setSlide} slides={lesson.slides}/> : ''}*/}
-
 
           {user.type === 'teacher' ?
             <div className={'pickers'}>
@@ -143,7 +138,7 @@ const ClassRoom = ({user, logout, setAlert}) => {
               <StudentPicker open={studentPickerOpen}
                              setOpen={setStudentPickerOpen}
                              students={students}
-                             setAllowedStudent={setAllowedStudent}
+                             setAllowedStudent={studentPicked}
                              allowedStudent={allowedStudent}/>
 
               <div className={'menus-buttons'}>
@@ -171,7 +166,6 @@ const ClassRoom = ({user, logout, setAlert}) => {
 ClassRoom.propTypes = {
   user: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
-  setAlert: PropTypes.func.isRequired
 };
 
 export default ClassRoom;

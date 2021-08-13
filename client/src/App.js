@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
-import useUser from "./utils/useUser";
+import useUser from "./hooks/useUser";
 
 import Alert from "./components/ui/Alert";
 
@@ -12,31 +12,22 @@ import StudentMenu from "./components/studentMenu/StudentMenu"
 import PrivateRoute from "./components/ui/PrivateRoute";
 import ClassRoom from "./components/classRoom/ClassRoom";
 import ResetPassword from "./components/resetPassword/ResetPassword";
-import {v4 as uuidv4} from 'uuid';
+
+import {useAlerts} from "./hooks/useAlerts";
 
 import './App.css'
 import './Common.scss'
 
 const App = () => {
-  const {user, setUser, unsetUser} = useUser()
+  const {user, unsetUser} = useUser()
   const [auth, setAuth] = useState({isAuthenticated: Boolean(user && user.token), isLoading: false});
-  const [alerts, setAlerts] = useState([])
-
-  const setAlert = (msg, alertType, timeout = 5000) => {
-    const id = uuidv4();
-    setAlerts([...alerts, {msg, alertType, id}])
-
-    setTimeout(() => removeAlert(id), timeout);
-  };
-
-  function removeAlert(id) {
-    setAlerts(alerts => alerts.filter((alert) => alert.id !== id));
-  }
+  const {alerts} = useAlerts()
 
   const logout = () => {
     unsetUser();
     setAuth({isAuthenticated: false, isLoading: false});
   };
+
   return (
     <section className="container">
       <Alert alerts={alerts}/>
@@ -45,7 +36,7 @@ const App = () => {
           {/* Sign In Page */}
           <Route exact path="/login"
                  render={(props) =>
-                   <Login {...props} setAuth={setAuth} setAlert={setAlert} setUser={setUser} auth={auth}/>
+                   <Login {...props} setAuth={setAuth} auth={auth}/>
                  }/>
           {/* Teacher Menu */}
           {user && user.type === 'teacher' &&
@@ -64,7 +55,6 @@ const App = () => {
 
           {/* canvas will determine content by type and room */}
           <PrivateRoute exact path="/canvas/:teacher"
-                        setAlert={setAlert}
                         component={ClassRoom}
                         auth={auth}
                         user={user}
@@ -72,7 +62,6 @@ const App = () => {
 
           {/* Reset pass word */}
           <PrivateRoute exact path="/reset-password/:user/:type"
-                        setAlert={setAlert}
                         component={ResetPassword}
                         auth={auth}
                         user={user}

@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import PropTypes from "prop-types";
 import {FaPencilAlt, FaEraser, FaSyncAlt, FaMousePointer, FaClock, FaMinusCircle} from 'react-icons/fa';
 
-import useInterval from "../../../utils/useInterval";
-import Switch from "../../ui/Switch";
-import {TOOLS} from "../../../utils/types";
-import ColorPicker from "../../ui/ColorPicker";
-import Picker from "../../ui/Picker";
+import useInterval from "../../../../hooks/useInterval";
+import Switch from "../../../ui/Switch";
+import {TOOLS} from "../../../../utils/types";
+import ColorPicker from "../../../ui/ColorPicker";
+import Picker from "../../../ui/Picker";
 
 
 const ToolPanel = ({
@@ -14,10 +14,9 @@ const ToolPanel = ({
                      setActiveTool,
                      setDrawWidth,
                      setDrawColor,
-                     setStudentAllowedToDraw,
-                     displayTeacherTools,
-                     toggleResetStudentCanvasFlag
+                     // TODO переместить type в useUser
                    }) => {
+  // TODO получать из контекста allowedToDraw
 
   const [timerRunning, setTimerRunning] = useState(false);
   const [minute, setMinute] = useState(0);
@@ -99,11 +98,11 @@ const ToolPanel = ({
 
       {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
                                       onChange={(value) => {
-                                        setStudentAllowedToDraw(value);
+                                        // TODO emmit event setStudentAllowedToDraw(value);
                                       }}/>}
 
       {displayTeacherTools && <div className={'tool-btn'} onClick={() => {
-        toggleResetStudentCanvasFlag()
+        // TODO emmit event
       }}><FaSyncAlt/></div>}
 
     </div>
@@ -113,11 +112,8 @@ const ToolPanel = ({
 ToolPanel.propTypes = {
   drawColor: PropTypes.string.isRequired,
   setActiveTool: PropTypes.func.isRequired,
-  setStudentAllowedToDraw: PropTypes.func.isRequired,
   setDrawWidth: PropTypes.func.isRequired,
   setDrawColor: PropTypes.func.isRequired,
-  displayTeacherTools: PropTypes.bool.isRequired,
-  toggleResetStudentCanvasFlag: PropTypes.func.isRequired,
 }
 
 export default ToolPanel;

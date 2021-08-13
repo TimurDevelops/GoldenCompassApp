@@ -1,5 +1,5 @@
 import axios from 'axios';
-import useUser from "./useUser";
+import useUser from "../hooks/useUser";
 
 import {serverUrl} from '../config.json';
 

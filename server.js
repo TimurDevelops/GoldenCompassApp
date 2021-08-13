@@ -112,9 +112,11 @@ io.sockets.on('connection', (socket) => {
     if (teacherLogin) {
       allowStudentToClass(teacherLogin, studentLogin);
       const studentSocketId = getSocketIdByLogin(studentLogin);
+      const teacherSocketId = getSocketIdByLogin(teacherLogin);
 
       if (studentSocketId) {
-        io.to(studentSocketId).emit('studentAllowed');
+        io.to(studentSocketId).emit('allowedToClassRoom');
+        io.to(teacherSocketId).emit('studentAllowed', {login: studentLogin});
       }
     }
   })

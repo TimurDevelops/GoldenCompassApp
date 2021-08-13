@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-const TipArea = ({tip, displayTip}) => {
+const TipArea = ({tip}) => {
+  // TODO получать из контекста allowedToDraw
 
   return (
     <div className={"tip-area"}>
@@ -14,7 +15,6 @@ const TipArea = ({tip, displayTip}) => {
 
 TipArea.propTypes = {
   tip: PropTypes.string,
-  displayTip: PropTypes.bool.isRequired,
 }
 
 export default TipArea;

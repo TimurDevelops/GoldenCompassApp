@@ -6,6 +6,7 @@ import Checkbox from "../ui/Checkbox";
 
 
 import './Login.scss'
+import useUser from "../../hooks/useUser";
 
 const loginUser = async ({credentials, type}) => {
   try {
@@ -21,7 +22,8 @@ const loginUser = async ({credentials, type}) => {
   }
 }
 
-const Login = ({setUser, setAuth, setAlert}) => {
+const Login = ({setAuth, setAlert}) => {
+  const {setUser} = useUser()
   const history = useHistory();
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();

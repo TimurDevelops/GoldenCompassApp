@@ -1,10 +1,13 @@
 import React, {useState} from "react";
 import api from "../../utils/api";
-import {useParams} from "react-router-dom";
-import PropTypes from "prop-types";
+
 import GoBack from "../ui/GoBack";
 
-const ResetPassword = ({setAlert}) => {
+import {useAlerts} from "../../hooks/useAlerts";
+import {useParams} from "react-router-dom";
+
+const ResetPassword = () => {
+  const {setAlert} = useAlerts()
 
   const {user, type} = useParams();
 
@@ -69,10 +72,6 @@ const ResetPassword = ({setAlert}) => {
       </div>
     </div>
   );
-}
-
-ResetPassword.propTypes = {
-  setAlert: PropTypes.func.isRequired,
 }
 
 export default ResetPassword;

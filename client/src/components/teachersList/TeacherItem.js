@@ -1,5 +1,4 @@
 import React from "react";
-import './TeacherItem.scss'
 import MenuItem from "../ui/MenuItem";
 
 const TeacherItem = ({teacher}) => {

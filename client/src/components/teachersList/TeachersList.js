@@ -6,9 +6,6 @@ import GoBack from "../ui/GoBack";
 
 import api from "../../utils/api";
 
-import './TeachersList.scss'
-
-
 const TeachersList = ({student: {login}}) => {
   const [teachers, setTeachers] = useState([]);
 
