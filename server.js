@@ -1,6 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require("./config/db");
+const canvasHandlers = require('./handlers/canvasHandlers')
+const userHandlers = require('./handlers/userHandlers')
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const {
@@ -36,9 +40,11 @@ app.get('/ping', (req, res) => {
   res.send(`Pong`);
 });
 
+
 const server = app.listen(PORT, () => {
   console.log(`Sever started on port ${PORT}`);
 });
+
 
 const io = require('socket.io')(server, {
   cors: {
@@ -46,150 +52,18 @@ const io = require('socket.io')(server, {
   }
 })
 
-const disallowRequestFromStudent = {}
 
 io.sockets.on('connection', (socket) => {
-  socket.emit('me', socket.id);
 
-  socket.on("callUser", ({ userToCall, signalData, from, name }) => {
-    io.to(userToCall).emit("callUser", { signal: signalData, from, name });
-  });
+  userHandlers(io, socket);
 
-
-
-
-  socket.on('joinClassRoom', async ({login: userLogin, teacher: teacherLogin, usertype}) => {
-    if (usertype === 'student') {
-      const userData = await getStudent(userLogin);
-      const teacherData = await getTeacher(teacherLogin);
-      const user = userJoin(socket.id, userData, teacherLogin);
-
-      if (!checkTeacherPresent(teacherLogin)) {
-        io.to(user.socketId).emit('teacherNotPresent', {name: teacherData.name});
-      } else if (!checkStudentAllowed(teacherLogin, userLogin)) {
-        io.to(user.socketId).emit('studentDisallowed', {name: teacherData.name});
-
-        if (!disallowRequestFromStudent[userLogin]) {
-          const teacherSocketId = getSocketIdByLogin(teacherLogin);
-          io.to(teacherSocketId).emit('studentRequestsEntrance', {name: userData.name});
-          setTimeout(() => disallowRequestFromStudent[userLogin] = false, 30 * 1000);
-        }
-        disallowRequestFromStudent[userLogin] = true;
-
-      } else {
-        socket.join(teacherLogin);
-        io.to(user.socketId).emit('joinedClassRoom', {user});
-      }
-
-    } else if (usertype === 'teacher') {
-      const user = await getTeacher(userLogin);
-      const userObject = userJoin(socket.id, user, teacherLogin);
-      socket.join(teacherLogin);
-      io.to(socket.id).emit('joinedClassRoom', {user: userObject});
-    }
-  })
-
-  socket.on('clientPencilDraw', ({teacher, data}) => {
-    if (teacher) {
-      io.to(teacher).emit('serverPencilDraw', data);
-    }
-  })
-
-  socket.on('clientEraser', ({teacher, data}) => {
-    if (teacher) {
-      io.to(teacher).emit('serverEraser', data);
-    }
-  })
-
-  socket.on('clientCursor', ({teacher, data}) => {
-    if (teacher) {
-      io.to(teacher).emit('serverCursor', data);
-    }
-  })
-
-  socket.on('allowStudent', async ({teacherLogin, studentLogin}) => {
-
-    if (teacherLogin) {
-      allowStudentToClass(teacherLogin, studentLogin);
-      const studentSocketId = getSocketIdByLogin(studentLogin);
-      const teacherSocketId = getSocketIdByLogin(teacherLogin);
-
-      if (studentSocketId) {
-        io.to(studentSocketId).emit('allowedToClassRoom');
-        io.to(teacherSocketId).emit('studentAllowed', {login: studentLogin});
-      }
-    }
-  })
-
-  socket.on('allowStudentToDraw', async ({teacherLogin, allowStudentToDraw}) => {
-    if (teacherLogin) {
-      const allowedStudents = getAllowedStudents(teacherLogin);
-      for (const studentLogin of allowedStudents) {
-        const studentSocketId = getSocketIdByLogin(studentLogin);
-        if (studentSocketId) {
-          io.to(studentSocketId).emit('allowToDraw', {allowStudentToDraw});
-        }
-      }
-    }
-
-  })
-
-  socket.on('resetStudentCanvas', async ({teacherLogin}) => {
-    if (teacherLogin) {
-      const allowedStudents = getAllowedStudents(teacherLogin);
-      for (const studentLogin of allowedStudents) {
-        const studentSocketId = getSocketIdByLogin(studentLogin);
-        if (studentSocketId) {
-          io.to(studentSocketId).emit('resetCanvas');
-        }
-      }
-    }
-
-  })
-
-  socket.on('changeSlide', async ({teacherLogin, slideImg}) => {
-
-    if (teacherLogin) {
-      const allowedStudents = getAllowedStudents(teacherLogin);
-      for (const studentLogin of allowedStudents) {
-        const studentSocketId = getSocketIdByLogin(studentLogin);
-        if (studentSocketId) {
-          io.to(studentSocketId).emit('slideChanged', {slideImg});
-        }
-      }
-    }
-
-  })
-
-  socket.on('disallowStudent', (teacherLogin, studentLogin) => {
-
-    if (teacherLogin) {
-      disallowStudentToClass(teacherLogin, studentLogin);
-      const studentSocketId = getSocketIdByLogin(studentLogin);
-      io.to(studentSocketId).emit('studentDisallowed');
-    }
-  })
-
+  canvasHandlers(io, socket);
 
   socket.on('disconnect', async () => {
     const user = getCurrentUser(socket.id);
     if (user === undefined) {
       return
     }
-    // if (user.user.type === 'teacher') {
-    //   const teacherData = await getTeacher(user.user.login);
-    //   user.allowedStudents.forEach(studentLogin => {
-    //     const studentSocketId = getSocketIdByLogin(studentLogin);
-    //     io.to(studentSocketId).emit('teacherNotPresent', {name: teacherData.name});
-    //   })
-    //
-    // }
-    // if (user.user.type === 'student') {
-    //   const teacherSocketId = getSocketIdByLogin(user.room);
-    //   if (teacherSocketId) {
-    //     io.to(teacherSocketId).emit('studentDisconnected');
-    //   }
-    // }
     userLeave(user.socketId)
   })
 })
