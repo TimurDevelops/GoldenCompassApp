@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useAlert } from 'react-alert'
 
 import Checkbox from "../ui/Checkbox";
 
@@ -9,7 +10,6 @@ import api from "../../utils/api";
 import {useUser} from "../../hooks/useUser";
 
 import './Login.scss'
-import {useAlerts} from "../../hooks/useAlerts";
 
 const loginUser = async ({credentials, type}) => {
   try {
@@ -27,9 +27,9 @@ const loginUser = async ({credentials, type}) => {
 
 const Login = ({setAuth}) => {
   const history = useHistory();
+  const alert = useAlert()
 
   const {setUser} = useUser()
-  const {setAlert} = useAlerts()
 
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
@@ -37,13 +37,13 @@ const Login = ({setAuth}) => {
 
   const outputErrors = (errors) => {
     errors.forEach(err => {
-      setAlert(err.msg, 'danger')
+      alert.show(err.msg)
     })
   }
 
   const handleSubmit = async e => {
     e.preventDefault()
-    setAuth({isLoading: true, isAuthenticated: false});
+    setAuth({user: undefined, isAuthenticated: false, isLoading: true});
     try {
       const user = await loginUser({
         credentials: {
@@ -52,12 +52,13 @@ const Login = ({setAuth}) => {
         },
         type
       });
+
       setUser(user)
-      setAuth({isLoading: false, isAuthenticated: true});
+      setAuth({user: user, isAuthenticated: true, isLoading: false});
       history.push("/" + user.type);
 
     } catch (errors) {
-      setAuth({isLoading: false, isAuthenticated: false});
+      setAuth({user: undefined, isAuthenticated: false, isLoading: false});
       outputErrors(errors);
     }
   }

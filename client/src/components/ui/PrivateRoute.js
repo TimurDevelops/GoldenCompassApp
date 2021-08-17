@@ -3,13 +3,13 @@ import {Route, Redirect} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Spinner from "./Spinner";
 
-const PrivateRoute = ({component: Component, auth: {isAuthenticated, loading}, ...rest}) => {
+const PrivateRoute = ({component: Component, auth: {isAuthenticated, isLoading}, ...rest}) => {
 
   return (
     <Route
       {...rest}
       render={props =>
-        loading ? (
+        isLoading ? (
           <Spinner/>
         ) : isAuthenticated ? (
           <Component {...props} {...rest} />

@@ -1,12 +1,13 @@
 import React, { createContext, useState, useEffect } from 'react';
 import {useSocket} from "../hooks/useSocket";
-import {useAlerts} from "../hooks/useAlerts";
+import { useAlert } from 'react-alert'
+
 
 const TeacherContext = createContext('');
 
 const TeacherContextProvider = ({ children }) => {
+  const alert = useAlert()
   const {socket} = useSocket()
-  const {setAlert} = useAlerts()
 
   const [waitingScreen, setWaitingScreen] = useState(false);
   const [waitingScreenMessage, setWaitingScreenMessage] = useState('');
@@ -16,7 +17,7 @@ const TeacherContextProvider = ({ children }) => {
   useEffect(() => {
 
     socket.on('student-requests-entrance', ({name}) => {
-        setAlert(`Ученик ${name} отправил запрос на вход в класную комнату`, 'primary')
+      alert.show(`Ученик ${name} отправил запрос на вход в класную комнату`, 'primary')
     })
 
     socket.on('allowed-student-set', ({login}) => {
@@ -37,7 +38,7 @@ const TeacherContextProvider = ({ children }) => {
       setWaitingScreenMessage('')
     })
 
-  }, [setAlert, socket]);
+  }, [alert, socket]);
 
   return (
     <TeacherContext.Provider value={{

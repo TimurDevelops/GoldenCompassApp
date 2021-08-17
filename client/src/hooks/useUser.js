@@ -8,11 +8,8 @@ export const useUser = () => {
   };
 
   const [user, setUser] = useState(getUser());
-  console.log('useUser', user)
 
   const saveUser = user => {
-    console.log('saveUser', user)
-
     sessionStorage.setItem('user', JSON.stringify(user));
     setUser(user);
   };

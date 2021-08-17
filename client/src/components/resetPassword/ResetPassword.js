@@ -1,14 +1,13 @@
 import React, {useState} from "react";
 import api from "../../utils/api";
+import { useAlert } from 'react-alert'
 
 import GoBack from "../ui/GoBack";
 
-import {useAlerts} from "../../hooks/useAlerts";
 import {useParams} from "react-router-dom";
 
 const ResetPassword = () => {
-  const {setAlert} = useAlerts()
-
+  const alert = useAlert()
   const {user, type} = useParams();
 
   const [oldPassword, setOldPassword] = useState()
@@ -17,15 +16,15 @@ const ResetPassword = () => {
 
   const handleSubmit = async () => {
     if (password !== passwordConfirm) {
-      return setAlert('Пароли не совпадают', 'danger')
+      return alert.show('Пароли не совпадают')
     }
     try {
       await api.post(`/${type}/set-password`, {login: user, oldPassword, password});
-      setAlert('Пароль сменен успешно', 'primary')
+      alert.show('Пароль сменен успешно')
 
     } catch (e) {
       e.response.data.errors.forEach(err => {
-        setAlert(err.msg, 'danger')
+        alert.show(err.msg)
       })
     }
   }

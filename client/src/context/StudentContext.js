@@ -1,14 +1,14 @@
 import React, {createContext, useState, useEffect} from 'react';
+import { useAlert } from 'react-alert'
 
 import {useSocket} from "../hooks/useSocket";
-import {useAlerts} from "../hooks/useAlerts";
 import {useUser} from "../hooks/useUser";
 
 const StudentContext = createContext('');
 
 const StudentContextProvider = ({children}) => {
+  const alert = useAlert()
   const {socket} = useSocket();
-  const {setAlert} = useAlerts();
   const {user} = useUser();
 
   const [waitingScreen, setWaitingScreen] = useState(false);
@@ -48,17 +48,17 @@ const StudentContextProvider = ({children}) => {
     })
 
     socket.on('canvas-allow-to-draw', ({allowStudentToDraw}) => {
-      if (allowStudentToDraw) setAlert("Вы можете рисовать")
-      else setAlert("Учитель отключил вам возможность рисовать")
+      if (allowStudentToDraw) alert.show("Вы можете рисовать")
+      else alert.show("Учитель отключил вам возможность рисовать")
 
       setAllowedToDraw(allowStudentToDraw);
     })
 
     socket.on('canvas-canvas-reset', () => {
-      setAlert("Учитель перезапустил ваш холст")
+      alert.show("Учитель перезапустил ваш холст")
     })
 
-  }, [setAlert, socket, user]);
+  }, [alert, socket, user]);
 
 
   return (
