@@ -30,7 +30,7 @@ const ClassRoom = ({logout}) => {
   const {user} = useUser();
 
   const {allowedStudent} = useContext(TeacherContext)
-  const {waitingScreen} = useContext(StudentContext)
+  const {waitingScreen, waitingScreenMessage} = useContext(StudentContext)
 
   const [lesson, setLesson] = useState({});
   const [level, setLevel] = useState({});
@@ -43,13 +43,6 @@ const ClassRoom = ({logout}) => {
   const [levelPickerOpen, setLevelPickerOpen] = useState(false);
 
   const [studentPickerOpen, setStudentPickerOpen] = useState(false);
-
-
-  const studentPicked = (value) => {
-    socket.emit("student:allow", {teacherLogin: teacher, studentLogin: value});
-  }
-  if (user.type === 'teacher') socket.emit("join-teacher", {room: teacher, login: user.login});
-  else if (user.type === 'student') socket.emit("join-student", {room: teacher, login: user.login});
 
   useEffect(() => {
     const getStudents = async () => {
@@ -73,6 +66,17 @@ const ClassRoom = ({logout}) => {
 
   }, [user]);
 
+  if (waitingScreen) {
+    return <WaitingScreen message={waitingScreenMessage}/>
+  }
+
+  if (user.type === 'teacher') socket.emit("join-teacher", {room: teacher, login: user.login});
+  else if (user.type === 'student') socket.emit("join-student", {room: teacher, login: user.login});
+
+
+  const studentPicked = (value) => {
+    socket.emit("student-allow", {teacherLogin: teacher, studentLogin: value});
+  }
 
   const levelPicked = (newLevel) => {
     setLevel(newLevel);
@@ -92,65 +96,62 @@ const ClassRoom = ({logout}) => {
   }
 
   return (
-      <div className={"class-room"}>
-        <Header logout={logout}/>
-        <div className={'waiting-screen-class-room-wrapper'}>
+    <div className={"class-room"}>
+      <Header logout={logout}/>
+      <div className={'waiting-screen-class-room-wrapper'}>
 
-          {waitingScreen ? <WaitingScreen/> : ''}
+        <section className={"class-room-wrapper"}>
+          <VideoArea/>
 
+          <CanvasArea
+            room={teacher}
+            sidebarOpen={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
+          />
 
-          <section className={"class-room-wrapper"}>
-            <VideoArea/>
+          {user.type === 'teacher' ?
+            <div className={'pickers'}>
 
-            <CanvasArea
-              room={teacher}
-              sidebarOpen={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
-            />
+              <SlidePicker open={slidePickerOpen}
+                           setOpen={setSlidePickerOpen}
+                           slides={lesson.slides}
+                           setSlide={slidePicked}/>
 
-            {user.type === 'teacher' ?
-              <div className={'pickers'}>
+              <LessonPicker open={lessonPickerOpen}
+                            setOpen={setLessonPickerOpen}
+                            lessons={level.lessons}
+                            setLesson={lessonPicked}/>
 
-                <SlidePicker open={slidePickerOpen}
-                             setOpen={setSlidePickerOpen}
-                             slides={lesson.slides}
-                             setSlide={slidePicked}/>
-
-                <LessonPicker open={lessonPickerOpen}
-                              setOpen={setLessonPickerOpen}
-                              lessons={level.lessons}
-                              setLesson={lessonPicked}/>
-
-                <LevelPicker open={levelPickerOpen}
-                             setOpen={setLevelPickerOpen}
-                             levels={levels}
-                             setLevel={levelPicked}/>
+              <LevelPicker open={levelPickerOpen}
+                           setOpen={setLevelPickerOpen}
+                           levels={levels}
+                           setLevel={levelPicked}/>
 
 
-                <StudentPicker open={studentPickerOpen}
-                               setOpen={setStudentPickerOpen}
-                               students={students}
-                               setAllowedStudent={studentPicked}
-                               allowedStudent={allowedStudent}/>
+              <StudentPicker open={studentPickerOpen}
+                             setOpen={setStudentPickerOpen}
+                             students={students}
+                             setAllowedStudent={studentPicked}
+                             allowedStudent={allowedStudent}/>
 
-                <div className={'menus-buttons'}>
+              <div className={'menus-buttons'}>
 
-                  {!studentPickerOpen && <div className={'button-holder levels'}>
-                    <div className={'button'} onClick={() => setLevelPickerOpen(!levelPickerOpen)}>Уровни</div>
-                  </div>}
+                {!studentPickerOpen && <div className={'button-holder levels'}>
+                  <div className={'button'} onClick={() => setLevelPickerOpen(!levelPickerOpen)}>Уровни</div>
+                </div>}
 
-                  {!lessonPickerOpen && <div className={'button-holder students'}>
-                    <div className={'button'} onClick={() => setStudentPickerOpen(!studentPickerOpen)}>Ученики</div>
-                  </div>}
+                {!lessonPickerOpen && <div className={'button-holder students'}>
+                  <div className={'button'} onClick={() => setStudentPickerOpen(!studentPickerOpen)}>Ученики</div>
+                </div>}
 
-                </div>
               </div>
+            </div>
 
-              : ''}
+            : ''}
 
-          </section>
+        </section>
 
-        </div>
       </div>
+    </div>
   )
 }
 

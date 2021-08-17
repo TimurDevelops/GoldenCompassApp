@@ -25,7 +25,7 @@ const StudentContextProvider = ({children}) => {
 
     socket.on('student-allowed', ({teacher}) => {
       // TODO emit join-student at appropriate moment
-      socket.emit('join-student', {user, teacher});
+      socket.emit('join-student', {room: teacher, login: user.login});
     })
 
     socket.on('teacher-absent', ({name}) => {
@@ -33,9 +33,10 @@ const StudentContextProvider = ({children}) => {
       setWaitingScreenMessage(`Учитель ${name} отсутствует на рабочем месте`)
     })
 
-    socket.on('teacher-present', () => {
-      setWaitingScreen(true);
+    socket.on('teacher-present', ({login: teacherLogin}) => {
+      setWaitingScreen(false);
       setWaitingScreenMessage('')
+      socket.emit('join-student', {room: teacherLogin, login: user.login});
     })
 
     socket.on('student-joined', () => {

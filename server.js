@@ -4,24 +4,8 @@ const connectDB = require("./config/db");
 const canvasHandlers = require('./handlers/canvasHandlers')
 const userHandlers = require('./handlers/userHandlers')
 
-
 const app = express();
 const PORT = process.env.PORT || 5000;
-const {
-  getTeacher,
-  getStudent,
-  userJoin,
-  getCurrentUser,
-  getSocketIdByLogin,
-  // getRoomUsers,
-  checkTeacherPresent,
-  checkStudentAllowed,
-  allowStudentToClass,
-  disallowStudentToClass,
-  getAllowedStudents,
-  userLeave
-} = require('./utils/users');
-
 
 connectDB();
 
@@ -55,15 +39,10 @@ const io = require('socket.io')(server, {
 
 io.sockets.on('connection', (socket) => {
 
+
   userHandlers(io, socket);
 
   canvasHandlers(io, socket);
 
-  socket.on('disconnect', async () => {
-    const user = getCurrentUser(socket.id);
-    if (user === undefined) {
-      return
-    }
-    userLeave(user.socketId)
-  })
+
 })

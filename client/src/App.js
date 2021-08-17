@@ -39,7 +39,6 @@ const App = () => {
           <PrivateRoute exact path="/teacher"
                         component={TeacherMenu}
                         auth={{isAuthenticated: auth.isAuthenticated, isLoading: auth.isLoading}}
-                        user={auth.user}
                         logout={logout}/>
           }
 
@@ -48,7 +47,6 @@ const App = () => {
           <PrivateRoute exact path="/student"
                         component={StudentMenu}
                         auth={{isAuthenticated: auth.isAuthenticated, isLoading: auth.isLoading}}
-                        user={auth.user}
                         logout={logout}/>
           }
 
@@ -56,8 +54,7 @@ const App = () => {
           {auth.user && auth.user.type === 'student' &&
           <PrivateRoute exact path="/teachers-list"
                         component={TeachersList}
-                        auth={{isAuthenticated: auth.isAuthenticated, isLoading: auth.isLoading}}
-                        student={auth.user}/>
+                        auth={{isAuthenticated: auth.isAuthenticated, isLoading: auth.isLoading}}/>
           }
 
           {/* canvas will determine content by type and room */}

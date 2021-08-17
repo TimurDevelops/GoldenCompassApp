@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import MenuItem from "../ui/MenuItem";
+import {useUser} from "../../hooks/useUser";
 
 import GoBack from "../ui/GoBack";
 
-const StudentMenu = ({user, logout}) => {
+const StudentMenu = ({logout}) => {
+  const user = useUser()
 
   return (
     <div className={"menu-bg"}>
@@ -19,7 +21,6 @@ const StudentMenu = ({user, logout}) => {
 }
 
 StudentMenu.propTypes = {
-  user: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired
 }
 

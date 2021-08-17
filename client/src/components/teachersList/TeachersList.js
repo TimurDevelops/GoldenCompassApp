@@ -1,22 +1,24 @@
 import React, {useEffect, useState} from "react";
-import PropTypes from "prop-types";
 
 import TeacherItem from "./TeacherItem";
 import GoBack from "../ui/GoBack";
 
+import {useUser} from "../../hooks/useUser";
+
 import api from "../../utils/api";
 
-const TeachersList = ({student: {login}}) => {
+const TeachersList = () => {
   const [teachers, setTeachers] = useState([]);
+  const {user} = useUser()
 
   useEffect(() => {
     const getTeachers = async () => {
-      const res = await api.post('/student/get-teachers', {studentLogin: login});
+      const res = await api.post('/student/get-teachers', {studentLogin: user.login});
       setTeachers(res.data.teachers);
     }
     getTeachers().catch((err) => console.error(err))
 
-  }, [login]);
+  }, [user]);
 
   return (
     <div className={"menu-bg"} id={'resetPassForm'}>
@@ -30,11 +32,8 @@ const TeachersList = ({student: {login}}) => {
         <GoBack/>
 
       </div>
-    </div>)
+    </div>
+  )
 }
-
-TeachersList.propTypes = {
-  student: PropTypes.object.isRequired
-};
 
 export default TeachersList;

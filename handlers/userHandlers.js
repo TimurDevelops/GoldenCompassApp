@@ -4,7 +4,9 @@ const {
   userJoin,
   checkTeacherPresent,
   checkStudentAllowed,
-  getSocketIdByLogin, getAllowedStudents
+  getSocketIdByLogin,
+  getCurrentUser,
+  userLeave, getAllowedStudents,
 } = require("../utils/users");
 const {disallowStudentToClass, allowStudentToClass} = require("../utils/users");
 
@@ -16,19 +18,12 @@ module.exports = (io, socket) => {
   const teacherJoin = async ({room, login}) => {
     const user = await getTeacher(login);
     const userObject = userJoin(socket.id, user, room);
-    const allowedStudents = getAllowedStudents(login);
 
     io.to(socket.id).emit('teacher-joined', {user: userObject});
 
-    for (const studentLogin of allowedStudents) {
-      const studentSocketId = getSocketIdByLogin(studentLogin);
-      if (studentSocketId) {
-        socket.broadcast.to(room).emit('teacher-present');
-      }
-    }
+    socket.broadcast.to(room).emit('teacher-present', {login});
 
     socket.join(room);
-
   }
 
   const studentJoin = async ({room, login}) => {
@@ -37,6 +32,7 @@ module.exports = (io, socket) => {
     const user = userJoin(socket.id, userData, room);
 
     socket.join(room);
+    console.log(checkTeacherPresent(room))
 
     if (!checkTeacherPresent(room)) {
       io.to(user.socketId).emit('teacher-absent', {name: teacherData.name});
@@ -70,7 +66,7 @@ module.exports = (io, socket) => {
       const teacherSocketId = getSocketIdByLogin(teacherLogin);
 
       if (studentSocketId) {
-        io.to(studentSocketId).emit('student-allowed');
+        io.to(studentSocketId).emit('student-allowed', {teacher: teacherLogin});
       }
 
       if (teacherSocketId) {
@@ -79,6 +75,26 @@ module.exports = (io, socket) => {
 
     }
   }
+
+  const disconnect = async () => {
+    const user = getCurrentUser(socket.id);
+
+    const allowedStudents = getAllowedStudents(login);
+
+
+    if(!user) return
+
+    for (const studentLogin of allowedStudents) {
+      const studentSocketId = getSocketIdByLogin(studentLogin);
+      if (studentSocketId) {
+        io.to(user.socketId).emit('teacher-absent', {name: user.name});
+      }
+    }
+
+    userLeave(user.socketId)
+  }
+
+  socket.on('disconnect', disconnect)
 
   socket.on('join-teacher', teacherJoin);
   socket.on('join-student', studentJoin);
