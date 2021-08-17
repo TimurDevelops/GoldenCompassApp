@@ -5,21 +5,21 @@ const {getAllowedStudents, getSocketIdByLogin} = require("../utils/users");
 
 module.exports = (io, socket) => {
 
-  const pencil = ({teacher, data}) => {
-    if (teacher) {
-      io.to(teacher).emit('serverPencilDraw', data);
+  const pencil = ({room, data}) => {
+    if (room) {
+      io.to(room).emit('draw', data);
     }
   }
 
-  const eraser = ({teacher, data}) => {
-    if (teacher) {
-      io.to(teacher).emit('serverEraser', data);
+  const eraser = ({room, data}) => {
+    if (room) {
+      io.to(room).emit('erase', data);
     }
   }
 
-  const cursor = ({teacher, data}) => {
-    if (teacher) {
-      io.to(teacher).emit('serverCursor', data);
+  const cursor = ({room, data}) => {
+    if (room) {
+      io.to(room).emit('cursor', data);
     }
   }
 
@@ -41,7 +41,7 @@ module.exports = (io, socket) => {
       for (const studentLogin of allowedStudents) {
         const studentSocketId = getSocketIdByLogin(studentLogin);
         if (studentSocketId) {
-          io.to(studentSocketId).emit('canvas:canvas-reset');
+          io.to(studentSocketId).emit('canvas-reset');
         }
       }
     }
@@ -69,7 +69,7 @@ module.exports = (io, socket) => {
   socket.on('canvas-cursor', cursor);
 
   socket.on('canvas-set-drawing-enabled', setDrawingEnabled);
-  socket.on('canvas-reset-canvas', resetCanvas);
+  socket.on('reset-canvas', resetCanvas);
   socket.on('canvas-change-slide', changeSlide);
 
 }

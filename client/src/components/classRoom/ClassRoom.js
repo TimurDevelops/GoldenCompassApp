@@ -48,7 +48,8 @@ const ClassRoom = ({logout}) => {
   const studentPicked = (value) => {
     socket.emit("student:allow", {teacherLogin: teacher, studentLogin: value});
   }
-
+  if (user.type === 'teacher') socket.emit("join-teacher", {room: teacher, login: user.login});
+  else if (user.type === 'student') socket.emit("join-student", {room: teacher, login: user.login});
 
   useEffect(() => {
     const getStudents = async () => {

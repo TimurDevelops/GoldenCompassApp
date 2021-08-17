@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 
+import {useUser} from "./hooks/useUser";
+
 import Login from "./components/login/Login";
 import TeacherMenu from "./components/teacherMenu/TeacherMenu";
 import TeachersList from "./components/teachersList/TeachersList";
@@ -14,8 +16,9 @@ import './App.css'
 import './Common.scss'
 
 const App = () => {
-  const [auth, setAuth] = useState({user: undefined, isAuthenticated: false, isLoading: false})
+  const {user} = useUser();
 
+  const [auth, setAuth] = useState({user: user, isAuthenticated: Boolean(user && user.token), isLoading: false})
 
   const logout = () => {
     setAuth({user: undefined, isAuthenticated: false, isLoading: false});

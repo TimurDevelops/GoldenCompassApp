@@ -28,23 +28,6 @@ export default function sketch(p) {
     drawingCanvas = p.createGraphics(sketchWidth, sketchHeight);
     cursorCanvas = p.createGraphics(sketchWidth, sketchHeight);
     canvas.parent("mainCanvas");
-
-    socket.on('serverPencilDraw', (data) => {
-      pencilDraw(data);
-    })
-
-    socket.on('serverEraser', (data) => {
-      eraser(data);
-    })
-
-    socket.on('serverCursor', (data) => {
-      cursor(data);
-    })
-
-    socket.on('canvas:canvas-reset', () => {
-      resetCanvas();
-    })
-
   }
 
   p.draw = () => {
@@ -60,7 +43,7 @@ export default function sketch(p) {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("canvas:cursor", {room, data});
+      socket.emit("canvas-cursor", {room, data});
 
     } else {
 
@@ -84,13 +67,13 @@ export default function sketch(p) {
         size: drawWidth,
         color: drawColor
       }
-      socket.emit("canvas:pencil", {room, data});
+      socket.emit("canvas-pencil", {room, data});
     } else if (activeTool === TOOLS.ERASER) {
       let data = {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("canvas:eraser", {room, data});
+      socket.emit("canvas-eraser", {room, data});
     }
   }
 
@@ -101,7 +84,7 @@ export default function sketch(p) {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("canvas:eraser", {room, data});
+      socket.emit("canvas-eraser", {room, data});
     }
   }
 
@@ -138,12 +121,33 @@ export default function sketch(p) {
   }
 
   p.myCustomRedrawAccordingToNewPropsHandler = newProps => {
-    socket = newProps.socket;
     room = newProps.room;
 
     active = newProps.active;
     activeTool = newProps.activeTool;
     drawWidth = newProps.drawWidth;
     drawColor = newProps.drawColor;
+
+    if(!newProps.socket) return;
+    if(!!socket) return;
+
+    socket = newProps.socket;
+
+    socket.on('draw', (data) => {
+      pencilDraw(data);
+    })
+
+    socket.on('erase', (data) => {
+      eraser(data);
+    })
+
+    socket.on('cursor', (data) => {
+      cursor(data);
+    })
+
+    socket.on('canvas-reset', () => {
+      resetCanvas();
+    })
+
   }
 }

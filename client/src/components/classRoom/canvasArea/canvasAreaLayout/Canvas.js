@@ -27,7 +27,7 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
 
 Canvas.propTypes = {
   room: PropTypes.string.isRequired,
-  img: PropTypes.string.isRequired,
+  img: PropTypes.string,
   active: PropTypes.bool.isRequired,
   activeTool: PropTypes.string.isRequired,
   drawWidth: PropTypes.number.isRequired,

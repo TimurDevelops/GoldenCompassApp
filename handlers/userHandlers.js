@@ -13,7 +13,7 @@ const disallowRequestFromStudent = {}
 
 module.exports = (io, socket) => {
 
-  const teacherJoin = async ({login, room}) => {
+  const teacherJoin = async ({room, login}) => {
     const user = await getTeacher(login);
     const userObject = userJoin(socket.id, user, room);
     const allowedStudents = getAllowedStudents(login);
@@ -31,7 +31,7 @@ module.exports = (io, socket) => {
 
   }
 
-  const studentJoin = async ({login, room}) => {
+  const studentJoin = async ({room, login}) => {
     const userData = await getStudent(login);
     const teacherData = await getTeacher(room);
     const user = userJoin(socket.id, userData, room);
