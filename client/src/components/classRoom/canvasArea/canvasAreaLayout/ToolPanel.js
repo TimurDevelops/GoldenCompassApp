@@ -31,11 +31,11 @@ const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor}) => {
   }
 
   const setStudentAllowedToDraw = (isEnabled) => {
-    socket.emit("canvas:set-drawing-enabled", {login, isEnabled});
+    socket.emit("set-drawing-enabled", {login, isEnabled});
   }
 
   const resetStudentCanvas = () => {
-    socket.emit("canvas:reset-canvas", {login});
+    socket.emit("reset-canvas", {teacherLogin: login});
   }
 
   Interval(() => {

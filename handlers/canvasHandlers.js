@@ -29,7 +29,7 @@ module.exports = (io, socket) => {
       for (const studentLogin of allowedStudents) {
         const studentSocketId = getSocketIdByLogin(studentLogin);
         if (studentSocketId) {
-          io.to(studentSocketId).emit('allowToDraw', {isEnabled});
+          io.to(studentSocketId).emit('drawing-enabled-set', {isEnabled});
         }
       }
     }
@@ -68,7 +68,7 @@ module.exports = (io, socket) => {
   socket.on('canvas-eraser', eraser);
   socket.on('canvas-cursor', cursor);
 
-  socket.on('canvas-set-drawing-enabled', setDrawingEnabled);
+  socket.on('set-drawing-enabled', setDrawingEnabled);
   socket.on('reset-canvas', resetCanvas);
   socket.on('canvas-change-slide', changeSlide);
 

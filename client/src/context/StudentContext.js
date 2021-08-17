@@ -48,7 +48,7 @@ const StudentContextProvider = ({children}) => {
       setSlide(slide);
     })
 
-    socket.on('canvas-allow-to-draw', ({allowStudentToDraw}) => {
+    socket.on('drawing-enabled-set', ({isEnabled: allowStudentToDraw}) => {
       if (allowStudentToDraw) alert.show("Вы можете рисовать")
       else alert.show("Учитель отключил вам возможность рисовать")
 
