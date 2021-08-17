@@ -41,8 +41,7 @@ export default function sketch(p) {
       cursor(data);
     })
 
-    // TODO canvasReset event for message      setAlert("Учитель перезапустил ваш холст")
-    socket.on('resetCanvas', () => {
+    socket.on('canvas:canvas-reset', () => {
       resetCanvas();
     })
 
@@ -61,7 +60,7 @@ export default function sketch(p) {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("clientCursor", {room, data});
+      socket.emit("canvas:cursor", {room, data});
 
     } else {
 
@@ -85,13 +84,13 @@ export default function sketch(p) {
         size: drawWidth,
         color: drawColor
       }
-      socket.emit("clientPencilDraw", {room, data});
+      socket.emit("canvas:pencil", {room, data});
     } else if (activeTool === TOOLS.ERASER) {
       let data = {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("clientEraser", {room, data});
+      socket.emit("canvas:eraser", {room, data});
     }
   }
 
@@ -102,7 +101,7 @@ export default function sketch(p) {
         x: p.mouseX,
         y: p.mouseY,
       }
-      socket.emit("clientEraser", {room, data});
+      socket.emit("canvas:eraser", {room, data});
     }
   }
 
@@ -146,15 +145,5 @@ export default function sketch(p) {
     activeTool = newProps.activeTool;
     drawWidth = newProps.drawWidth;
     drawColor = newProps.drawColor;
-
-    //
-    // if (resetStudentCanvas !== newProps.resetStudentCanvas) {
-    //   resetStudentCanvas = newProps.resetStudentCanvas;
-    //
-    //   socket.emit("resetStudentCanvas", {teacherLogin: teacher});
-    // }
-
-
-
   }
 }

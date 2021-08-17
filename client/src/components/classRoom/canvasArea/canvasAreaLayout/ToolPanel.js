@@ -2,21 +2,23 @@ import React, {useState} from 'react';
 import PropTypes from "prop-types";
 import {FaPencilAlt, FaEraser, FaSyncAlt, FaMousePointer, FaClock, FaMinusCircle} from 'react-icons/fa';
 
-import useInterval from "../../../../hooks/useInterval";
+import {Interval} from "../../../../utils/interval";
 import Switch from "../../../ui/Switch";
 import {TOOLS} from "../../../../utils/types";
 import ColorPicker from "../../../ui/ColorPicker";
 import Picker from "../../../ui/Picker";
+import {useUser} from "../../../../hooks/useUser";
+import {useSocket} from "../../../../hooks/useSocket";
 
 
-const ToolPanel = ({
-                     drawColor,
-                     setActiveTool,
-                     setDrawWidth,
-                     setDrawColor,
-                     // TODO переместить type в useUser
-                   }) => {
-  // TODO получать из контекста allowedToDraw
+const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor}) => {
+
+  const {socket} = useSocket();
+
+  const {user: {type: usertype, login}} = useUser();
+
+  const displayTeacherTools = usertype === 'teacher';
+
 
   const [timerRunning, setTimerRunning] = useState(false);
   const [minute, setMinute] = useState(0);
@@ -28,7 +30,15 @@ const ToolPanel = ({
     setTimerRunning(false);
   }
 
-  useInterval(() => {
+  const setStudentAllowedToDraw = (isEnabled) => {
+    socket.emit("canvas:set-drawing-enabled", {login, isEnabled});
+  }
+
+  const resetStudentCanvas = () => {
+    socket.emit("canvas:reset-canvas", {login});
+  }
+
+  Interval(() => {
     if (second < 59) {
       setSecond(second + 1);
     } else {
@@ -97,13 +107,9 @@ const ToolPanel = ({
       </div>}
 
       {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
-                                      onChange={(value) => {
-                                        // TODO emmit event setStudentAllowedToDraw(value);
-                                      }}/>}
+                                      onChange={(value) => setStudentAllowedToDraw(value)}/>}
 
-      {displayTeacherTools && <div className={'tool-btn'} onClick={() => {
-        // TODO emmit event
-      }}><FaSyncAlt/></div>}
+      {displayTeacherTools && <div className={'tool-btn'} onClick={() => resetStudentCanvas()}><FaSyncAlt/></div>}
 
     </div>
   )

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-const useUser = () => {
+export const useUser = () => {
   const getUser = () => {
     const userString = sessionStorage.getItem('user');
     const user = JSON.parse(userString);
@@ -8,11 +8,15 @@ const useUser = () => {
   };
 
   const [user, setUser] = useState(getUser());
+  console.log('useUser', user)
 
-  const saveUser = userToken => {
-    sessionStorage.setItem('user', JSON.stringify(userToken));
-    setUser(userToken);
+  const saveUser = user => {
+    console.log('saveUser', user)
+
+    sessionStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
   };
+
   const unsetUser = () => {
     sessionStorage.removeItem('user');
     setUser(undefined);
@@ -24,5 +28,3 @@ const useUser = () => {
     unsetUser: unsetUser
   }
 }
-
-export default useUser;

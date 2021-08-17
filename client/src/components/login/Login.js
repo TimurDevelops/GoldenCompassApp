@@ -1,12 +1,15 @@
 import React, {useState} from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-import api from "../../utils/api";
+
 import Checkbox from "../ui/Checkbox";
 
+import api from "../../utils/api";
+
+import {useUser} from "../../hooks/useUser";
 
 import './Login.scss'
-import useUser from "../../hooks/useUser";
+import {useAlerts} from "../../hooks/useAlerts";
 
 const loginUser = async ({credentials, type}) => {
   try {
@@ -22,9 +25,12 @@ const loginUser = async ({credentials, type}) => {
   }
 }
 
-const Login = ({setAuth, setAlert}) => {
-  const {setUser} = useUser()
+const Login = ({setAuth}) => {
   const history = useHistory();
+
+  const {setUser} = useUser()
+  const {setAlert} = useAlerts()
+
   const [login, setLogin] = useState();
   const [password, setPassword] = useState();
   const [type, setType] = useState("student");
@@ -112,10 +118,7 @@ const Login = ({setAuth, setAlert}) => {
 }
 
 Login.propTypes = {
-  auth: PropTypes.object.isRequired,
-  setAlert: PropTypes.func.isRequired,
   setAuth: PropTypes.func.isRequired,
-  setUser: PropTypes.func.isRequired
 }
 
 export default Login;

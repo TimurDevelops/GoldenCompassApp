@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from "prop-types";
-import {useHistory, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 
 import Header from "../ui/Header";
 
@@ -17,34 +17,26 @@ import SlidePicker from "./pickersArea/slidePicker/SlidePicker";
 
 import api from "../../utils/api";
 
-//  TODO привести к одному виду
-import {useAlerts} from "../../hooks/useAlerts";
 import {useSocket} from "../../hooks/useSocket";
-import useUser from "../../hooks/useUser";
+import {useUser} from "../../hooks/useUser";
 
 import "./ClassRoom.scss";
+import {TeacherContext} from "../../context/TeacherContext";
+import {StudentContext} from "../../context/StudentContext";
 
 const ClassRoom = ({logout}) => {
-  const history = useHistory();
   const {teacher} = useParams();
-  const {setAlert} = useAlerts()
   const {socket} = useSocket();
   const {user} = useUser();
 
-  const [waitingScreen, setWaitingScreenState] = useState(true);
+  const {allowedStudent} = useContext(TeacherContext)
+  const {waitingScreen} = useContext(StudentContext)
 
-  const setWaitingScreen = (value) => {
-    setWaitingScreenState(value)
-  }
-
-  // TODO получать slide из context
   const [lesson, setLesson] = useState({});
   const [level, setLevel] = useState({});
 
   const [students, setStudents] = useState([]);
   const [levels, setLevels] = useState([]);
-
-  // TODO получать allowedStudent из context
 
   const [slidePickerOpen, setSlidePickerOpen] = useState(false);
   const [lessonPickerOpen, setLessonPickerOpen] = useState(false);
@@ -54,9 +46,8 @@ const ClassRoom = ({logout}) => {
 
 
   const studentPicked = (value) => {
-    socket.emit("allowStudent", {teacherLogin: teacher, studentLogin: value});
+    socket.emit("student:allow", {teacherLogin: teacher, studentLogin: value});
   }
-
 
 
   useEffect(() => {
@@ -95,71 +86,70 @@ const ClassRoom = ({logout}) => {
   }
 
   const slidePicked = (value) => {
-    // TODO name better
-    socket.emit("slidePicked", {teacherLogin: teacher, studentLogin: value});
+    socket.emit("canvas:change-slide", {teacherLogin: teacher, studentLogin: value});
     setSlidePickerOpen(false);
   }
 
   return (
-    <div className={"class-room"}>
-      <Header logout={logout}/>
-      <div className={'waiting-screen-class-room-wrapper'}>
+      <div className={"class-room"}>
+        <Header logout={logout}/>
+        <div className={'waiting-screen-class-room-wrapper'}>
 
-        {waitingScreen ? <WaitingScreen/> : ''}
-
-
-        <section className={"class-room-wrapper"}>
-          <VideoArea/>
-
-          <CanvasArea
-            room={teacher}
-            sidebarOpen={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
-          />
-
-          {user.type === 'teacher' ?
-            <div className={'pickers'}>
-
-              <SlidePicker open={slidePickerOpen}
-                           setOpen={setSlidePickerOpen}
-                           slides={lesson.slides}
-                           setSlide={slidePicked}/>
-
-              <LessonPicker open={lessonPickerOpen}
-                            setOpen={setLessonPickerOpen}
-                            lessons={level.lessons}
-                            setLesson={lessonPicked}/>
-
-              <LevelPicker open={levelPickerOpen}
-                           setOpen={setLevelPickerOpen}
-                           levels={levels}
-                           setLevel={levelPicked}/>
+          {waitingScreen ? <WaitingScreen/> : ''}
 
 
-              <StudentPicker open={studentPickerOpen}
-                             setOpen={setStudentPickerOpen}
-                             students={students}
-                             setAllowedStudent={studentPicked}
-                             allowedStudent={allowedStudent}/>
+          <section className={"class-room-wrapper"}>
+            <VideoArea/>
 
-              <div className={'menus-buttons'}>
+            <CanvasArea
+              room={teacher}
+              sidebarOpen={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
+            />
 
-                {!studentPickerOpen && <div className={'button-holder levels'}>
-                  <div className={'button'} onClick={() => setLevelPickerOpen(!levelPickerOpen)}>Уровни</div>
-                </div>}
+            {user.type === 'teacher' ?
+              <div className={'pickers'}>
 
-                {!lessonPickerOpen && <div className={'button-holder students'}>
-                  <div className={'button'} onClick={() => setStudentPickerOpen(!studentPickerOpen)}>Ученики</div>
-                </div>}
+                <SlidePicker open={slidePickerOpen}
+                             setOpen={setSlidePickerOpen}
+                             slides={lesson.slides}
+                             setSlide={slidePicked}/>
 
+                <LessonPicker open={lessonPickerOpen}
+                              setOpen={setLessonPickerOpen}
+                              lessons={level.lessons}
+                              setLesson={lessonPicked}/>
+
+                <LevelPicker open={levelPickerOpen}
+                             setOpen={setLevelPickerOpen}
+                             levels={levels}
+                             setLevel={levelPicked}/>
+
+
+                <StudentPicker open={studentPickerOpen}
+                               setOpen={setStudentPickerOpen}
+                               students={students}
+                               setAllowedStudent={studentPicked}
+                               allowedStudent={allowedStudent}/>
+
+                <div className={'menus-buttons'}>
+
+                  {!studentPickerOpen && <div className={'button-holder levels'}>
+                    <div className={'button'} onClick={() => setLevelPickerOpen(!levelPickerOpen)}>Уровни</div>
+                  </div>}
+
+                  {!lessonPickerOpen && <div className={'button-holder students'}>
+                    <div className={'button'} onClick={() => setStudentPickerOpen(!studentPickerOpen)}>Ученики</div>
+                  </div>}
+
+                </div>
               </div>
-            </div>
 
-            : ''}
+              : ''}
 
-        </section>
+          </section>
 
+        </div>
       </div>
-    </div>
   )
 }
 

@@ -2,18 +2,11 @@ import React from 'react';
 import PropTypes from "prop-types";
 import P5Wrapper from "react-p5-wrapper";
 import sketch from "./Sketch";
+
 import {useSocket} from "../../../../hooks/useSocket";
 
-const Canvas = ({
-                  room,
-                  // TODO получать img и active из контекста
-
-                  activeTool,
-                  drawWidth,
-                  drawColor,
-                }) => {
-
-  const {socket} = useSocket()
+const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
+  const {socket} = useSocket();
 
   return (
     <div id='mainCanvas' className={"canvas"}
@@ -34,13 +27,11 @@ const Canvas = ({
 
 Canvas.propTypes = {
   room: PropTypes.string.isRequired,
+  img: PropTypes.string.isRequired,
+  active: PropTypes.bool.isRequired,
   activeTool: PropTypes.string.isRequired,
   drawWidth: PropTypes.number.isRequired,
   drawColor: PropTypes.string.isRequired,
-
-  // TODO получать img и active из контекста
-  img: PropTypes.string,
-  active: PropTypes.bool.isRequired,
 }
 
 export default Canvas;

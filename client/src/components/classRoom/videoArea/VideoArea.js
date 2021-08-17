@@ -1,13 +1,7 @@
 import React, {useState} from 'react';
 import {FaVideo, FaVideoSlash, FaVolumeUp, FaVolumeMute} from 'react-icons/fa';
 
-import io from 'socket.io-client';
-
-import {serverUrl} from '../../../config.json';
 import './VideoArea.scss';
-
-const socket = io(serverUrl, {transports: ['websocket'], upgrade: false});
-
 
 const VideoArea = () => {
 

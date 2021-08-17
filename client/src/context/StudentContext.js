@@ -1,80 +1,77 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, {createContext, useState, useEffect} from 'react';
+
 import {useSocket} from "../hooks/useSocket";
 import {useAlerts} from "../hooks/useAlerts";
-import useUser from "../hooks/useUser";
+import {useUser} from "../hooks/useUser";
 
-const SocketContext = createContext('');
+const StudentContext = createContext('');
 
-const ContextProvider = ({ children }) => {
-  const socket = useSocket();
+const StudentContextProvider = ({children}) => {
+  const {socket} = useSocket();
   const {setAlert} = useAlerts();
   const {user} = useUser();
 
   const [waitingScreen, setWaitingScreen] = useState(false);
   const [waitingScreenMessage, setWaitingScreenMessage] = useState('');
-  const [slideImg, setSlideImg] = useState('');
-  const [allowedToDraw, setAllowedToDraw] = useState('');
+  const [slide, setSlide] = useState({});
+  const [allowedToDraw, setAllowedToDraw] = useState(true);
 
   useEffect(() => {
 
-    // TODO check data structure
-    // TODO notAllowedToClassRoom event
-    socket.on('notAllowedToClassRoom', ({name}) => {
+    socket.on('student-disallowed', ({name}) => {
       setWaitingScreen(true);
       setWaitingScreenMessage(`Отправлен запрос на вход в классную комнату учителю ${name}`)
     })
 
-    // TODO check data structure
-    // TODO allowedToClassRoom event
-    socket.on('allowedToClassRoom', ({teacher}) => {
-
-      // TODO studentJoinClassRoom event
-      // TODO teacherJoinClassRoom event
-      socket.emit('studentJoinClassRoom', {user, teacher});
+    socket.on('student-allowed', ({teacher}) => {
+      // TODO emit join-student at appropriate moment
+      socket.emit('join-student', {user, teacher});
     })
 
-    socket.on('teacherNotPresent', ({name}) => {
+    socket.on('teacher-absent', ({name}) => {
       setWaitingScreen(true);
       setWaitingScreenMessage(`Учитель ${name} отсутствует на рабочем месте`)
     })
 
-    // TODO teacherPresent event
-    socket.on('teacherPresent', () => {
+    socket.on('teacher-present', () => {
       setWaitingScreen(true);
       setWaitingScreenMessage('')
     })
 
-    // TODO studentJoinedClassRoom event
-    socket.on('studentJoinedClassRoom', () => {
+    socket.on('student-joined', () => {
       setWaitingScreen(false);
       setWaitingScreenMessage('')
     })
 
-    socket.on('slideChanged', ({img}) => {
-      setSlideImg(img);
+    socket.on('canvas-slide-changed', ({slide}) => {
+      setSlide(slide);
     })
 
-    socket.on('allowToDraw', ({allowStudentToDraw}) => {
+    socket.on('canvas-allow-to-draw', ({allowStudentToDraw}) => {
       if (allowStudentToDraw) setAlert("Вы можете рисовать")
       else setAlert("Учитель отключил вам возможность рисовать")
 
       setAllowedToDraw(allowStudentToDraw);
     })
 
-  }, []);
+    socket.on('canvas-canvas-reset', () => {
+      setAlert("Учитель перезапустил ваш холст")
+    })
+
+  }, [setAlert, socket, user]);
 
 
   return (
-    <SocketContext.Provider value={{
+    <StudentContext.Provider value={{
       waitingScreen,
       waitingScreenMessage,
-      slideImg,
+      slide,
       allowedToDraw,
     }}
     >
       {children}
-    </SocketContext.Provider>
+    </StudentContext.Provider>
   );
 };
 
-export { ContextProvider, SocketContext };
+export {StudentContextProvider, StudentContext};

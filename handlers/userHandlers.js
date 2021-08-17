@@ -4,19 +4,31 @@ const {
   userJoin,
   checkTeacherPresent,
   checkStudentAllowed,
-  getSocketIdByLogin
+  getSocketIdByLogin, getAllowedStudents
 } = require("../utils/users");
-const {disallowStudentToClass, allowStudentToClass} = require("./utils/users");
+const {disallowStudentToClass, allowStudentToClass} = require("../utils/users");
 
 const disallowRequestFromStudent = {}
+
 
 module.exports = (io, socket) => {
 
   const teacherJoin = async ({login, room}) => {
     const user = await getTeacher(login);
     const userObject = userJoin(socket.id, user, room);
+    const allowedStudents = getAllowedStudents(login);
+
+    io.to(socket.id).emit('teacher-joined', {user: userObject});
+
+    for (const studentLogin of allowedStudents) {
+      const studentSocketId = getSocketIdByLogin(studentLogin);
+      if (studentSocketId) {
+        socket.broadcast.to(room).emit('teacher-present');
+      }
+    }
+
     socket.join(room);
-    io.to(socket.id).emit('joinedClassRoom', {user: userObject});
+
   }
 
   const studentJoin = async ({login, room}) => {
@@ -24,21 +36,22 @@ module.exports = (io, socket) => {
     const teacherData = await getTeacher(room);
     const user = userJoin(socket.id, userData, room);
 
+    socket.join(room);
+
     if (!checkTeacherPresent(room)) {
-      io.to(user.socketId).emit('teacherNotPresent', {name: teacherData.name});
+      io.to(user.socketId).emit('teacher-absent', {name: teacherData.name});
     } else if (!checkStudentAllowed(room, login)) {
-      io.to(user.socketId).emit('studentDisallowed', {name: teacherData.name});
+      io.to(user.socketId).emit('student-disallowed', {name: teacherData.name});
 
       if (!disallowRequestFromStudent[login]) {
         const teacherSocketId = getSocketIdByLogin(room);
-        io.to(teacherSocketId).emit('studentRequestsEntrance', {name: userData.name});
+        io.to(teacherSocketId).emit('student-requests-entrance', {name: userData.name});
         setTimeout(() => disallowRequestFromStudent[login] = false, 30 * 1000);
       }
       disallowRequestFromStudent[login] = true;
 
     } else {
-      socket.join(login);
-      io.to(user.socketId).emit('joinedClassRoom', {user});
+      io.to(user.socketId).emit('student-joined', {user});
     }
   }
 
@@ -46,7 +59,7 @@ module.exports = (io, socket) => {
     if (teacherLogin) {
       disallowStudentToClass(teacherLogin, studentLogin);
       const studentSocketId = getSocketIdByLogin(studentLogin);
-      io.to(studentSocketId).emit('studentDisallowed');
+      io.to(studentSocketId).emit('student-disallowed');
     }
   }
 
@@ -57,20 +70,20 @@ module.exports = (io, socket) => {
       const teacherSocketId = getSocketIdByLogin(teacherLogin);
 
       if (studentSocketId) {
-        io.to(studentSocketId).emit('allowedToClassRoom');
+        io.to(studentSocketId).emit('student-allowed');
       }
 
       if (teacherSocketId) {
-        io.to(teacherSocketId).emit('studentAllowed', {login: studentLogin});
+        io.to(teacherSocketId).emit('allowed-student-set', {login: studentLogin});
       }
 
     }
   }
 
-  socket.on('join:teacher', teacherJoin);
-  socket.on('join:student', studentJoin);
+  socket.on('join-teacher', teacherJoin);
+  socket.on('join-student', studentJoin);
 
-  socket.on('student:allow', allowStudent);
-  socket.on('student:disallow', disallowStudent);
+  socket.on('student-allow', allowStudent);
+  socket.on('student-disallow', disallowStudent);
 
 }
