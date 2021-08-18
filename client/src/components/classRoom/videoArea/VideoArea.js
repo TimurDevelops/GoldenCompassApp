@@ -1,5 +1,5 @@
-import React, {useContext} from 'react';
-import {FaVideo, FaVideoSlash, FaVolumeUp, FaVolumeMute} from 'react-icons/fa';
+import React, {useContext, useEffect} from 'react';
+import {FaVideo, FaVideoSlash, FaVolumeUp, FaVolumeMute, FaPhone, FaPhoneSlash} from 'react-icons/fa';
 
 import {VideoContext} from "../../../context/VideoContext";
 
@@ -9,10 +9,20 @@ import {useUser} from "../../../hooks/useUser";
 
 const VideoArea = ({room}) => {
   const {
-    joinVideoSocket,
-    callTeacher,
+    setup,
+    caller,
+
+    callAccepted,
+    calling,
+    receivingCall,
+
     myVideo,
     userVideo,
+
+    callTeacher,
+    answerCall,
+    leaveCall,
+
     captureVideo,
     captureAudio,
     captureNone,
@@ -20,15 +30,13 @@ const VideoArea = ({room}) => {
     setAudio,
   } = useContext(VideoContext);
 
+
+  useEffect(()=>{
+    setup(room)
+  }, [])
+
   const {getUser} = useUser();
-
   const user = getUser();
-  console.log(user)
-  joinVideoSocket(user.login);
-
-  if (user.type === 'student') {
-    callTeacher(room)
-  }
 
   return (
     <div className={"video-wrapper"}>
@@ -39,6 +47,21 @@ const VideoArea = ({room}) => {
           autoPlay
           className="my-video"
         />
+
+        <div className={'video-buttons start-call-buttons'}>
+          {!callAccepted ?
+            <React.Fragment>{
+              user.type === 'student' ?
+                <div className='video-button green' onClick={() => callTeacher(room)}><FaPhone/></div> :
+                <div className='video-button green' onClick={() => answerCall(caller)}><FaPhone/></div>
+            }</React.Fragment> :
+            <React.Fragment>{
+              user.type === 'student' ?
+                <div className='video-button green' onClick={() => leaveCall(room)}><FaPhoneSlash/></div> :
+                <div className='video-button green' onClick={() => leaveCall(caller)}><FaPhoneSlash/></div>
+            }</React.Fragment>
+          }
+        </div>
 
         <div className={'video-buttons'}>
           {captureVideo && !captureNone ?

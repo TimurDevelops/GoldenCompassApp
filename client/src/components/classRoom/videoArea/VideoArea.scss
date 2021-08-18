@@ -40,11 +40,26 @@
       .video-button {
         padding: .3em;
         color: white;
+        width: 1em;
+        height: 1em;
+
+        &.green {
+          color: green;
+        }
+
+        &.red {
+          color: red;
+        }
 
         &:hover {
           transform: scale(1.2);
         }
       }
+    }
+
+    .start-call-buttons {
+      top: 0;
+
     }
   }
 

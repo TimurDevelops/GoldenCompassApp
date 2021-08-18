@@ -14,11 +14,55 @@ const VideoContextProvider = ({children}) => {
 
   const myVideo = useRef();
   const userVideo = useRef();
+  const connectionRef = useRef({});
 
-  const [connected, setConnected] = useState(true);
+  const [stream, setStream] = useState();
+  const [callerSignal, setCallerSignal] = useState();
+  const [caller, setCaller] = useState();
+  const [callAccepted, setCallAccepted] = useState(false);
+  const [calling, setCalling] = useState(false);
+  const [receivingCall, setReceivingCall] = useState(false);
+
   const [captureVideo, setCaptureVideo] = useState(true);
   const [captureAudio, setCaptureAudio] = useState(true);
   const [captureNone, setCaptureNone] = useState(false);
+
+  const setup = (room) => {
+    const user = getUser()
+
+    socket.emit('add-to-video', {login: user.login});
+
+    navigator.mediaDevices.getUserMedia({video: captureVideo, audio: captureAudio})
+      .then((currentStream) => {
+        setStream(currentStream);
+        if (myVideo.current) myVideo.current.srcObject = currentStream;
+      });
+
+    const startVideo = ({callStarted}) => {
+      console.log(callStarted)
+      if (callStarted) {
+        if (user.type === 'student') {
+          console.log('calling')
+          callTeacher(room)
+        } else {
+          socket.on('student-calling', ({studentLogin, signal}) => {
+            setCallerSignal(signal);
+            answerCall(studentLogin);
+          });
+        }
+      } else {
+        socket.on('student-calling', ({studentLogin, signal}) => {
+          console.log('student-calling')
+          setReceivingCall(true);
+          setCaller(studentLogin);
+          setCallerSignal(signal);
+        });
+      }
+    }
+
+    socket.on('added', startVideo)
+
+  }
 
 
   const setVideo = (value) => {
@@ -47,101 +91,76 @@ const VideoContextProvider = ({children}) => {
     }
   }
 
-  socket.on('student-calling', ({studentLogin}) => {
-    console.log('student-calling')
-
-    answerCall(studentLogin);
-  });
-
-  const joinVideoSocket = (login) => {
-    console.log('joinVideoSocket')
-
-    socket.emit('add-to-video', {login});
-  }
-
   const answerCall = (studentLogin) => {
     console.log('answerCall')
-    socket.emit('call-accepted', {studentLogin});
+    const user = getUser();
+    const teacherPeer = new Peer({initiator: false, trickle: false, stream: stream});
 
-    navigator.mediaDevices.getUserMedia({video: captureVideo, audio: captureAudio})
-      .then((currentStream) => {
-        console.log('student signals')
-        if (myVideo.current) myVideo.current.srcObject = currentStream;
+    teacherPeer.on('signal', data => {
+      console.log('call-accepted')
+      setCallAccepted(true);
+      setReceivingCall(false);
+      socket.emit('call-accepted', {teacherLogin: user.login, studentLogin, signal: data});
+    })
 
-        if (captureNone) return
+    teacherPeer.on("stream", stream => {
+      if (userVideo.current) userVideo.current.srcObject = stream;
+    });
 
-        const peer1 = new Peer({initiator: true, stream: currentStream})
-        const peer2 = new Peer()
+    teacherPeer.signal(callerSignal)
 
-        peer1.on('signal', data => {
-          peer2.signal(data)
-        })
-
-        peer2.on('signal', data => {
-          peer1.signal(data)
-        })
-
-        peer2.on('stream', stream => {
-          console.log('student signals')
-
-          if (userVideo.current) userVideo.current.srcObject = stream;
-        })
-
-      });
+    connectionRef.current = teacherPeer;
   };
 
   const callTeacher = (teacherLogin) => {
-    console.log('callTeacher')
     const user = getUser();
-    socket.emit('call-teacher', {teacherLogin, studentLogin: user.login});
 
-    socket.on('teacher-accepted-call', () => {
-      console.log('teacher-accepted-call')
-      connect();
+    const studentPeer = new Peer({initiator: true, trickle: false, stream: stream})
+
+    studentPeer.on('signal', data => {
+      setCalling(false);
+      socket.emit('call-teacher', {teacherLogin, studentLogin: user.login, signalData: data});
+    })
+
+    studentPeer.on("stream", stream => {
+      if (userVideo.current) userVideo.current.srcObject = stream;
     });
 
-    const connect = () => {
-      console.log(connected)
-      if (connected) return
+    socket.on('teacher-accepted-call', ({signal}) => {
+      console.log('teacher-accepted-call')
+      setCallAccepted(true);
+      studentPeer.signal(signal);
+    });
 
-      setConnected(true)
-      navigator.mediaDevices.getUserMedia({video: captureVideo, audio: captureAudio})
-        .then((currentStream) => {
-          if (myVideo.current) myVideo.current.srcObject = currentStream;
+    connectionRef.current = studentPeer;
+  };
 
-          // if (captureNone) return
-          //
-          // const peer1 = new Peer({initiator: true, stream: currentStream})
-          // const peer2 = new Peer()
-          //
-          // peer1.on('signal', data => {
-          //   console.log('peer1 signal')
-          //   peer2.signal(data)
-          // })
-          //
-          // peer2.on('signal', data => {
-          //   console.log('peer2 signal')
-          //
-          //   peer1.signal(data)
-          // })
-          //
-          // peer2.on('stream', stream => {
-          //   console.log('peer2 stream')
-          //
-          //   if (userVideo.current) userVideo.current.srcObject = stream;
-          // })
+  const leaveCall = () => {
+    setReceivingCall(false);
+    setCallAccepted(false);
+    setCalling(false);
 
-        });
-    }
+    connectionRef.current.destroy();
+
+    window.location.reload();
   };
 
   return (
     <VideoContext.Provider value={{
+      setup,
+      caller,
+
+      callAccepted,
+      calling,
+      receivingCall,
+
       myVideo,
       userVideo,
-      joinVideoSocket,
+
       callTeacher,
       answerCall,
+      leaveCall,
+
       captureVideo,
       captureAudio,
       captureNone,

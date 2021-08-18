@@ -1,7 +1,5 @@
 const {getAllowedStudents, getSocketIdByLogin} = require("../utils/users");
-
-// TODO canvas-allow-to-draw
-// TODO canvas-canvas-reset
+const {log} = require("nodemon/lib/utils");
 
 module.exports = (io, socket) => {
 
@@ -38,12 +36,7 @@ module.exports = (io, socket) => {
   const resetCanvas = async ({teacherLogin}) => {
     if (teacherLogin) {
       const allowedStudents = getAllowedStudents(teacherLogin);
-      for (const studentLogin of allowedStudents) {
-        const studentSocketId = getSocketIdByLogin(studentLogin);
-        if (studentSocketId) {
-          io.to(studentSocketId).emit('canvas-reset');
-        }
-      }
+      socket.broadcast.to(teacherLogin).emit('canvas-reset');
     }
   }
 

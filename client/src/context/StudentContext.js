@@ -47,7 +47,6 @@ const StudentContextProvider = ({children}) => {
     socket.on('student-joined', () => {
       setWaitingScreen(false);
       setWaitingScreenMessage('')
-      console.log('student-joined')
     })
 
     socket.on('canvas-slide-changed', ({slide}) => {
@@ -62,10 +61,11 @@ const StudentContextProvider = ({children}) => {
     })
 
     socket.on('canvas-reset', () => {
+      console.log(socket.id)
       alert.show("Учитель перезапустил ваш холст")
     })
 
-  }, [alert, socket, getUser]);
+  }, []);
 
 
   return (
