@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require("./config/db");
-const canvasHandlers = require('./handlers/canvasHandlers')
 const userHandlers = require('./handlers/userHandlers')
+const canvasHandlers = require('./handlers/canvasHandlers')
+const videoHandlers = require('./handlers/videoHandlers')
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,5 +45,6 @@ io.sockets.on('connection', (socket) => {
 
   canvasHandlers(io, socket);
 
+  videoHandlers(io, socket)
 
 })

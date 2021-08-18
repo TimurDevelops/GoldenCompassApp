@@ -56,12 +56,13 @@ module.exports = (io, socket) => {
         const studentSocketId = getSocketIdByLogin(studentLogin);
         if (studentSocketId) {
           io.to(studentSocketId).emit('canvas-slide-changed', {slide});
+        }
+        if (teacherSocketId) {
           io.to(teacherSocketId).emit('canvas-slide-picked', {slide});
         }
       }
     }
   }
-
 
 
   socket.on('canvas-pencil', pencil);

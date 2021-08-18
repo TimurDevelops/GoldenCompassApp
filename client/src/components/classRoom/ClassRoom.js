@@ -91,7 +91,7 @@ const ClassRoom = ({logout}) => {
   }
 
   const slidePicked = (value) => {
-    socket.emit("canvas:change-slide", {teacherLogin: teacher, studentLogin: value});
+    socket.emit("canvas-change-slide", {teacherLogin: teacher, slide: value});
     setSlidePickerOpen(false);
   }
 
@@ -101,7 +101,7 @@ const ClassRoom = ({logout}) => {
       <div className={'waiting-screen-class-room-wrapper'}>
 
         <section className={"class-room-wrapper"}>
-          <VideoArea/>
+          <VideoArea room={teacher}/>
 
           <CanvasArea
             room={teacher}

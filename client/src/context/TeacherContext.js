@@ -21,7 +21,6 @@ const TeacherContextProvider = ({ children }) => {
     })
 
     socket.on('allowed-student-set', ({login}) => {
-      console.log(login)
       setAllowedStudent(login)
     })
 

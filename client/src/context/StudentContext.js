@@ -1,8 +1,9 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, {createContext, useState, useEffect, useContext} from 'react';
 import { useAlert } from 'react-alert'
 
 import {useSocket} from "../hooks/useSocket";
 import {useUser} from "../hooks/useUser";
+import {VideoContext} from "./VideoContext";
 
 const StudentContext = createContext('');
 
@@ -16,9 +17,12 @@ const StudentContextProvider = ({children}) => {
   const [slide, setSlide] = useState({});
   const [allowedToDraw, setAllowedToDraw] = useState(true);
 
+  const {callUser} = useContext(VideoContext);
+
   useEffect(() => {
 
     socket.on('student-disallowed', ({name}) => {
+
       setWaitingScreen(true);
       setWaitingScreenMessage(`Отправлен запрос на вход в классную комнату учителю ${name}`)
     })
@@ -39,9 +43,10 @@ const StudentContextProvider = ({children}) => {
       socket.emit('join-student', {room: teacherLogin, login: user.login});
     })
 
-    socket.on('student-joined', () => {
+    socket.on('student-joined', ({user: {room}}) => {
       setWaitingScreen(false);
       setWaitingScreenMessage('')
+      callUser(room)
     })
 
     socket.on('canvas-slide-changed', ({slide}) => {

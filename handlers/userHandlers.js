@@ -32,7 +32,6 @@ module.exports = (io, socket) => {
     const user = userJoin(socket.id, userData, room);
 
     socket.join(room);
-    console.log(checkTeacherPresent(room))
 
     if (!checkTeacherPresent(room)) {
       io.to(user.socketId).emit('teacher-absent', {name: teacherData.name});
@@ -79,10 +78,9 @@ module.exports = (io, socket) => {
   const disconnect = async () => {
     const user = getCurrentUser(socket.id);
 
-    const allowedStudents = getAllowedStudents(login);
-
-
     if(!user) return
+
+    const allowedStudents = getAllowedStudents(user.login);
 
     for (const studentLogin of allowedStudents) {
       const studentSocketId = getSocketIdByLogin(studentLogin);
