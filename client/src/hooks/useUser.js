@@ -20,6 +20,7 @@ export const useUser = () => {
   }
 
   return {
+    getUser,
     setUser: saveUser,
     user: user,
     unsetUser: unsetUser

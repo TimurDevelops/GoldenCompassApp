@@ -66,13 +66,14 @@ const ClassRoom = ({logout}) => {
 
   }, [user]);
 
+  useEffect(() => {
+    if (user.type === 'teacher') socket.emit("join-teacher", {room: teacher, login: user.login});
+    else if (user.type === 'student') socket.emit("join-student", {room: teacher, login: user.login});
+  }, [user, socket, teacher]);
+
   if (waitingScreen) {
     return <WaitingScreen message={waitingScreenMessage}/>
   }
-
-  if (user.type === 'teacher') socket.emit("join-teacher", {room: teacher, login: user.login});
-  else if (user.type === 'student') socket.emit("join-student", {room: teacher, login: user.login});
-
 
   const studentPicked = (value) => {
     socket.emit("student-allow", {teacherLogin: teacher, studentLogin: value});

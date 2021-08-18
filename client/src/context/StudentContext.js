@@ -1,23 +1,22 @@
-import React, {createContext, useState, useEffect, useContext} from 'react';
+import React, {createContext, useState, useEffect} from 'react';
 import { useAlert } from 'react-alert'
 
 import {useSocket} from "../hooks/useSocket";
 import {useUser} from "../hooks/useUser";
-import {VideoContext} from "./VideoContext";
 
 const StudentContext = createContext('');
 
 const StudentContextProvider = ({children}) => {
   const alert = useAlert()
   const {socket} = useSocket();
-  const {user} = useUser();
+  const {getUser} = useUser();
+
 
   const [waitingScreen, setWaitingScreen] = useState(false);
   const [waitingScreenMessage, setWaitingScreenMessage] = useState('');
   const [slide, setSlide] = useState({});
   const [allowedToDraw, setAllowedToDraw] = useState(true);
 
-  const {callUser} = useContext(VideoContext);
 
   useEffect(() => {
 
@@ -29,6 +28,7 @@ const StudentContextProvider = ({children}) => {
 
     socket.on('student-allowed', ({teacher}) => {
       // TODO emit join-student at appropriate moment
+      const user = getUser()
       socket.emit('join-student', {room: teacher, login: user.login});
     })
 
@@ -38,15 +38,16 @@ const StudentContextProvider = ({children}) => {
     })
 
     socket.on('teacher-present', ({login: teacherLogin}) => {
+      const user = getUser()
       setWaitingScreen(false);
       setWaitingScreenMessage('')
       socket.emit('join-student', {room: teacherLogin, login: user.login});
     })
 
-    socket.on('student-joined', ({user: {room}}) => {
+    socket.on('student-joined', () => {
       setWaitingScreen(false);
       setWaitingScreenMessage('')
-      callUser(room)
+      console.log('student-joined')
     })
 
     socket.on('canvas-slide-changed', ({slide}) => {
@@ -64,7 +65,7 @@ const StudentContextProvider = ({children}) => {
       alert.show("Учитель перезапустил ваш холст")
     })
 
-  }, [alert, socket, user]);
+  }, [alert, socket, getUser]);
 
 
   return (
