@@ -2,18 +2,56 @@ const {getSocketIdByLogin} = require("../utils/users");
 
 module.exports = (io, socket) => {
 
-  const callUser = ({ teacherLogin, signalData, from, name }) => {
-    console.log(teacherLogin)
+  const callTeacher = ({ teacherLogin, studentLogin }) => {
     const teacherSocketId = getSocketIdByLogin(teacherLogin);
-    io.to(teacherSocketId).emit("call-user", { signal: signalData, from, name });
+     io.to(teacherSocketId).emit("student-calling", { studentLogin });
   }
 
-  const callAccepted = ({to: studentLogin, signal}) => {
+  const callAccepted = ({studentLogin}) => {
     const studentSocketId = getSocketIdByLogin(studentLogin);
-    io.to(studentSocketId).emit("call-accepted", signal)
+    io.to(studentSocketId).emit("teacher-accepted-call")
   }
 
-  socket.on('call-user', callUser);
+  const studentSendSignal = ({teacherLogin, stream}) => {
+    const teacherSocketId = getSocketIdByLogin(teacherLogin);
+    io.to(teacherSocketId).emit("student-sends-signal", {stream})
+  }
+
+  const teacherAcceptedSignal = ({studentLogin}) => {
+    const studentSocketId = getSocketIdByLogin(studentLogin);
+    io.to(studentSocketId).emit("teacher-accepted-signal")
+  }
+
+
+  const teacherSendSignal = ({studentLogin, stream}) => {
+    const studentSocketId = getSocketIdByLogin(studentLogin);
+    io.to(studentSocketId).emit("teacher-sends-signal", {stream})
+  }
+
+
+  const studentAcceptedSignal = ({teacherLogin}) => {
+    const teacherSocketId = getSocketIdByLogin(teacherLogin);
+    io.to(teacherSocketId).emit("student-accepted-signal")
+  }
+
+
+
+
+
+
+  socket.on('call-teacher', callTeacher);
   socket.on('call-accepted', callAccepted);
+
+
+  socket.on('student-send-signal', studentSendSignal);
+  socket.on('teacher-accepted-signal', teacherAcceptedSignal);
+
+
+  socket.on('teacher-send-signal', teacherSendSignal);
+  socket.on('student-accepted-signal', studentAcceptedSignal);
+
+
+
+
 
 }
