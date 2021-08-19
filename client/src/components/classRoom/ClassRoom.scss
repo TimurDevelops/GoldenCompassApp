@@ -39,11 +39,12 @@ $menus-buttons-bg: #e5dec1;
   cursor: pointer;
   user-select: none;
 
-  &.levels{
+  &.levels {
     background: $button-background-color-levels;
 
   }
-  &.students{
+
+  &.students {
     background: $button-background-color-students;
 
   }
@@ -200,18 +201,73 @@ $menu-items: rgb(91, 151, 164);
       background: #e8e673;
     }
 
-    &.empty{
+    &.empty {
       padding: 2px;
       height: 10em;
       display: flex;
 
-      .content{
+      .content {
         display: flex;
         align-items: center;
         justify-content: center;
         background-color: #eee;
         height: 100%;
         width: 100%;
+
+      }
+    }
+  }
+}
+
+@media (max-width: 1300px) {
+  .class-room-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    .video-wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 30%;
+
+      .video {
+        width: 50%;
+        height: 100%;
+      }
+    }
+
+    .canvas-area {
+      height: 50%;
+
+      //.tip-area{
+      //  position: fixed;
+      //  right: 0;
+      //}
+    }
+
+    .pickers {
+      position: fixed;
+      right: 0;
+      height: 70%;
+    }
+  }
+
+}
+
+@media (max-width: 900px) {
+  .class-room-wrapper {
+    .tip-area{
+      height: auto;
+    }
+    .pickers {
+      position: fixed;
+      right: 0;
+      top: 30%;
+      height: 70%;
+
+      .menus-buttons{
+        overflow-y: scroll;
+        overflow-x: hidden;
 
       }
     }
