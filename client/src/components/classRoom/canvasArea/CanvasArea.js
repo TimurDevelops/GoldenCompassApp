@@ -19,14 +19,13 @@ const CanvasArea = ({room, sidebarOpen}) => {
   const {slide: teacherContextSlide} = useContext(TeacherContext)
   const {slide: studentContextSlide, allowedToDraw: contextAllowedToDraw} = useContext(StudentContext)
 
-  const { img, tip } = usertype === 'teacher' ? teacherContextSlide : studentContextSlide;
+  const { img, tip, hasAbacus } = usertype === 'teacher' ? teacherContextSlide : studentContextSlide;
 
   const allowedToDraw = usertype === 'teacher' ? true : contextAllowedToDraw;
 
   const [drawWidth, setDrawWidth] = useState(10);
   const [drawColor, setDrawColor] = useState('red');
   const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
-
 
   return (
     <div className={"canvas-area"}>
@@ -35,6 +34,7 @@ const CanvasArea = ({room, sidebarOpen}) => {
       <Canvas
         room={room}
         img={img}
+        hasAbacus={hasAbacus}
         active={sidebarOpen && allowedToDraw}
         activeTool={activeTool}
         drawWidth={drawWidth}

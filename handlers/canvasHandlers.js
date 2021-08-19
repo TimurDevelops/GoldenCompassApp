@@ -1,5 +1,4 @@
 const {getAllowedStudents, getSocketIdByLogin} = require("../utils/users");
-const {log} = require("nodemon/lib/utils");
 
 module.exports = (io, socket) => {
 
@@ -35,7 +34,6 @@ module.exports = (io, socket) => {
 
   const resetCanvas = async ({teacherLogin}) => {
     if (teacherLogin) {
-      const allowedStudents = getAllowedStudents(teacherLogin);
       socket.broadcast.to(teacherLogin).emit('canvas-reset');
     }
   }
@@ -45,13 +43,14 @@ module.exports = (io, socket) => {
     if (teacherLogin) {
       const allowedStudents = getAllowedStudents(teacherLogin);
       const teacherSocketId = getSocketIdByLogin(teacherLogin);
+      if (teacherSocketId) {
+        io.to(teacherSocketId).emit('canvas-slide-picked', {slide});
+      }
+
       for (const studentLogin of allowedStudents) {
         const studentSocketId = getSocketIdByLogin(studentLogin);
         if (studentSocketId) {
           io.to(studentSocketId).emit('canvas-slide-changed', {slide});
-        }
-        if (teacherSocketId) {
-          io.to(teacherSocketId).emit('canvas-slide-picked', {slide});
         }
       }
     }

@@ -92,6 +92,7 @@ const ClassRoom = ({logout}) => {
   }
 
   const slidePicked = (value) => {
+    console.log(value)
     socket.emit("canvas-change-slide", {teacherLogin: teacher, slide: value});
     setSlidePickerOpen(false);
   }

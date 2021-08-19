@@ -128,7 +128,6 @@ const VideoContextProvider = ({children}) => {
     socket.on('teacher-accepted-call', ({signal}) => {
       setCalling(false);
       setCallAccepted(true);
-      console.log(studentPeer)
       studentPeer.signal(signal);
     });
 
