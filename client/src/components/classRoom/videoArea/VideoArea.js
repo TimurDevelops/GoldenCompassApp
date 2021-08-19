@@ -66,7 +66,8 @@ const VideoArea = ({room}) => {
           {
             user.type === 'student' ?
               <div className='video-button green' onClick={() => callTeacher(room)}><FaPhone/></div> :
-              <div className='video-button green' onClick={() => answerCall(caller)}><FaPhone/></div>
+              receivingCall ?
+                <div className='video-button green' onClick={() => answerCall(caller)}><FaPhone/></div> : ''
           }
 
 

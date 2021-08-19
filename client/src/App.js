@@ -24,6 +24,8 @@ const App = () => {
     setAuth({user: undefined, isAuthenticated: false, isLoading: false});
   };
 
+
+
   return (
     <section className="container">
       <Router>
