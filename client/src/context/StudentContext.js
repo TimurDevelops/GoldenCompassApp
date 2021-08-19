@@ -27,7 +27,6 @@ const StudentContextProvider = ({children}) => {
     })
 
     socket.on('student-allowed', ({teacher}) => {
-      // TODO emit join-student at appropriate moment
       const user = getUser()
       socket.emit('join-student', {room: teacher, login: user.login});
     })
@@ -61,7 +60,6 @@ const StudentContextProvider = ({children}) => {
     })
 
     socket.on('canvas-reset', () => {
-      console.log(socket.id)
       alert.show("Учитель перезапустил ваш холст")
     })
 

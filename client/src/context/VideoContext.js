@@ -1,4 +1,4 @@
-import React, {createContext, useRef, useState} from 'react';
+import React, {createContext, useEffect, useRef, useState} from 'react';
 import Peer from 'simple-peer';
 import {useUser} from "../hooks/useUser";
 import io from 'socket.io-client'
@@ -16,7 +16,7 @@ const VideoContextProvider = ({children}) => {
   const userVideo = useRef();
   const connectionRef = useRef({});
 
-  const [stream, setStream] = useState();
+  const [stream, setStream] = useState({});
   const [callerSignal, setCallerSignal] = useState();
   const [caller, setCaller] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
@@ -25,86 +25,77 @@ const VideoContextProvider = ({children}) => {
 
   const [captureVideo, setCaptureVideo] = useState(true);
   const [captureAudio, setCaptureAudio] = useState(true);
-  const [captureNone, setCaptureNone] = useState(false);
 
-  const setup = (room) => {
+  useEffect(() => {
+    const user = getUser();
+    if (callAccepted){
+
+      stream.getVideoTracks().forEach(track => track.enabled = captureVideo);
+      stream.getAudioTracks().forEach(track => track.enabled = captureAudio);
+
+      if(user.type === 'student'){
+        connectionRef.current = new Peer({initiator: false, trickle: false, stream: stream})
+
+        connectionRef.current.on('signal', data => {
+          connectionRef.current.signal(data);
+        })
+
+        connectionRef.current.on("stream", otherStream => {
+          if (userVideo.current) userVideo.current.srcObject = otherStream;
+        });
+
+
+      } else if (user.type === 'teacher'){
+        connectionRef.current = new Peer({initiator: false, trickle: false, stream: stream});
+
+        connectionRef.current.on('signal', data => {
+          connectionRef.current.signal(data)
+        })
+
+        connectionRef.current.on("stream", otherStream => {
+          if (userVideo.current) userVideo.current.srcObject = otherStream;
+        });
+      }
+
+    }
+
+
+  }, [captureVideo, captureAudio])
+
+  const setup = () => {
     const user = getUser()
 
     socket.emit('add-to-video', {login: user.login});
 
-    navigator.mediaDevices.getUserMedia({video: captureVideo, audio: captureAudio})
+    navigator.mediaDevices.getUserMedia({video: true, audio: true})
       .then((currentStream) => {
-        setStream(currentStream);
+        setStream(currentStream.clone());
         if (myVideo.current) myVideo.current.srcObject = currentStream;
       });
 
-    const startVideo = ({callStarted}) => {
-      console.log(callStarted)
-      if (callStarted) {
-        if (user.type === 'student') {
-          console.log('calling')
-          callTeacher(room)
-        } else {
-          socket.on('student-calling', ({studentLogin, signal}) => {
-            setCallerSignal(signal);
-            answerCall(studentLogin);
-          });
-        }
-      } else {
-        socket.on('student-calling', ({studentLogin, signal}) => {
-          console.log('student-calling')
-          setReceivingCall(true);
-          setCaller(studentLogin);
-          setCallerSignal(signal);
-        });
-      }
-    }
 
-    socket.on('added', startVideo)
+    socket.on('student-calling', ({studentLogin, signal}) => {
+      setReceivingCall(true);
+      setCaller(studentLogin);
+      setCallerSignal(signal);
+    });
 
-  }
-
-
-  const setVideo = (value) => {
-    if (value) {
-      setCaptureNone(false)
-      setCaptureVideo(true)
-    } else {
-      if (!captureAudio) {
-        setCaptureNone(true);
-      } else {
-        setCaptureVideo(false)
-      }
-    }
-  }
-
-  const setAudio = (value) => {
-    if (value) {
-      setCaptureNone(false)
-      setCaptureAudio(true)
-    } else {
-      if (!captureVideo) {
-        setCaptureNone(true);
-      } else {
-        setCaptureAudio(false)
-      }
-    }
   }
 
   const answerCall = (studentLogin) => {
-    console.log('answerCall')
-    const user = getUser();
+    stream.getVideoTracks().forEach(track => track.enabled = captureVideo);
+    stream.getAudioTracks().forEach(track => track.enabled = captureAudio);
+
     const teacherPeer = new Peer({initiator: false, trickle: false, stream: stream});
 
     teacherPeer.on('signal', data => {
-      console.log('call-accepted')
       setCallAccepted(true);
       setReceivingCall(false);
-      socket.emit('call-accepted', {teacherLogin: user.login, studentLogin, signal: data});
+      socket.emit('call-accepted', {studentLogin, signal: data});
     })
 
-    teacherPeer.on("stream", stream => {
-      if (userVideo.current) userVideo.current.srcObject = stream;
+    teacherPeer.on("stream", otherStream => {
+      if (userVideo.current) userVideo.current.srcObject = otherStream;
     });
 
     teacherPeer.signal(callerSignal)
@@ -114,20 +105,23 @@ const VideoContextProvider = ({children}) => {
 
   const callTeacher = (teacherLogin) => {
     const user = getUser();
+    stream.getVideoTracks().forEach(track => track.enabled = captureVideo);
+    stream.getAudioTracks().forEach(track => track.enabled = captureAudio);
 
     const studentPeer = new Peer({initiator: true, trickle: false, stream: stream})
 
     studentPeer.on('signal', data => {
-      setCalling(false);
+      setCalling(true);
       socket.emit('call-teacher', {teacherLogin, studentLogin: user.login, signalData: data});
     })
 
-    studentPeer.on("stream", stream => {
-      if (userVideo.current) userVideo.current.srcObject = stream;
+    studentPeer.on("stream", otherStream => {
+      console.log(otherStream)
+      if (userVideo.current) userVideo.current.srcObject = otherStream;
     });
 
     socket.on('teacher-accepted-call', ({signal}) => {
-      console.log('teacher-accepted-call')
+      setCalling(false);
       setCallAccepted(true);
       studentPeer.signal(signal);
     });
@@ -163,9 +157,8 @@ const VideoContextProvider = ({children}) => {
 
       captureVideo,
       captureAudio,
-      captureNone,
-      setVideo,
-      setAudio,
+      setCaptureVideo,
+      setCaptureAudio,
     }}
     >
       {children}

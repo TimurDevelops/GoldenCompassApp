@@ -1,20 +1,17 @@
 let connections = {};
-let startedCalls = {};
 
 module.exports = (io, socket) => {
 
   const addToVideo = ({login}) => {
     connections[login] = socket.id;
-    io.to(socket.id).emit("added", {callStarted: startedCalls[login]});
   }
 
   const callTeacher = ({teacherLogin, studentLogin, signalData}) => {
-
     const teacherSocketId = connections[teacherLogin];
     io.to(teacherSocketId).emit("student-calling", {studentLogin, signal: signalData});
   }
 
-  const callAccepted = ({teacherLogin, studentLogin, signal}) => {
+  const callAccepted = ({studentLogin, signal}) => {
     const studentSocketId = connections[studentLogin];
     io.to(studentSocketId).emit("teacher-accepted-call", {signal})
   }

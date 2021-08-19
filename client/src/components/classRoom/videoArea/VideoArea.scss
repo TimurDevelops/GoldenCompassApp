@@ -1,4 +1,23 @@
 .video-wrapper {
+  .notification {
+    position: fixed;
+    top: 0;
+    left: calc(50vw - 12em);
+    width: 20em;
+    background-color: #3d716f;
+    margin: 1em;
+    border-radius: .3em;
+    box-shadow: 3px 6px 20px 10px rgba(86, 86, 86, 0.65);
+
+    .notification-inner {
+      color: #e5dec1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      word-wrap: break-word;
+      padding: 1em 2em;
+    }
+  }
 
   .video {
     background-color: #ccc;
@@ -60,6 +79,16 @@
     .start-call-buttons {
       top: 0;
 
+      .video-button {
+        width: 2em;
+        height: 2em;
+
+        svg {
+          width: 100%;
+          height: 100%;
+        }
+
+      }
     }
   }
 
