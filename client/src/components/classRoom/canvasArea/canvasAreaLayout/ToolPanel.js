@@ -5,10 +5,10 @@ import {FaPencilAlt, FaEraser, FaSyncAlt, FaMousePointer, FaClock, FaMinusCircle
 import {Interval} from "../../../../utils/interval";
 import Switch from "../../../ui/Switch";
 import {TOOLS} from "../../../../utils/types";
-import ColorPicker from "../../../ui/ColorPicker";
-import Picker from "../../../ui/Picker";
 import {useUser} from "../../../../hooks/useUser";
 import {useSocket} from "../../../../hooks/useSocket";
+import InlinePicker from "../../../ui/InlinePicker";
+import InlineColorPicker from "../../../ui/InlineColorPicker";
 
 
 const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor}) => {
@@ -50,12 +50,44 @@ const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor}) => {
   return (
 
     <div className={"tool-panel"}>
-      <div className={'tool-btn salad'} onClick={() => {
-        setActiveTool(TOOLS.PENCIL)
-      }}><FaPencilAlt/></div>
+      <div className={'row'}>
 
-      <div>
-        <Picker
+        <div className={'tool-btn salad'} onClick={() => {
+          setActiveTool(TOOLS.PENCIL)
+        }}><FaPencilAlt/></div>
+
+        <div className={'tool-btn '} onClick={() => {
+          setActiveTool(TOOLS.ERASER)
+        }}><FaEraser/></div>
+
+        {displayTeacherTools && <div className={'tool-btn'} onClick={() => {
+          setActiveTool(TOOLS.CURSOR)
+        }}><FaMousePointer/></div>}
+
+        {displayTeacherTools && <div className={'border'}>
+
+          <div className={'tool-btn green'} onClick={() => {
+            setTimerRunning(!timerRunning);
+          }}><FaClock/></div>
+          <div className={'time-holder'}>
+            <span className={'minute'}>{minute < 10 ? '0' + minute : minute}</span>
+            <span className={'colon'}>:</span>
+            <span className={'seconds'}>{second < 10 ? '0' + second : second}</span>
+          </div>
+          <div className={'tool-btn red'} onClick={() => {
+            resetTimer();
+          }}><FaMinusCircle/></div>
+        </div>}
+
+        {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
+                                        onChange={(value) => setStudentAllowedToDraw(value)}/>}
+
+        {displayTeacherTools && <div className={'tool-btn'} onClick={() => resetStudentCanvas()}><FaSyncAlt/></div>}
+      </div>
+
+
+      <div className={'row'}>
+        <InlinePicker
           defaultValue={10}
           valueField={'value'}
           labelField={'label'}
@@ -72,8 +104,9 @@ const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor}) => {
           }
         />
       </div>
-      <div>
-        <ColorPicker
+
+      <div className={'row'}>
+        <InlineColorPicker
           color={drawColor}
           onChangeComplete={
             color => {
@@ -82,34 +115,6 @@ const ToolPanel = ({drawColor, setActiveTool, setDrawWidth, setDrawColor}) => {
           }
         />
       </div>
-
-      <div className={'tool-btn '} onClick={() => {
-        setActiveTool(TOOLS.ERASER)
-      }}><FaEraser/></div>
-
-      {displayTeacherTools && <div className={'tool-btn'} onClick={() => {
-        setActiveTool(TOOLS.CURSOR)
-      }}><FaMousePointer/></div>}
-
-      {displayTeacherTools && <div className={'border'}>
-
-        <div className={'tool-btn green'} onClick={() => {
-          setTimerRunning(!timerRunning);
-        }}><FaClock/></div>
-        <div className={'time-holder'}>
-          <span className={'minute'}>{minute < 10 ? '0' + minute : minute}</span>
-          <span className={'colon'}>:</span>
-          <span className={'seconds'}>{second < 10 ? '0' + second : second}</span>
-        </div>
-        <div className={'tool-btn red'} onClick={() => {
-          resetTimer();
-        }}><FaMinusCircle/></div>
-      </div>}
-
-      {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
-                                      onChange={(value) => setStudentAllowedToDraw(value)}/>}
-
-      {displayTeacherTools && <div className={'tool-btn'} onClick={() => resetStudentCanvas()}><FaSyncAlt/></div>}
 
     </div>
   )

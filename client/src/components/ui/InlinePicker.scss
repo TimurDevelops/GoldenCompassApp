@@ -1,0 +1,60 @@
+.inline-picker-wrapper {
+  position: relative;
+
+  .p-item-picker-wrapper {
+    display: flex;
+    bottom: 100%;
+    width: calc(100% - 2px);
+    z-index: 500;
+
+    .p-item-wrapper {
+      margin: .5em;
+      background: #fff;
+      border-bottom: 1px solid #ccc;
+      box-sizing: border-box;
+      cursor: pointer;
+      height: 3em;
+      width: 3em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &.active {
+        background: #c7adad;
+      }
+
+      .p-item {
+        padding: 0;
+        box-sizing: border-box;
+        display: block;
+        background: #363636;
+        border-radius: 50%;
+
+        &.size10{
+          height: .7em;
+          width: .7em;
+        }
+        &.size20{
+          height: 1.4em;
+          width: 1.4em;
+        }
+        &.size50{
+          height: 1.9em;
+          width: 1.9em;
+        }
+        &.size150{
+          height: 2.5em;
+          width: 2.5em;
+        }
+      }
+
+      &:hover {
+        background: #c9c9c9;
+
+      }
+    }
+  }
+
+}
+
+

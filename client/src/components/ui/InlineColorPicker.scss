@@ -1,0 +1,67 @@
+.inline-color-picker-wrapper {
+  position: relative;
+
+  .p-item-picker-wrapper {
+    display: flex;
+    bottom: 100%;
+    width: calc(100% - 2px);
+    z-index: 500;
+
+    .p-item-wrapper {
+      margin: .5em;
+      background: #fff;
+      border-bottom: 1px solid #ccc;
+      box-sizing: border-box;
+      cursor: pointer;
+
+      &.active {
+        background: #c7adad;
+
+      }
+
+      .p-item {
+        margin: 5px;
+        padding: 0;
+        height: 3em;
+        width: 3em;
+        box-sizing: border-box;
+        display: flex;
+
+
+
+        &.red {
+          background: red;
+        }
+
+        &.blue {
+          background: blue;
+        }
+
+        &.yellow {
+          background: yellow;
+        }
+
+        &.green {
+          background: green;
+        }
+
+        &.black {
+          background: black;
+        }
+
+        &.grey {
+          background: grey;
+        }
+
+      }
+
+      &:hover {
+        background: #c9c9c9;
+
+      }
+    }
+  }
+
+}
+
+
