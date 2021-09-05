@@ -1,9 +1,23 @@
 const express = require('express');
+const https = require('https')
+const http = require('http')
 const cors = require('cors');
+const fs = require('fs');
+
 const connectDB = require("./config/db");
 const userHandlers = require('./handlers/userHandlers')
 const canvasHandlers = require('./handlers/canvasHandlers')
 const videoHandlers = require('./handlers/videoHandlers')
+
+const {env} = require('./config.json');
+const credentials = {};
+
+if (env === 'prod'){
+  const privateKey = fs.readFileSync('./sslcert/server.key', 'utf8');
+  const certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
+  credentials.key = privateKey;
+  credentials.cert = certificate;
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,11 +39,11 @@ app.get('/ping', (req, res) => {
   res.send(`Pong`);
 });
 
+const listener = env === 'prod' ? https.createServer(credentials, app) : http.createServer(app)
 
-const server = app.listen(PORT, () => {
+const server = listener.listen(Number(PORT), () => {
   console.log(`Sever started on port ${PORT}`);
 });
-
 
 const io = require('socket.io')(server, {
   cors: {
