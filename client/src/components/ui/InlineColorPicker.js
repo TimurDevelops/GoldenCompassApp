@@ -10,9 +10,6 @@ const InlineColorPicker = ({color, onChangeComplete}) => {
     'blue',
     'yellow',
     'green',
-    'black',
-    'grey',
-    'white',
   ]
 
   return (

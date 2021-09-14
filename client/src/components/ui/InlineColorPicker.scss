@@ -1,3 +1,5 @@
+$item-color: #438bab;
+
 .inline-color-picker-wrapper {
   position: relative;
 
@@ -9,25 +11,22 @@
 
     .p-item-wrapper {
       margin: .5em;
-      background: #fff;
-      border-bottom: 1px solid #ccc;
       box-sizing: border-box;
       cursor: pointer;
 
       &.active {
-        background: #c7adad;
-
+        .p-item {
+          border: 2px solid #0b76ef;
+        }
       }
 
       .p-item {
-        margin: 5px;
-        padding: 0;
-        height: 3em;
-        width: 3em;
+        height: 2em;
+        width: 2em;
         box-sizing: border-box;
         display: flex;
-
-
+        border-radius: 50%;
+        box-shadow: 1px 3px 20px 1px $item-color;
 
         &.red {
           background: red;
@@ -53,12 +52,11 @@
           background: grey;
         }
 
+        &:hover {
+          transform: scale(1.1);
+        }
       }
 
-      &:hover {
-        background: #c9c9c9;
-
-      }
     }
   }
 

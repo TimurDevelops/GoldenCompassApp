@@ -7,7 +7,6 @@ const InlinePicker = ({defaultValue, values, valueField, onChangeComplete}) => {
   const defItem = values.find((i) => i[valueField] === defaultValue)
 
   const [activeItem, setActiveItem] = useState(defItem)
-  console.log(activeItem)
   return (
 
     <div className={'inline-picker-wrapper'}>

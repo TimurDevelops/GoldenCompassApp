@@ -23,7 +23,7 @@ const CanvasArea = ({room, sidebarOpen}) => {
 
   const allowedToDraw = usertype === 'teacher' ? true : contextAllowedToDraw;
 
-  const [drawWidth, setDrawWidth] = useState(10);
+  const [drawWidth, setDrawWidth] = useState(2);
   const [drawColor, setDrawColor] = useState('red');
   const [activeTool, setActiveTool] = useState(TOOLS.DEFAULT);
 
@@ -42,9 +42,10 @@ const CanvasArea = ({room, sidebarOpen}) => {
       />
 
       <ToolPanel
-        drawColor={drawColor}
         setActiveTool={setActiveTool}
+        defWidth={drawWidth}
         setDrawWidth={setDrawWidth}
+        defColor={drawColor}
         setDrawColor={setDrawColor}
       />
     </div>
