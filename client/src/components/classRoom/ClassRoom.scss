@@ -41,12 +41,14 @@ $menus-buttons-bg: #e5dec1;
 
   &.levels {
     background: $button-background-color-levels;
-
   }
 
   &.students {
     background: $button-background-color-students;
+  }
 
+  &:hover{
+    transform: scale(1.05);
   }
 
   .button {
@@ -64,7 +66,8 @@ $menus-buttons-bg: #e5dec1;
     padding: 15px 0;
     margin: 0;
     box-sizing: border-box;
-    color: white;
+    color: #6ec009;
+
     cursor: pointer;
   }
 }
@@ -72,7 +75,7 @@ $menus-buttons-bg: #e5dec1;
 // AREAS
 .video-wrapper {
   height: 100%;
-  width: 30%;
+  width: 20%;
 }
 
 .canvas-area {

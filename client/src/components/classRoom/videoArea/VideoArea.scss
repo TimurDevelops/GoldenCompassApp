@@ -1,4 +1,8 @@
 .video-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+
   .notification {
     position: fixed;
     top: 0;
@@ -19,10 +23,14 @@
       padding: 1em 2em;
     }
   }
+  .video-border{
+    flex: 1;
+    background: linear-gradient(to right, #324f4d, #315c55);
+  }
 
   .video {
     background-color: #ccc;
-    height: 50%;
+    height: 46%;
     display: flex;
     justify-content: center;
     align-items: center;

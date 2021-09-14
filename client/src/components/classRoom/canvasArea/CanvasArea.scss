@@ -25,24 +25,48 @@ $tip-text-bg: #efda7f;
 }
 
 // CANVAS
+$canvas-bg-color: #6b9b92;
+$canvas-bg-color-two: #77a28f;
+$canvas-border-color: #2d5a55;
+$canvas-border-color-two: #4b6c62;
+$canvas-color: #ec4c4c;
 
-.canvas {
+.canvas-background {
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient( to right, $canvas-bg-color, $canvas-bg-color-two);
 
-  background-size: contain;
-  background-repeat: no-repeat;
+  .canvas-border {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, $canvas-border-color, $canvas-border-color-two);
+    border-radius: 1em;
+    padding: 2em;
+
+    .canvas {
+      background-color: $canvas-color;
+      min-width: 10em;
+      min-height: 10em;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+  }
 }
 
 // TOOLS PANEL
-$tool-panel-bg: #8edad9;
+$tool-panel-bg: #315f5d;
 $tool-panel-item-color: #438bab;
-$tool-panel-divider: #e5e8f8;
+$tool-panel-divider: #587873;
 
 .tool-panel {
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: $tool-panel-bg;
+  //background-color: $tool-panel-bg;
+  background: linear-gradient(to right, #324f4d, #5f8075);
 
   .tool-panel-divider {
     height: 100%;
@@ -54,7 +78,7 @@ $tool-panel-divider: #e5e8f8;
     &:after {
       display: block;
       content: '';
-      width: .2em;
+      width: .15em;
       background: $tool-panel-divider;
       border-radius: 1em;
       height: 80%;
@@ -72,7 +96,7 @@ $tool-panel-divider: #e5e8f8;
     justify-content: space-between;
 
     .tool-btn {
-      padding: 0 .5em;
+      padding: 0 .6em;
       width: 2em;
       height: 100%;
       cursor: pointer;
@@ -110,6 +134,13 @@ $tool-panel-divider: #e5e8f8;
         }
       }
     }
+  }
+
+  .time-holder{
+    display: flex;
+    align-items: center;
+    color: #c2c1a3;
+    font-size: 1.4em;
   }
 }
 

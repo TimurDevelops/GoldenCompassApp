@@ -69,21 +69,6 @@ const VideoArea = ({room}) => {
               receivingCall ?
                 <div className='video-button green' onClick={() => answerCall(caller)}><FaPhone/></div> : ''
           }
-
-
-          {/*{!callAccepted ?*/}
-          {/*  <React.Fragment>{*/}
-          {/*    user.type === 'student' ?*/}
-          {/*      <div className='video-button green' onClick={() => callTeacher(room)}><FaPhone/></div> :*/}
-          {/*      <div className='video-button green' onClick={() => answerCall(caller)}><FaPhone/></div>*/}
-          {/*  }</React.Fragment> :*/}
-          {/*  <React.Fragment>{*/}
-          {/*    user.type === 'student' ?*/}
-          {/*      <div className='video-button green' onClick={() => leaveCall(room)}><FaPhoneSlash/></div> :*/}
-          {/*      <div className='video-button green' onClick={() => leaveCall(caller)}><FaPhoneSlash/></div>*/}
-          {/*  }</React.Fragment>*/}
-          {/*}*/}
-
         </div>
 
         <div className={'video-buttons'}>
@@ -95,8 +80,10 @@ const VideoArea = ({room}) => {
             <div className={'video-button stop-audio'} onClick={() => setCaptureAudio(false)}><FaVolumeMute/></div> :
             <div className={'video-button start-audio'} onClick={() => setCaptureAudio(true)}><FaVolumeUp/></div>}
         </div>
-
       </div>
+
+      <div className={'video-border'}/>
+
       <div className={"student-video video"}>
         <video
           ref={userVideo}
