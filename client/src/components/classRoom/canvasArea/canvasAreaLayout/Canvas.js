@@ -19,7 +19,7 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
 
       <div className={'canvas-border'}>
 
-        {/* TODO Make an image */}
+        <img className={'slide-img'} src={img} alt="Картинка для слайда не загрузилась"/>
 
         <div id='mainCanvas' className={"canvas"}
              style={{backgroundImage: img ? `url(${img})` : 'none'}}>

@@ -36,21 +36,37 @@ $canvas-color: #ec4c4c;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient( to right, $canvas-bg-color, $canvas-bg-color-two);
+  background: linear-gradient(to right, $canvas-bg-color, $canvas-bg-color-two);
 
   .canvas-border {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     background: linear-gradient(to right, $canvas-border-color, $canvas-border-color-two);
     border-radius: 1em;
     padding: 2em;
+    max-width: 100%;
+    max-height: 100%;
+
+    .slide-img {
+      display: block;
+      vertical-align: bottom;
+      z-index: 0;
+      visibility: hidden;
+    }
 
     .canvas {
+      z-index: 100;
+      width: calc(100% - 4em);
+      height: calc(100% - 4em);
+      position: absolute;
+      top: 2em;
+      left: 2em;
       background-color: $canvas-color;
       min-width: 10em;
       min-height: 10em;
-      background-size: contain;
+      background-size: cover;
       background-repeat: no-repeat;
     }
   }
@@ -136,7 +152,7 @@ $tool-panel-divider: #587873;
     }
   }
 
-  .time-holder{
+  .time-holder {
     display: flex;
     align-items: center;
     color: #c2c1a3;
