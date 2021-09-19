@@ -59,10 +59,6 @@ const StudentContextProvider = ({children}) => {
       setAllowedToDraw(allowStudentToDraw);
     })
 
-    socket.on('canvas-reset', () => {
-      alert.show("Учитель перезапустил ваш холст")
-    })
-
   }, []);
 
 

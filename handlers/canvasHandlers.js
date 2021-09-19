@@ -34,7 +34,7 @@ module.exports = (io, socket) => {
 
   const resetCanvas = async ({teacherLogin}) => {
     if (teacherLogin) {
-      socket.broadcast.to(teacherLogin).emit('canvas-reset');
+      io.to(teacherLogin).emit('canvas-reset');
     }
   }
 
