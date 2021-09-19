@@ -50,7 +50,7 @@ module.exports = (io, socket) => {
       for (const studentLogin of allowedStudents) {
         const studentSocketId = getSocketIdByLogin(studentLogin);
         if (studentSocketId) {
-          io.to(studentSocketId).emit('canvas-slide-changed', {slide});
+          io.to(teacherLogin).emit('canvas-slide-changed', {slide});
         }
       }
     }

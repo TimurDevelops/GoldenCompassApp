@@ -7,7 +7,8 @@ $menus-buttons-bg: #77CCE07F;
 
   .waiting-screen-class-room-wrapper {
     position: relative;
-    height: 100%;
+    height: calc(100% - 80px);
+    //flex: 1;
 
     .class-room-wrapper {
       position: relative;
@@ -136,6 +137,7 @@ $menu-items: #558180;
         height: 100%;
         width: 30%;
         background: $menu-items;
+        overflow-y: scroll;
       }
     }
 
