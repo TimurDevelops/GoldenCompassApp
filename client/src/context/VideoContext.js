@@ -106,6 +106,8 @@ const VideoContextProvider = ({children}) => {
       if (userVideo.current) userVideo.current.srcObject = otherStream;
     });
 
+    teacherPeer.on('close', () => hangUp())
+
     teacherPeer.signal(callerSignal)
     // teacherPeer._debug = console.log
 
@@ -142,9 +144,11 @@ const VideoContextProvider = ({children}) => {
 
     studentPeer.on('error', (err) => {
       console.error(err)
-      alert('При передаче видео произошла ошибка, обновите страницу')
+      // alert('При передаче видео произошла ошибка, обновите страницу')
       // window.location.reload();
     })
+
+    studentPeer.on('close', () => hangUp())
 
     // studentPeer._debug = console.log
 
@@ -193,53 +197,3 @@ const VideoContextProvider = ({children}) => {
 };
 
 export {VideoContextProvider, VideoContext};
-
-
-
-
-
-
-
-
-
-
-// starting batched negotiation
-// start negotiation
-// signalingStateChange have-local-offer
-// createOffer success
-// iceStateChange (connection: new) (gathering: gathering)
-// started iceComplete timeout
-// iceComplete timeout completed
-// signal
-// iceStateChange (connection: checking) (gathering: gathering)
-// signal()
-// flushing sender queue []
-// negotiate
-// signalingStateChange stable
-//  on track
-// iceStateChange (connection: connected) (gathering: gathering)
-// maybeReady pc true channel false
-// on channel open
-// maybeReady pc true channel true
-// iceStateChange (connection: connected) (gathering: complete)
-// maybeReady pc true channel true
-// connect local: 192.168.1.106:47409 remote: 192.168.1.106:46302
-// connect
-// destroy (error: undefined)
-// starting batched negotiation
-// start negotiation
-// signalingStateChange have-local-offer
-// createOffer success
-// iceStateChange (connection: new) (gathering: gathering)
-// started iceComplete timeout
-// iceComplete timeout completed
-// signal
-// iceStateChange (connection: checking) (gathering: gathering)
-//  signal()
-// flushing sender queue []
-// negotiate
-// signalingStateChange stable
-//  on track
-// iceStateChange (connection: connected) (gathering: gathering)
-// maybeReady pc true channel false
-// destroy (error: InvalidStateError: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable)

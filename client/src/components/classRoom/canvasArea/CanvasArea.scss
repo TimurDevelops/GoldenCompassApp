@@ -161,3 +161,23 @@ $tool-panel-divider: #587873;
   }
 }
 
+
+@media (max-width: 1300px) {
+  //TODO как поступить с панелью при маленьком экране
+  .tool-panel {
+    justify-content: start;
+    .tool-panel-divider{
+      margin: 0 .2em;
+    }
+  }
+
+  .canvas-background {
+    .canvas-border {
+      padding: .2em;
+      border-radius: .1em;
+
+    }
+  }
+}
+
+

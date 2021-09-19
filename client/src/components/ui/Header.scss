@@ -6,7 +6,7 @@ $sign-out-color: #ef2f5a;
 header {
   width: 100%;
   height: 80px;
-  background: linear-gradient( to right, $main-two, $main, $main-two);
+  background: linear-gradient(to right, $main-two, $main, $main-two);
 
   display: flex;
   justify-content: space-between;
@@ -27,7 +27,7 @@ header {
         height: 100%;
       }
 
-      &:after{
+      &:after {
         z-index: 0;
         display: block;
         content: '';
@@ -63,11 +63,27 @@ header {
         width: 3em;
         height: 3em;
       }
-      &:hover{
+
+      &:hover {
         transform: scale(1.1);
       }
 
     }
 
+  }
+}
+
+
+@media (max-width: 1300px) {
+  header {
+    height: 40px;
+    .logo {
+      .logo-icon {
+        &:after {
+          margin: .3em;
+
+        }
+      }
+    }
   }
 }

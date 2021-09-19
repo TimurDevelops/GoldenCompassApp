@@ -18,22 +18,42 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
     const maxWidth = canvasBackground.current.offsetWidth;
     let proportion = 1;
 
-    if (img.height > maxHeight || img.width > maxWidth) {
-      if (img.height > maxHeight) {
-        proportion = img.height / img.width;
+    if (maxHeight < maxWidth) {
+      if (img.height > maxHeight || img.width > maxWidth) {
+        if (img.height > maxHeight) {
+          proportion = img.height / img.width;
 
-        setHeight(`calc(${maxHeight}px  - 4em)`)
-        setWidth(`calc((${maxHeight}px - 4em) / ${proportion})`);
+          setHeight(`calc(${maxHeight}px  - 4em)`)
+          setWidth(`calc((${maxHeight}px - 4em) / ${proportion})`);
 
+        } else {
+          proportion = img.width / img.height;
+
+          setWidth(`calc(${maxWidth}px  - 4em)`)
+          setHeight(`calc((${maxWidth}px - 4em) / ${proportion})`);
+        }
       } else {
-        proportion = img.width / img.height;
-
-        setWidth(`calc(${maxWidth}px  - 4em)`)
-        setHeight(`calc((${maxWidth}px - 4em) / ${proportion})`);
+        setWidth(img.width);
+        setHeight(img.height);
       }
     } else {
-      setWidth(img.width);
-      setHeight(img.height);
+      if (img.height > maxHeight || img.width > maxWidth) {
+        if (img.width > maxWidth) {
+          proportion = img.width / img.height;
+
+          setWidth(`calc(${maxWidth}px  - 4em)`)
+          setHeight(`calc((${maxWidth}px - 4em) / ${proportion})`);
+
+        } else {
+          proportion = img.height / img.width;
+
+          setHeight(`calc(${maxHeight}px  - 4em)`)
+          setWidth(`calc((${maxHeight}px - 4em) / ${proportion})`);
+        }
+      } else {
+        setWidth(img.width);
+        setHeight(img.height);
+      }
     }
   }
 

@@ -2,10 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import SlideItem from "./SlideItem";
 
-const SlidePicker = ({open, slides, setSlide}) => {
+const SlidePicker = ({open, setOpen, slides, setSlide}) => {
   return (
     <div className={`item-picker slide-picker ${open ? 'open' : ''}`}>
       <div className={`picker-area`}>
+        <div className={'picker-menu-bg slides'} onClick={() => setOpen(false)}/>
 
         <div className={'picker-items slides'}>
           {slides && slides.map(slide => <SlideItem key={slide._id} setSlide={() => setSlide(slide)} slide={slide}/>)}
