@@ -128,8 +128,8 @@ export default function sketch(p) {
     drawWidth = newProps.drawWidth;
     drawColor = newProps.drawColor;
 
-    if(!newProps.socket) return;
-    if(!!socket) return;
+    if (!newProps.socket) return;
+    if (!!socket) return;
 
     socket = newProps.socket;
 
@@ -149,6 +149,9 @@ export default function sketch(p) {
       resetCanvas();
     })
 
+    socket.on('canvas-slide-changed', () => {
+      p.setup()
+    })
 
   }
 }

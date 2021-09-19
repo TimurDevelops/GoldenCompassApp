@@ -41,18 +41,11 @@ module.exports = (io, socket) => {
   const changeSlide = async ({teacherLogin, slide}) => {
 
     if (teacherLogin) {
-      const allowedStudents = getAllowedStudents(teacherLogin);
       const teacherSocketId = getSocketIdByLogin(teacherLogin);
       if (teacherSocketId) {
         io.to(teacherSocketId).emit('canvas-slide-picked', {slide});
       }
-
-      for (const studentLogin of allowedStudents) {
-        const studentSocketId = getSocketIdByLogin(studentLogin);
-        if (studentSocketId) {
-          io.to(teacherLogin).emit('canvas-slide-changed', {slide});
-        }
-      }
+      io.to(teacherLogin).emit('canvas-slide-changed', {slide});
     }
   }
 

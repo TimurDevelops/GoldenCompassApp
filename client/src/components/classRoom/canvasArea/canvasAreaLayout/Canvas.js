@@ -19,7 +19,7 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
     let proportion = 1;
 
     if (img.height > maxHeight || img.width > maxWidth) {
-      if (img.height > maxHeight){
+      if (img.height > maxHeight) {
         proportion = img.height / img.width;
 
         setHeight(`calc(${maxHeight}px  - 4em)`)
@@ -35,13 +35,6 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
       setWidth(img.width);
       setHeight(img.height);
     }
-
-    // const maxHeight = canvasBackground.current.offsetHeight;
-    // const maxWidth = canvasBackground.current.offsetWidth;
-    //
-    // setWidth(`auto`);
-    // setHeight(`calc(${maxHeight}px  - 4em)`);
-
   }
 
   return (
@@ -64,11 +57,13 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
           {/*        onDragStop={() => setDraggingAbacus(false)}*/}
           {/*        room={room}/>}*/}
 
-
           <P5Wrapper
             sketch={sketch}
             socket={socket}
             room={room}
+
+            width={parseInt(width)}
+            height={parseInt(height)}
 
             active={active}
             activeTool={activeTool}
