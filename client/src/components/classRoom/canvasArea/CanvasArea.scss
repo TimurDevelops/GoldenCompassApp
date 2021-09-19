@@ -144,6 +144,12 @@ $tool-panel-divider: #587873;
           transform: scale(1.1);
         }
       }
+
+      &.active {
+        svg {
+          color: #6b9b92;
+        }
+      }
     }
   }
 

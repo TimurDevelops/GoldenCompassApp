@@ -6,5 +6,5 @@ export const TOOLS = {
   TIMER: "TIMER",
   SWITCH: "SWITCH",
   RELOAD: "RELOAD",
-  DEFAULT: "PENCIL"
+  DEFAULT: ""
 }

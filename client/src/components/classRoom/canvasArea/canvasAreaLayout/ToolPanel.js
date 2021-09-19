@@ -11,7 +11,7 @@ import InlinePicker from "../../../ui/InlinePicker";
 import InlineColorPicker from "../../../ui/InlineColorPicker";
 
 
-const ToolPanel = ({setActiveTool, defWidth, setDrawWidth, defColor, setDrawColor}) => {
+const ToolPanel = ({activeTool, setActiveTool, defWidth, setDrawWidth, defColor, setDrawColor}) => {
 
   const {socket} = useSocket();
 
@@ -79,37 +79,39 @@ const ToolPanel = ({setActiveTool, defWidth, setDrawWidth, defColor, setDrawColo
       <div className={'tool-panel-divider'}/>
 
       <div className={'tools-buttons'}>
-      <div className={'tool-btn salad'} onClick={() => {
-        setActiveTool(TOOLS.PENCIL)
-      }}><FaPencilAlt/></div>
+        <div className={`tool-btn salad ${activeTool === TOOLS.PENCIL ? 'active' : ''}`} onClick={() => {
+          setActiveTool(TOOLS.PENCIL)
+        }}><FaPencilAlt/></div>
 
-      <div className={'tool-btn salad'} onClick={() => {
-        setActiveTool(TOOLS.ERASER)
-      }}><FaEraser/></div>
+        <div className={`tool-btn salad ${activeTool === TOOLS.ERASER ? 'active' : ''}`} onClick={() => {
+          setActiveTool(TOOLS.ERASER)
+        }}><FaEraser/></div>
 
-      {displayTeacherTools && <div className={'tool-btn salad'} onClick={() => {
-        setActiveTool(TOOLS.CURSOR)
-      }}><FaMousePointer/></div>}
+        {displayTeacherTools &&
+        <div className={`tool-btn salad ${activeTool === TOOLS.CURSOR ? 'active' : ''}`} onClick={() => {
+          setActiveTool(TOOLS.CURSOR)
+        }}><FaMousePointer/></div>}
 
-      {displayTeacherTools && <div className={'tool-btn green'} onClick={() => {
-        setTimerRunning(!timerRunning);
-      }}><FaClock/></div>}
+        {displayTeacherTools && <div className={'tool-btn green'} onClick={() => {
+          setTimerRunning(!timerRunning);
+        }}><FaClock/></div>}
 
-      {displayTeacherTools &&
-      <div className={'time-holder'}>
-        <span className={'minute'}>{minute < 10 ? '0' + minute : minute}</span>
-        <span className={'colon'}>:</span>
-        <span className={'seconds'}>{second < 10 ? '0' + second : second}</span>
-      </div>}
-      {displayTeacherTools && <div className={'tool-btn red'} onClick={() => {
-        resetTimer();
-      }}><FaMinusCircle/></div>
+        {displayTeacherTools &&
+        <div className={'time-holder'}>
+          <span className={'minute'}>{minute < 10 ? '0' + minute : minute}</span>
+          <span className={'colon'}>:</span>
+          <span className={'seconds'}>{second < 10 ? '0' + second : second}</span>
+        </div>}
+        {displayTeacherTools && <div className={'tool-btn red'} onClick={() => {
+          resetTimer();
+        }}><FaMinusCircle/></div>
         }
 
-      {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
-                                      onChange={(value) => setStudentAllowedToDraw(value)}/>}
+        {displayTeacherTools && <Switch labelOne="" labelTwo="" valueOne={true} valueTwo={false}
+                                        onChange={(value) => setStudentAllowedToDraw(value)}/>}
 
-      {displayTeacherTools && <div className={'tool-btn salad'} onClick={() => resetStudentCanvas()}><FaSyncAlt/></div>}
+        {displayTeacherTools &&
+        <div className={'tool-btn salad'} onClick={() => resetStudentCanvas()}><FaSyncAlt/></div>}
 
       </div>
     </div>
@@ -117,6 +119,7 @@ const ToolPanel = ({setActiveTool, defWidth, setDrawWidth, defColor, setDrawColo
 }
 
 ToolPanel.propTypes = {
+  activeTool: PropTypes.string.isRequired,
   setActiveTool: PropTypes.func.isRequired,
   defWidth: PropTypes.number.isRequired,
   setDrawWidth: PropTypes.func.isRequired,

@@ -42,6 +42,7 @@ const CanvasArea = ({room, sidebarOpen}) => {
       />
 
       <ToolPanel
+        activeTool={activeTool}
         setActiveTool={setActiveTool}
         defWidth={drawWidth}
         setDrawWidth={setDrawWidth}
