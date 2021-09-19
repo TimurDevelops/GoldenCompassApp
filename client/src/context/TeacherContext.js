@@ -25,11 +25,8 @@ const TeacherContextProvider = ({ children }) => {
     })
 
     socket.on('canvas-slide-picked', ({slide}) => {
-      console.log(slide)
       setSlide(slide);
     })
-
-
 
     socket.on('teacher-joined', () => {
       setWaitingScreen(false);

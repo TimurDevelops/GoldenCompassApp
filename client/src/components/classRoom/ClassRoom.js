@@ -92,9 +92,7 @@ const ClassRoom = ({logout}) => {
   }
 
   const slidePicked = (value) => {
-    console.log(value)
     socket.emit("canvas-change-slide", {teacherLogin: teacher, slide: value});
-    setSlidePickerOpen(false);
   }
 
   return (
@@ -111,12 +109,15 @@ const ClassRoom = ({logout}) => {
           />
 
           {user.type === 'teacher' ?
+            <SlidePicker open={slidePickerOpen}
+                       setOpen={setSlidePickerOpen}
+                       slides={lesson.slides}
+                       setSlide={slidePicked}/> : ''}
+
+
+          {user.type === 'teacher' ?
             <div className={'pickers'}>
 
-              <SlidePicker open={slidePickerOpen}
-                           setOpen={setSlidePickerOpen}
-                           slides={lesson.slides}
-                           setSlide={slidePicked}/>
 
               <LessonPicker open={lessonPickerOpen}
                             setOpen={setLessonPickerOpen}
