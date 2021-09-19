@@ -1,3 +1,4 @@
+// TODO potentially remove connections and use socket ids from other stuff
 let connections = {};
 let startedCalls = {};
 
@@ -19,7 +20,7 @@ module.exports = (io, socket) => {
     startedCalls[teacherLogin] = true;
 
     const studentSocketId = connections[studentLogin];
-    io.to(studentSocketId).emit("teacher-accepted-call", {signal})
+    io.to(studentSocketId).emit("teacher-accepted-call", {teacherLogin, signal})
   }
 
 
@@ -33,11 +34,13 @@ module.exports = (io, socket) => {
     io.to(studentSocketId).emit("teacher-signals", {stream})
   }
 
-  const disconnect = async () => {
+  const disconnect = async ({caller}) => {
+    const callerSocketId = connections[caller];
+
+    io.to(callerSocketId).emit("caller-ended-call");
     for (const [key, value] of Object.entries(connections)) {
       if(value === socket.id){
         delete startedCalls[key]
-        delete connections[key]
       }
     }
   }

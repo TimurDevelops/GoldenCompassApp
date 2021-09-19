@@ -23,6 +23,7 @@ const VideoContextProvider = ({children}) => {
   const [calling, setCalling] = useState(false);
   const [receivingCall, setReceivingCall] = useState(false);
 
+
   const [captureVideo, setCaptureVideo] = useState(true);
   const [captureAudio, setCaptureAudio] = useState(true);
 
@@ -82,8 +83,11 @@ const VideoContextProvider = ({children}) => {
       setCallerSignal(signal);
     });
 
-  }
+    socket.on('caller-ended-call', () => {
+      hangUp();
+    });
 
+  }
 
   const answerCall = (studentLogin) => {
     const user = getUser()
@@ -103,6 +107,7 @@ const VideoContextProvider = ({children}) => {
     });
 
     teacherPeer.signal(callerSignal)
+    // teacherPeer._debug = console.log
 
     connectionRef.current = teacherPeer;
   };
@@ -112,12 +117,13 @@ const VideoContextProvider = ({children}) => {
     stream.getVideoTracks().forEach(track => track.enabled = captureVideo);
     stream.getAudioTracks().forEach(track => track.enabled = captureAudio);
 
+    setCalling(true);
+
     if (connectionRef.current.destroy) connectionRef.current.destroy();
 
     const studentPeer = new Peer({initiator: true, trickle: false, stream: stream})
 
     studentPeer.on('signal', data => {
-      setCalling(true);
       socket.emit('call-teacher', {teacherLogin, studentLogin: user.login, signalData: data});
     })
 
@@ -125,30 +131,39 @@ const VideoContextProvider = ({children}) => {
       if (userVideo.current) userVideo.current.srcObject = otherStream;
     });
 
-    socket.on('teacher-accepted-call', ({signal}) => {
+    socket.on('teacher-accepted-call', ({teacherLogin, signal}) => {
+      setCaller(teacherLogin);
       setCalling(false);
       setCallAccepted(true);
-      studentPeer.signal(signal);
+
+      connectionRef.current.signal(signal);
     });
 
 
     studentPeer.on('error', (err) => {
       console.error(err)
-      window.location.reload();
+      alert('При передаче видео произошла ошибка, обновите страницу')
+      // window.location.reload();
     })
+
+    // studentPeer._debug = console.log
 
     connectionRef.current = studentPeer;
   };
 
   const leaveCall = () => {
-    socket.emit('call-ended')
+    socket.emit('call-ended', {caller})
+    hangUp();
+  };
 
+  const hangUp = () => {
     setReceivingCall(false);
     setCallAccepted(false);
     setCalling(false);
 
     connectionRef.current.destroy();
-  };
+    window.location.reload();
+  }
 
   return (
     <VideoContext.Provider value={{
@@ -178,3 +193,53 @@ const VideoContextProvider = ({children}) => {
 };
 
 export {VideoContextProvider, VideoContext};
+
+
+
+
+
+
+
+
+
+
+// starting batched negotiation
+// start negotiation
+// signalingStateChange have-local-offer
+// createOffer success
+// iceStateChange (connection: new) (gathering: gathering)
+// started iceComplete timeout
+// iceComplete timeout completed
+// signal
+// iceStateChange (connection: checking) (gathering: gathering)
+// signal()
+// flushing sender queue []
+// negotiate
+// signalingStateChange stable
+//  on track
+// iceStateChange (connection: connected) (gathering: gathering)
+// maybeReady pc true channel false
+// on channel open
+// maybeReady pc true channel true
+// iceStateChange (connection: connected) (gathering: complete)
+// maybeReady pc true channel true
+// connect local: 192.168.1.106:47409 remote: 192.168.1.106:46302
+// connect
+// destroy (error: undefined)
+// starting batched negotiation
+// start negotiation
+// signalingStateChange have-local-offer
+// createOffer success
+// iceStateChange (connection: new) (gathering: gathering)
+// started iceComplete timeout
+// iceComplete timeout completed
+// signal
+// iceStateChange (connection: checking) (gathering: gathering)
+//  signal()
+// flushing sender queue []
+// negotiate
+// signalingStateChange stable
+//  on track
+// iceStateChange (connection: connected) (gathering: gathering)
+// maybeReady pc true channel false
+// destroy (error: InvalidStateError: Failed to execute 'setRemoteDescription' on 'RTCPeerConnection': Failed to set remote answer sdp: Called in wrong state: stable)

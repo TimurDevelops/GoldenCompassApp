@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {FaVideo, FaVideoSlash, FaVolumeUp, FaVolumeMute, FaPhone} from 'react-icons/fa';
+import {FaVideo, FaVideoSlash, FaVolumeUp, FaVolumeMute, FaPhone, FaPhoneSlash} from 'react-icons/fa';
 
 import PropTypes from "prop-types";
 import {useUser} from "../../../hooks/useUser";
@@ -22,7 +22,7 @@ const VideoArea = ({room}) => {
 
     callTeacher,
     answerCall,
-    // leaveCall,
+    leaveCall,
 
     captureVideo,
     captureAudio,
@@ -64,11 +64,16 @@ const VideoArea = ({room}) => {
 
         <div className={'video-buttons start-call-buttons'}>
           {
-            user.type === 'student' ?
-              !calling && !callAccepted && <div className='video-button green' onClick={() => callTeacher(room)}><FaPhone/></div> :
-
-              receivingCall ?
-                <div className='video-button green' onClick={() => answerCall(caller)}><FaPhone/></div> : ''
+            user.type === 'student' && !calling && !callAccepted &&
+            <div className='video-button green' onClick={() => callTeacher(room)}><FaPhone/></div>
+          }
+          {
+            user.type === 'teacher' && receivingCall &&
+            <div className='video-button green' onClick={() => answerCall(caller)}><FaPhone/></div>
+          }
+          {
+            callAccepted &&
+            <div className='video-button red' onClick={() => leaveCall(caller)}><FaPhoneSlash/></div>
           }
         </div>
 
