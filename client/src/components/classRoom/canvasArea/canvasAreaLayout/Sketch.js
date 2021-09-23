@@ -18,14 +18,17 @@ export default function sketch(p) {
   let drawWidth = 10;
   let drawColor = 'white';
 
+  let sketchWidth;
+  let sketchHeight;
+
   p.setup = () => {
     cursorImg = p.loadImage(image);
     const container = document.getElementById("mainCanvas");
     if(!container){
       return
     }
-    const sketchWidth = container.offsetWidth;
-    const sketchHeight = container.offsetHeight;
+    sketchWidth = container.offsetWidth;
+    sketchHeight = container.offsetHeight;
 
     // TODO можно удалить повторное создание обработчиков события в socket'е
     const canvases = container.getElementsByTagName("canvas");
@@ -49,8 +52,8 @@ export default function sketch(p) {
       p.noCursor();
 
       let data = {
-        x: p.mouseX,
-        y: p.mouseY,
+        x: p.mouseX/(sketchWidth/100),
+        y: p.mouseY/(sketchHeight/100),
       }
       socket.emit("canvas-cursor", {room, data});
 
@@ -69,18 +72,18 @@ export default function sketch(p) {
     if (!active) return
     if (activeTool === TOOLS.PENCIL) {
       let data = {
-        x: p.mouseX,
-        y: p.mouseY,
-        pMouseX: p.pmouseX,
-        pMouseY: p.pmouseY,
+        x: p.mouseX/(sketchWidth/100),
+        y: p.mouseY/(sketchHeight/100),
+        pMouseX: p.pmouseX/(sketchWidth/100),
+        pMouseY: p.pmouseY/(sketchHeight/100),
         size: drawWidth,
         color: drawColor
       }
       socket.emit("canvas-pencil", {room, data});
     } else if (activeTool === TOOLS.ERASER) {
       let data = {
-        x: p.mouseX,
-        y: p.mouseY,
+        x: p.mouseX/(sketchWidth/100),
+        y: p.mouseY/(sketchHeight/100),
       }
       socket.emit("canvas-eraser", {room, data});
     }
@@ -90,8 +93,8 @@ export default function sketch(p) {
     if (!active) return
     if (activeTool === TOOLS.ERASER) {
       let data = {
-        x: p.mouseX,
-        y: p.mouseY,
+        x: p.mouseX/(sketchWidth/100),
+        y: p.mouseY/(sketchHeight/100),
       }
       socket.emit("canvas-eraser", {room, data});
     }
@@ -105,19 +108,19 @@ export default function sketch(p) {
     let c = drawingCanvas.color(color);
     drawingCanvas.stroke(c)
     drawingCanvas.strokeWeight(size);
-    drawingCanvas.line(x, y, pMouseX, pMouseY, size);
+    drawingCanvas.line(sketchWidth/100*x, sketchHeight/100*y, sketchWidth/100*pMouseX, sketchHeight/100*pMouseY, size);
   }
 
   const eraser = ({x, y}) => {
     drawingCanvas.erase();
-    drawingCanvas.circle(x, y, 30);
+    drawingCanvas.circle(sketchWidth/100*x, sketchHeight/100*y, 30);
     drawingCanvas.noErase();
   }
 
   const cursor = ({x, y}) => {
     cursorCanvas.clear();
 
-    cursorCanvas.image(cursorImg, x, y, cursorImg.width / 50, cursorImg.height / 50)
+    cursorCanvas.image(cursorImg, sketchWidth/100*x, sketchHeight/100*y, cursorImg.width / 50, cursorImg.height / 50)
 
     p.image(cursorCanvas, 0, 0);
   }
