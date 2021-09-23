@@ -20,10 +20,19 @@ export default function sketch(p) {
 
   p.setup = () => {
     cursorImg = p.loadImage(image);
+    const container = document.getElementById("mainCanvas");
+    if(!container){
+      return
+    }
+    const sketchWidth = container.offsetWidth;
+    const sketchHeight = container.offsetHeight;
 
-    const sketchWidth = document.getElementById("mainCanvas").offsetWidth;
-    const sketchHeight = document.getElementById("mainCanvas").offsetHeight;
-
+    // TODO можно удалить повторное создание обработчиков события в socket'е
+    const canvases = container.getElementsByTagName("canvas");
+    for (let i = 0; i < canvases.length; i++){
+      console.log(canvases[i])
+      if (canvases[i]) canvases[i].parentElement.removeChild(canvases[i])
+    }
     canvas = p.createCanvas(sketchWidth, sketchHeight);
     drawingCanvas = p.createGraphics(sketchWidth, sketchHeight);
     cursorCanvas = p.createGraphics(sketchWidth, sketchHeight);
@@ -149,9 +158,8 @@ export default function sketch(p) {
       resetCanvas();
     })
 
-    socket.on('canvas-slide-changed', () => {
+    socket.on('loaded-image', () => {
       p.setup()
     })
-
   }
 }

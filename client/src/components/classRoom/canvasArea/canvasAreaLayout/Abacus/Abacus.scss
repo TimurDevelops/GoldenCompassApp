@@ -1,0 +1,119 @@
+.abacus-slide {
+  background: url("../../../../../../src/img/abacusBg.jpeg");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  &.hidden{
+    display: none;
+  }
+  .abacus-border {
+    position: relative;
+    width: 100%;
+    padding: 1em;
+    box-sizing: border-box;
+
+    .border.left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1em;
+      height: 100%;
+      background: #437507;
+    }
+
+    .border.right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1em;
+      height: 100%;
+      background: #437507;
+    }
+
+    .border.top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1em;
+      background: #437507;
+    }
+
+    .border.bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1em;
+      background: #437507;
+
+    }
+  }
+}
+
+.abacus-holder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .abacus-divider {
+    height: 1em;
+    background: linear-gradient(to right, #437507, #cbc603, #437507);
+  }
+
+
+  .section {
+    display: flex;
+    justify-content: space-between;
+
+    .spoke {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      width: .5em;
+      margin: 0 .85em;
+      background: linear-gradient(to right, #437507, #cbc603, #437507);
+      cursor: pointer;
+
+      .bead {
+        border-radius: .6em;
+        background: radial-gradient(#ccc61c, #696215);
+        width: 2em;
+        height: 1.5em;
+
+        &.bead-3, &.bead-4 {
+          background: radial-gradient(#058534, #07582d);
+        }
+      }
+
+    }
+  }
+
+  .upper-row {
+    .spoke {
+      height: 45px;
+      justify-content: flex-start;
+
+      .bead {
+        &.active {
+          margin-top: auto;
+        }
+      }
+    }
+  }
+
+  .bottom-row {
+    .spoke {
+      height: 120px;
+
+      .bead {
+        &.active {
+          margin-bottom: auto;
+        }
+      }
+    }
+  }
+}

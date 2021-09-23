@@ -105,7 +105,7 @@ const ClassRoom = ({logout}) => {
 
           <CanvasArea
             room={teacher}
-            sidebarOpen={!slidePickerOpen && !lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
+            sidebarOpen={!lessonPickerOpen && !levelPickerOpen && !studentPickerOpen}
           />
 
           {user.type === 'teacher' ?

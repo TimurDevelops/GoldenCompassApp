@@ -39,16 +39,42 @@ module.exports = (io, socket) => {
   }
 
   const changeSlide = async ({teacherLogin, slide}) => {
-
     if (teacherLogin) {
       const teacherSocketId = getSocketIdByLogin(teacherLogin);
-      if (teacherSocketId) {
-        io.to(teacherSocketId).emit('canvas-slide-picked', {slide});
+      io.to(teacherSocketId).emit('canvas-slide-picked', {slide});
+      io.to(teacherSocketId).emit('canvas-slide-changed', {slide});
+
+      const allowedStudents = getAllowedStudents(teacherLogin);
+      for (const studentLogin of allowedStudents) {
+        const studentSocketId = getSocketIdByLogin(studentLogin);
+        if (studentSocketId) {
+          io.to(studentSocketId).emit('canvas-slide-changed', {slide});
+        }
       }
-      io.to(teacherLogin).emit('canvas-slide-changed', {slide});
+
     }
   }
 
+  const imageLoaded = async ({login}) => {
+    const userSocketId = getSocketIdByLogin(login);
+    io.to(userSocketId).emit('loaded-image');
+  }
+
+  const changeAbacus = async ({room, section, state}) => {
+    if (room) {
+      const teacherSocketId = getSocketIdByLogin(room);
+      io.to(teacherSocketId).emit('change-abacus', {section, state});
+
+      const allowedStudents = getAllowedStudents(room);
+      for (const studentLogin of allowedStudents) {
+        const studentSocketId = getSocketIdByLogin(studentLogin);
+        if (studentSocketId) {
+          io.to(studentSocketId).emit('change-abacus', {section, state});
+        }
+      }
+
+    }
+  }
 
   socket.on('canvas-pencil', pencil);
   socket.on('canvas-eraser', eraser);
@@ -57,5 +83,8 @@ module.exports = (io, socket) => {
   socket.on('set-drawing-enabled', setDrawingEnabled);
   socket.on('reset-canvas', resetCanvas);
   socket.on('canvas-change-slide', changeSlide);
+  socket.on('image-loaded', imageLoaded);
+
+  socket.on('abacus-clicked', changeAbacus);
 
 }

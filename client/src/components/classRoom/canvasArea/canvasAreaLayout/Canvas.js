@@ -4,11 +4,12 @@ import P5Wrapper from "react-p5-wrapper";
 import sketch from "./Sketch";
 
 import {useSocket} from "../../../../hooks/useSocket";
-// import Abacus from "../../../ui/Abacus";
+import AbacusSlide from "./Abacus/AbacusSlide";
+import {useUser} from "../../../../hooks/useUser";
 
-// const Canvas = ({room, activeTool, drawWidth, drawColor, active, img, hasAbacus}) => {
-const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
+const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}) => {
   const {socket} = useSocket();
+  const {getUser} = useUser();
   const [width, setWidth] = useState('100px');
   const [height, setHeight] = useState('100px');
   const canvasBackground = React.createRef();
@@ -18,7 +19,7 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
     const maxWidth = canvasBackground.current.offsetWidth;
     let proportion = 1;
 
-    if (maxHeight < maxWidth) {
+    if (maxWidth > maxHeight) {
       if (img.height > maxHeight || img.width > maxWidth) {
         if (img.height > maxHeight) {
           proportion = img.height / img.width;
@@ -55,6 +56,8 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
         setHeight(img.height);
       }
     }
+    const user = getUser();
+    socket.emit("image-loaded", {login: user.login});
   }
 
   return (
@@ -72,10 +75,7 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
                height: height
              }}
         >
-
-          {/*{hasAbacus && <Abacus onDragStart={() => setDraggingAbacus(true)}*/}
-          {/*        onDragStop={() => setDraggingAbacus(false)}*/}
-          {/*        room={room}/>}*/}
+          <AbacusSlide visible={hasAbacus} room={room}/>
 
           <P5Wrapper
             sketch={sketch}
@@ -99,7 +99,7 @@ const Canvas = ({room, activeTool, drawWidth, drawColor, active, img}) => {
 Canvas.propTypes = {
   room: PropTypes.string.isRequired,
   img: PropTypes.string,
-  // hasAbacus: PropTypes.bool,
+  hasAbacus: PropTypes.bool,
   active: PropTypes.bool.isRequired,
   activeTool: PropTypes.string.isRequired,
   drawWidth: PropTypes.number.isRequired,

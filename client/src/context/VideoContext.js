@@ -27,7 +27,6 @@ const VideoContextProvider = ({children}) => {
   const [captureVideo, setCaptureVideo] = useState(true);
   const [captureAudio, setCaptureAudio] = useState(true);
 
-
   // Обработка отключения/включения видео/аудио
   useEffect(() => {
     if (callAccepted) {
