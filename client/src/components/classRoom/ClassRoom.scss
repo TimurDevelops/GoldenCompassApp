@@ -89,7 +89,7 @@ $menus-buttons-bg: #e5dec1;
   position: relative;
 }
 
-.item-picker.slide-picker{
+.item-picker.slide-picker {
   width: 20%;
 }
 
@@ -130,7 +130,7 @@ $menu-items: #558180;
       height: 100%;
       background: $menu-bg;
 
-      &.slides{
+      &.slides {
         display: none;
       }
     }
@@ -261,7 +261,7 @@ $menu-items: #558180;
     }
   }
 
-      .slide-picker {
+  .slide-picker {
     position: fixed;
   }
 
@@ -302,6 +302,7 @@ $menu-items: #558180;
       position: fixed;
       right: 0;
       height: 70%;
+      top: calc(30% + 40px);
     }
   }
 
