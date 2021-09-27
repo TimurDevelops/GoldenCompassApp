@@ -64,11 +64,11 @@ const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}
 
     <div className={'canvas-background'} ref={canvasBackground}>
 
-      <div className={'canvas-border'}>
+      <div className={`canvas-border ${img ? '' : 'hidden'}`}>
 
         <img className={'slide-img'} src={img} alt="Картинка для слайда не загрузилась" onLoad={onImgLoad}/>
 
-        <div id='mainCanvas' className={"canvas"}
+        <div id='mainCanvas' className={'canvas'}
              style={{
                backgroundImage: img ? `url(${img})` : 'none',
                width: width,

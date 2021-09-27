@@ -310,6 +310,13 @@ $menu-items: #558180;
 }
 
 @media (max-width: 900px) {
+  .canvas-background{
+    padding-right: 2.5em;
+  }
+  .item-picker.slide-picker {
+    width: 30%;
+  }
+
   .class-room-wrapper {
     .tip-area {
       height: auto;

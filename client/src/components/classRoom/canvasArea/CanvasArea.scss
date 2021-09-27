@@ -4,6 +4,7 @@ $tip-color: #232323;
 $tip-text-bg: #efda7f;
 
 .tip-area {
+  overflow-y: scroll;
   height: 10%;
   background-color: $tip-bg;
   display: flex;
@@ -52,6 +53,10 @@ $canvas-color: #ec4c4c;
     max-width: 100%;
     max-height: 100%;
 
+    &.hidden{
+      visibility: hidden;
+    }
+
     .slide-img {
       vertical-align: bottom;
       z-index: 0;
@@ -59,6 +64,7 @@ $canvas-color: #ec4c4c;
     }
 
     .canvas {
+
       background-color: $canvas-color;
       background-size: cover;
       background-repeat: no-repeat;
@@ -162,7 +168,6 @@ $tool-panel-divider: #587873;
 }
 
 @media (max-width: 1300px) {
-  //TODO как поступить с панелью при маленьком экране
   .tool-panel {
     .tool-panel-divider{
       margin: 0 .2em;
@@ -178,4 +183,41 @@ $tool-panel-divider: #587873;
   }
 }
 
+
+@media (max-width: 900px) {
+  .tool-panel {
+    height: 15%;
+    flex-wrap: wrap;
+    justify-content: left;
+    .inline-picker-wrapper{
+      width: 40%;
+      height: 2.5em;
+      .p-item-picker-wrapper{
+        height: 2.5em;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .inline-color-picker-wrapper {
+      width: 40%;
+      height: 2.5em;
+      padding-left: .5em;
+      .p-item-picker-wrapper{
+        height: 2.5em;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .tools-buttons{
+      height: 2.5em;
+      .tool-btn{
+        padding: 0.2em;
+      }
+    }
+    .tool-panel-divider{
+      margin: 0 .2em;
+      display: none;
+    }
+  }
+}
 
