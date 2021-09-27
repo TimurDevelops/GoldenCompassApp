@@ -33,7 +33,6 @@ export default function sketch(p) {
     // TODO можно удалить повторное создание обработчиков события в socket'е
     const canvases = container.getElementsByTagName("canvas");
     for (let i = 0; i < canvases.length; i++){
-      console.log(canvases[i])
       if (canvases[i]) canvases[i].parentElement.removeChild(canvases[i])
     }
     canvas = p.createCanvas(sketchWidth, sketchHeight);
