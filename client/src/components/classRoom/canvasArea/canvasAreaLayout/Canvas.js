@@ -20,43 +20,23 @@ const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}
     const padding = window.innerWidth > 1300 ? '4em' : '.3em'
     let proportion = 1;
 
-    if (maxWidth > maxHeight) {
-      if (img.height > maxHeight || img.width > maxWidth) {
-        if (img.height > img.width) {
-          proportion = img.height / img.width;
+    if (img.height > maxHeight || img.width > maxWidth) {
+      if (img.height >= img.width) {
+        proportion = img.height / img.width;
 
-          setHeight(`calc(${maxHeight}px - ${padding})`)
-          setWidth(`calc((${maxHeight}px - ${padding}) / ${proportion})`);
-
-        } else {
-          proportion = img.width / img.height;
-
-          setWidth(`calc(${maxWidth}px  - ${padding})`)
-          setHeight(`calc((${maxWidth}px - ${padding}) / ${proportion})`);
-        }
+        setHeight(`calc(${maxHeight}px - ${padding})`)
+        setWidth(`calc((${maxHeight}px - ${padding}) / ${proportion})`);
       } else {
-        setWidth(img.width);
-        setHeight(img.height);
+        proportion = img.width / img.height;
+
+        setWidth(`calc(${maxWidth}px - ${padding})`)
+        setHeight(`calc((${maxWidth}px - ${padding}) / ${proportion})`);
       }
     } else {
-      if (img.height > maxHeight || img.width > maxWidth) {
-        if (img.width > img.width) {
-          proportion = img.width / img.height;
-
-          setWidth(`calc(${maxWidth}px  - ${padding})`)
-          setHeight(`calc((${maxWidth}px - ${padding}) / ${proportion})`);
-
-        } else {
-          proportion = img.height / img.width;
-
-          setHeight(`calc(${maxHeight}px  - ${padding})`)
-          setWidth(`calc((${maxHeight}px - ${padding}) / ${proportion})`);
-        }
-      } else {
-        setWidth(img.width);
-        setHeight(img.height);
-      }
+      setWidth(img.width);
+      setHeight(img.height);
     }
+
     const user = getUser();
     socket.emit("image-loaded", {login: user.login});
   }
