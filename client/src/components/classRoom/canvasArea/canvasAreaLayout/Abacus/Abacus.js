@@ -24,9 +24,9 @@ const bottomRowInitial = [
   {current: 0, number: 13, beads: [1, 2, 3, 4]},
   {current: 0, number: 14, beads: [1, 2, 3, 4]},
   {current: 0, number: 15, beads: [1, 2, 3, 4]},
-  {current: 0, number: 16, beads: [1, 2, 3, 4]},
+  // {current: 0, number: 16, beads: [1, 2, 3, 4]},
 
-  {current: 0, number: 17, beads: [1, 2, 3, 4]},
+  // {current: 0, number: 17, beads: [1, 2, 3, 4]},
 ]
 
 const upperRowInitial = [
@@ -45,8 +45,8 @@ const upperRowInitial = [
   {current: 0, number: 13, beads: [1]},
   {current: 0, number: 14, beads: [1]},
   {current: 0, number: 15, beads: [1]},
-  {current: 0, number: 16, beads: [1]},
-  {current: 0, number: 17, beads: [1]},
+  // {current: 0, number: 16, beads: [1]},
+  // {current: 0, number: 17, beads: [1]},
 ]
 
 const Abacus = ({room}) => {
