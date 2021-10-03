@@ -17,21 +17,22 @@ const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}
   const onImgLoad = ({target: img}) => {
     const maxHeight = canvasBackground.current.offsetHeight;
     const maxWidth = canvasBackground.current.offsetWidth;
+    const padding = window.innerWidth > 1300 ? '4em' : '.3em'
     let proportion = 1;
 
     if (maxWidth > maxHeight) {
       if (img.height > maxHeight || img.width > maxWidth) {
-        if (img.height > maxHeight) {
+        if (img.height > img.width) {
           proportion = img.height / img.width;
 
-          setHeight(`calc(${maxHeight}px  - 4em)`)
-          setWidth(`calc((${maxHeight}px - 4em) / ${proportion})`);
+          setHeight(`calc(${maxHeight}px - ${padding})`)
+          setWidth(`calc((${maxHeight}px - ${padding}) / ${proportion})`);
 
         } else {
           proportion = img.width / img.height;
 
-          setWidth(`calc(${maxWidth}px  - 4em)`)
-          setHeight(`calc((${maxWidth}px - 4em) / ${proportion})`);
+          setWidth(`calc(${maxWidth}px  - ${padding})`)
+          setHeight(`calc((${maxWidth}px - ${padding}) / ${proportion})`);
         }
       } else {
         setWidth(img.width);
@@ -39,17 +40,17 @@ const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}
       }
     } else {
       if (img.height > maxHeight || img.width > maxWidth) {
-        if (img.width > maxWidth) {
+        if (img.width > img.width) {
           proportion = img.width / img.height;
 
-          setWidth(`calc(${maxWidth}px  - 4em)`)
-          setHeight(`calc((${maxWidth}px - 4em) / ${proportion})`);
+          setWidth(`calc(${maxWidth}px  - ${padding})`)
+          setHeight(`calc((${maxWidth}px - ${padding}) / ${proportion})`);
 
         } else {
           proportion = img.height / img.width;
 
-          setHeight(`calc(${maxHeight}px  - 4em)`)
-          setWidth(`calc((${maxHeight}px - 4em) / ${proportion})`);
+          setHeight(`calc(${maxHeight}px  - ${padding})`)
+          setWidth(`calc((${maxHeight}px - ${padding}) / ${proportion})`);
         }
       } else {
         setWidth(img.width);
