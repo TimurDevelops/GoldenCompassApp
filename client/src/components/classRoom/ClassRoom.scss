@@ -280,7 +280,8 @@ $menu-items: #558180;
     .video-wrapper {
       display: flex;
       flex-direction: row;
-      width: 100%;
+      width: calc(100% - 2.5em);
+      padding-right: 2.5em;
       height: 30%;
 
       .video {

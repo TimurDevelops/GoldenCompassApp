@@ -188,7 +188,7 @@ $tool-panel-divider: #587873;
 
 @media (max-width: 900px) {
   .tool-panel {
-    height: 15%;
+    height: auto;
     flex-wrap: wrap;
     justify-content: center;
     .inline-picker-wrapper{
@@ -228,14 +228,15 @@ $tool-panel-divider: #587873;
     .inline-picker-wrapper{
       .p-item-picker-wrapper{
         .p-item-wrapper{
-          padding: 0 .6em;
+          padding: 0 .5em;
         }
       }
     }
     .inline-color-picker-wrapper {
       .p-item-picker-wrapper{
         .p-item-wrapper{
-          padding: 0 .6em;
+          padding: 0 .5em;
+          margin: 0;
         }
       }
     }
