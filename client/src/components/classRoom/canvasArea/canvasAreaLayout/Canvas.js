@@ -18,10 +18,13 @@ const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}
     const maxHeight = canvasBackground.current.offsetHeight;
     const maxWidth = canvasBackground.current.offsetWidth;
     const padding = window.innerWidth > 1300 ? '4em' : '.3em'
+    const maxProportion = maxWidth / maxHeight;
+    const imageProportion = img.width / img.height;
+
     let proportion = 1;
 
     if (img.height > maxHeight || img.width > maxWidth) {
-      if (img.height >= img.width) {
+      if (maxProportion >= imageProportion) {
         proportion = img.height / img.width;
 
         setHeight(`calc(${maxHeight}px - ${padding})`)
