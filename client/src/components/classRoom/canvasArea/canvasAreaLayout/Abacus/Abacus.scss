@@ -120,7 +120,7 @@
 }
 
 
-@media (max-width: 1300px) {
+@media (max-width: 1300px), (max-height: 800px) {
   .abacus-holder {
     .upper-row {
       .spoke {
@@ -148,7 +148,7 @@
 }
 
 
-@media (max-width: 900px) {
+@media (max-width: 900px), (max-height: 400px) {
   .abacus-slide {
     .abacus-border {
       padding: 0;
