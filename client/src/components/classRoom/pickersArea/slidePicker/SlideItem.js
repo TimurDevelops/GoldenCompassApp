@@ -7,7 +7,7 @@ const SlideItem = ({setSlide, slide}) => {
     <div className={`item-wrapper slide ${slide.img ? '' : 'empty'}`} onClick={setSlide}>
       <div className={'img-wrapper'}>
 
-        {slide.img ? <img src={slide.img} alt="Слайд"/> : <div className={'content'}>Картинка отсутствует</div>}
+        {slide.img ? <img src={slide.img} alt="Слайд"/> : <div className={'content'}>Для учителя</div>}
 
       </div>
     </div>
