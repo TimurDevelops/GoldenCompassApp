@@ -1,5 +1,4 @@
 import React, {createContext, useState, useEffect} from 'react';
-import { useAlert } from 'react-alert'
 
 import {useSocket} from "../hooks/useSocket";
 import {useUser} from "../hooks/useUser";
@@ -7,7 +6,6 @@ import {useUser} from "../hooks/useUser";
 const StudentContext = createContext('');
 
 const StudentContextProvider = ({children}) => {
-  const alert = useAlert()
   const {socket} = useSocket();
   const {getUser} = useUser();
 
@@ -53,9 +51,6 @@ const StudentContextProvider = ({children}) => {
     })
 
     socket.on('drawing-enabled-set', ({isEnabled: allowStudentToDraw}) => {
-      if (allowStudentToDraw) alert.show("Вы можете рисовать")
-      else alert.show("Учитель отключил вам возможность рисовать")
-
       setAllowedToDraw(allowStudentToDraw);
     })
 
