@@ -1,5 +1,6 @@
 import React, {useContext, useEffect} from 'react';
-import {FaVideo, FaVideoSlash, FaVolumeUp, FaVolumeMute, FaPhone, FaPhoneSlash} from 'react-icons/fa';
+// import {FaVideo, FaVideoSlash, FaVolumeUp, FaVolumeMute, FaPhone, FaPhoneSlash} from 'react-icons/fa';
+import {FaPhone, FaPhoneSlash} from 'react-icons/fa';
 
 import PropTypes from "prop-types";
 import {useUser} from "../../../hooks/useUser";
@@ -24,10 +25,10 @@ const VideoArea = ({room}) => {
     answerCall,
     leaveCall,
 
-    captureVideo,
-    captureAudio,
-    setCaptureVideo,
-    setCaptureAudio,
+    // captureVideo,
+    // captureAudio,
+    // setCaptureVideo,
+    // setCaptureAudio,
 
   } = useContext(VideoContext);
 
@@ -41,7 +42,6 @@ const VideoArea = ({room}) => {
 
   return (
     <div className={"video-wrapper"}>
-
       {calling && <div className={'notification'}>
         <div className={'notification-inner'}>Отправлен вызов учителю</div>
       </div>}
@@ -55,6 +55,7 @@ const VideoArea = ({room}) => {
       </div>}
 
       <div className={"teacher-video video"}>
+
         <video
           ref={myVideo}
           muted
@@ -63,6 +64,7 @@ const VideoArea = ({room}) => {
         />
 
         <div className={'video-buttons start-call-buttons'}>
+
           {
             user.type === 'student' && !calling && !callAccepted &&
             <div className='video-button green' onClick={() => callTeacher(room)}><FaPhone/></div>
@@ -77,15 +79,15 @@ const VideoArea = ({room}) => {
           }
         </div>
 
-        <div className={'video-buttons'}>
-          {captureVideo ?
-            <div className={'video-button stop-video'} onClick={() => setCaptureVideo(false)}><FaVideoSlash/></div> :
-            <div className={'video-button start-video'} onClick={() => setCaptureVideo(true)}><FaVideo/></div>}
+        {/*<div className={'video-buttons'}>*/}
+        {/*  {captureVideo ?*/}
+        {/*    <div className={'video-button stop-video'} onClick={() => setCaptureVideo(false)}><FaVideoSlash/></div> :*/}
+        {/*    <div className={'video-button start-video'} onClick={() => setCaptureVideo(true)}><FaVideo/></div>}*/}
 
-          {captureAudio ?
-            <div className={'video-button stop-audio'} onClick={() => setCaptureAudio(false)}><FaVolumeMute/></div> :
-            <div className={'video-button start-audio'} onClick={() => setCaptureAudio(true)}><FaVolumeUp/></div>}
-        </div>
+        {/*  {captureAudio ?*/}
+        {/*    <div className={'video-button stop-audio'} onClick={() => setCaptureAudio(false)}><FaVolumeMute/></div> :*/}
+        {/*    <div className={'video-button start-audio'} onClick={() => setCaptureAudio(true)}><FaVolumeUp/></div>}*/}
+        {/*</div>*/}
       </div>
 
       <div className={'video-border'}/>
