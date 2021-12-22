@@ -13,8 +13,8 @@ const {env} = require('./config.json');
 const credentials = {};
 
 if (env === 'prod'){
-  const privateKey = fs.readFileSync('./sslcert/server.key', 'utf8');
-  const certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
+  const privateKey = fs.readFileSync('./sslcert/golden-compass-app.key', 'utf8');
+  const certificate = fs.readFileSync('./sslcert/golden-compass-app_com_chain.crt', 'utf8');
   credentials.key = privateKey;
   credentials.cert = certificate;
 }
