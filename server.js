@@ -34,6 +34,7 @@ app.use('/api/level', require('./routes/api/levels'));
 app.use('/api/student', require('./routes/api/students'));
 app.use('/api/teacher', require('./routes/api/teacher'));
 app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/errors', require('./routes/api/errors'));
 
 app.get('/ping', (req, res) => {
   res.send(`Pong`);

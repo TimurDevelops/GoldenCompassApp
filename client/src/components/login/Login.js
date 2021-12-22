@@ -35,7 +35,6 @@ const Login = ({setAuth}) => {
   const [password, setPassword] = useState();
   const [type, setType] = useState("student");
 
-
   const outputErrors = (errors) => {
     errors.forEach(err => {
       alert.show(err.msg)

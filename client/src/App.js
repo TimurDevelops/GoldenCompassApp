@@ -7,6 +7,7 @@ import Login from "./components/login/Login";
 import TeacherMenu from "./components/teacherMenu/TeacherMenu";
 import TeachersList from "./components/teachersList/TeachersList";
 
+import ErrorFallback from "./components/ui/ErrorFallback"
 import StudentMenu from "./components/studentMenu/StudentMenu"
 import PrivateRoute from "./components/ui/PrivateRoute";
 import ClassRoom from "./components/classRoom/ClassRoom";
@@ -26,19 +27,25 @@ const App = () => {
     setAuth({user: undefined, isAuthenticated: false, isLoading: false});
   };
 
-  const myErrorHandler = (error, componentStack) => {
+  const myErrorHandler = (e, componentStack) => {
     const user = getUser()
-    api.post('/errors', {error, componentStack, user}).catch(console.error);
-
+    const message = e
+    const stack = componentStack.componentStack || componentStack
+    api.post('/errors', {error: message, componentStack: stack, user}).catch(console.error);
   };
 
   window.addEventListener("error", function (e) {
     const user = getUser()
-    api.post('/errors', {error: e, componentStack: '', user}).catch(console.error);
+    const message = e.error.message || e.message || e.error
+    const componentStack = e.error.stack || ""
+    api.post('/errors', {error: message, componentStack: componentStack, user}).catch(console.error);
   })
 
   return (
-    <ErrorBoundary onError={myErrorHandler}>
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onError={myErrorHandler}
+    >
       <section className="container">
         <Router>
           <Switch>

@@ -1,17 +1,20 @@
 const mongoose = require('mongoose');
 
-const LessonSchema = new mongoose.Schema({
+const ErrorSchema = new mongoose.Schema({
   error: {
+    type: String,
     required: true
   },
   componentStack: {
+    type: String,
     required: false
   },
   user: {
-    required: true
+    type: String,
+    required: false
   },
   time: {type: Date, default: Date.now}
 })
 
 
-module.exports = Lesson = mongoose.model('Error', LessonSchema);
+module.exports = Error = mongoose.model('Error', ErrorSchema);

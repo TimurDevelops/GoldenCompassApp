@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Error = require("../../models/Teacher");
+const Error = require("../../models/Error");
 
 
 // @route    POST errors
@@ -11,7 +11,6 @@ router.post(
   '/',
   async (req, res) => {
     const {error, componentStack, user} = req.body;
-
     try {
       const savedError = new Error({
         error: typeof error === 'object' ? JSON.stringify(error) : error,
@@ -22,6 +21,7 @@ router.post(
       await savedError.save();
 
     } catch (err) {
+
       console.error(err.message);
       res.status(500).send('Server error');
     }
