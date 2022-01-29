@@ -61,6 +61,7 @@ const StudentContextProvider = ({children}) => {
     <StudentContext.Provider value={{
       waitingScreen,
       waitingScreenMessage,
+      // type,
       slide,
       allowedToDraw,
     }}

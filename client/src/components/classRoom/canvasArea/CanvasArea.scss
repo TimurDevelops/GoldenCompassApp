@@ -54,9 +54,10 @@ $canvas-color: #ec4c4c;
     max-height: 100%;
 
     &.hidden{
-      visibility: hidden;
-      max-width: 0;
-      max-height: 0;
+      //visibility: hidden;
+      //max-width: 0;
+      //max-height: 0;
+      //width: 200px;
     }
 
     .slide-img {

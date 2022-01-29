@@ -14,13 +14,11 @@ import {StudentContext} from "../../../context/StudentContext";
 import './CanvasArea.scss'
 
 const CanvasArea = ({room, sidebarOpen}) => {
-
   const {user: {type: usertype}} = useUser();
   const {slide: teacherContextSlide} = useContext(TeacherContext)
   const {slide: studentContextSlide, allowedToDraw: contextAllowedToDraw} = useContext(StudentContext)
 
-  const { img, tip, hasAbacus } = usertype === 'teacher' ? teacherContextSlide : studentContextSlide;
-
+  const { img, tip, hasChessboard, hasAbacus } = usertype === 'teacher' ? teacherContextSlide : studentContextSlide;
   const allowedToDraw = usertype === 'teacher' ? true : contextAllowedToDraw;
 
   const [drawWidth, setDrawWidth] = useState(2);
@@ -34,6 +32,7 @@ const CanvasArea = ({room, sidebarOpen}) => {
       <Canvas
         room={room}
         img={img}
+        hasChessboard={hasChessboard}
         hasAbacus={hasAbacus}
         active={sidebarOpen && allowedToDraw}
         activeTool={activeTool}

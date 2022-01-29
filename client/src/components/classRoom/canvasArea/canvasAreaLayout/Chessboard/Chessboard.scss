@@ -1,0 +1,27 @@
+
+.abacus-holder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.chessboard-holder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+
+  .chessboard-cell {
+    width: 12.5%;
+    height: 12.5%;
+
+    &.black {
+      background: #33190c;
+    }
+
+    &.white {
+      background: #feead1;
+    }
+  }
+
+}

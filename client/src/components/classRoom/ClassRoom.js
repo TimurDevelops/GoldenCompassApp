@@ -23,6 +23,7 @@ import {useUser} from "../../hooks/useUser";
 import "./ClassRoom.scss";
 import {TeacherContext} from "../../context/TeacherContext";
 import {StudentContext} from "../../context/StudentContext";
+import ChessboardSlide from "./canvasArea/canvasAreaLayout/Chessboard/ChessboardSlide";
 
 const ClassRoom = ({logout}) => {
   const {teacher} = useParams();

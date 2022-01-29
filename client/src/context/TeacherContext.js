@@ -40,6 +40,7 @@ const TeacherContextProvider = ({ children }) => {
       waitingScreen,
       waitingScreenMessage,
       slide,
+      // type,
       allowedStudent,
     }}
     >

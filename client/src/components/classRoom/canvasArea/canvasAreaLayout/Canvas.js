@@ -3,15 +3,18 @@ import PropTypes from "prop-types";
 import P5Wrapper from "react-p5-wrapper";
 import sketch from "./Sketch";
 
-import {useSocket} from "../../../../hooks/useSocket";
 import AbacusSlide from "./Abacus/AbacusSlide";
+import ChessboardSlide from "./Chessboard/ChessboardSlide";
+import {useSocket} from "../../../../hooks/useSocket";
 import {useUser} from "../../../../hooks/useUser";
 
-const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}) => {
+const Canvas = ({room, img, hasChessboard, hasAbacus, activeTool, drawWidth, drawColor, active}) => {
   const {socket} = useSocket();
   const {getUser} = useUser();
-  const [width, setWidth] = useState('100px');
-  const [height, setHeight] = useState('100px');
+  // const [width, setWidth] = useState('100px');
+  const [width, setWidth] = useState('800px');
+  // const [height, setHeight] = useState('100px');
+  const [height, setHeight] = useState('800px');
   const canvasBackground = React.createRef();
 
   const onImgLoad = ({target: img}) => {
@@ -60,6 +63,7 @@ const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}
              }}
         >
           <AbacusSlide visible={hasAbacus} room={room}/>
+          <ChessboardSlide visible={hasChessboard || true} room={room}/>
 
           <P5Wrapper
             sketch={sketch}
@@ -83,6 +87,7 @@ const Canvas = ({room, img, hasAbacus, activeTool, drawWidth, drawColor, active}
 Canvas.propTypes = {
   room: PropTypes.string.isRequired,
   img: PropTypes.string,
+  slideType: PropTypes.string,
   hasAbacus: PropTypes.bool,
   active: PropTypes.bool.isRequired,
   activeTool: PropTypes.string.isRequired,
