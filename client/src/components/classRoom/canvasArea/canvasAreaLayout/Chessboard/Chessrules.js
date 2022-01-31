@@ -67,31 +67,13 @@ const getImg = (figureColor) => {
   }
 }
 
-const getAttackingBlackPawns = (boardState, cell, i, j) => {
-  const moves = [
-    getCell(boardState, i - 1, j - 1),
-    getCell(boardState, i - 1, j + 1)
-  ]
-
-  return moves.filter(i => i.figure === figures.PAWN)
-}
-
-const getAttackingWhitePawns = (boardState, cell, i, j) => {
-  const moves = [
-    getCell(boardState, i - 1, j - 1),
-    getCell(boardState, i - 1, j + 1)
-  ]
-
-  return moves.filter(i => i.figure === figures.PAWN)
-}
-
 const getAttackingPawns = (boardState, cell, i, j) => {
-  if (cell.color === colors.WHITE) {
-    return getAttackingBlackPawns(boardState, cell, i, j);
-  } else if (cell.color === colors.BLACK) {
-    return getAttackingWhitePawns(boardState, cell, i, j);
-  }
-  return []
+  const moves = [
+    getCell(boardState, i - 1, j - 1),
+    getCell(boardState, i - 1, j + 1)
+  ]
+
+  return moves.filter(move => move && move.figure === figures.PAWN && move.side === sides.OPPONENT)
 }
 
 const getAttackingHorses = (boardState, cell, i, j) => {
@@ -105,11 +87,13 @@ const getAttackingBishopsOrQueens = (boardState, cell, i, j) => {
 }
 
 const getAttackingRooksOrQueens = (boardState, cell, i, j) => {
-  const moves = getPossibleMovesForBishop(boardState, cell, i, j)
+  const moves = getPossibleMovesForRook(boardState, cell, i, j)
   return moves.filter(i => i.figure === figures.ROOK || i.figure === figures.QUEEN)
 }
 
-const isUnderAttack = (boardState, cell, i, j) => {
+const isUnderAttack = (boardState, cell) => {
+  const i = rows.indexOf(Number(cell.y))
+  const j = columns.indexOf(cell.x)
   const attackingPieces = []
   attackingPieces.push(...getAttackingPawns(boardState, cell, i, j))
   attackingPieces.push(...getAttackingHorses(boardState, cell, i, j))
@@ -457,7 +441,7 @@ const getCastlingMoveWhite = (boardState, cell, i, j, kingMoved, shortRookMoved,
         getCell(boardState, i, j + 2),
       ]
       const movesWithoutFigures = moves.filter(move => move && !move.figure)
-      const movesNotUnderAttack = movesWithoutFigures.filter(move => move && !isUnderAttack(boardState, move, i, j))
+      const movesNotUnderAttack = movesWithoutFigures.filter(move => move && !isUnderAttack(boardState, move))
 
       if (movesNotUnderAttack.length === 2) {
         activeCells.push(getCell(boardState, i, j + 2))
@@ -470,7 +454,7 @@ const getCastlingMoveWhite = (boardState, cell, i, j, kingMoved, shortRookMoved,
         getCell(boardState, i, j - 3),
       ]
       const movesWithoutFigures = moves.filter(move => move && !move.figure)
-      const movesNotUnderAttack = movesWithoutFigures.filter(move => move && !isUnderAttack(boardState, move, i, j))
+      const movesNotUnderAttack = movesWithoutFigures.filter(move => move && !isUnderAttack(boardState, move))
 
       if (movesNotUnderAttack.length === 3) {
         activeCells.push(getCell(boardState, i, j - 2))
@@ -488,7 +472,7 @@ const getCastlingMoveBlack = (boardState, cell, i, j, kingMoved, shortRookMoved,
         getCell(boardState, i - 1, j),
         getCell(boardState, i - 2, j),
       ]
-      const movesNotUnderAttack = moves.filter(i => isUnderAttack(boardState, cell, i, j))
+      const movesNotUnderAttack = moves.filter(i => isUnderAttack(boardState, cell))
       if (!movesNotUnderAttack.length) {
         activeCells.push(getCell(boardState, i - 2, j))
       }
@@ -499,7 +483,7 @@ const getCastlingMoveBlack = (boardState, cell, i, j, kingMoved, shortRookMoved,
         getCell(boardState, i + 2, j),
         getCell(boardState, i + 3, j),
       ]
-      const movesNotUnderAttack = moves.filter(i => isUnderAttack(boardState, cell, i, j))
+      const movesNotUnderAttack = moves.filter(i => isUnderAttack(boardState, cell))
       if (!movesNotUnderAttack.length) {
         activeCells.push(getCell(boardState, i + 3, j))
       }
@@ -525,8 +509,9 @@ const getPossibleMovesForKing = (boardState, cell, i, j, kingMoved, shortRookMov
   // TODO check if cell is under attack
 
   kingMoves = kingMoves.filter(move => {
-    return move && (!move.figure || move.side === sides.OPPONENT) && !isUnderAttack(boardState, move, i, j)
+    return move && (!move.figure || move.side === sides.OPPONENT) && !isUnderAttack(boardState, move)
   })
+
   if (cell.color === colors.WHITE) {
     kingMoves.push(...getCastlingMoveWhite(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
   } else if (cell.color === colors.BLACK) {
