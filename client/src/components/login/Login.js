@@ -58,6 +58,7 @@ const Login = ({setAuth}) => {
       history.push("/" + user.type);
 
     } catch (errors) {
+      console.log(errors)
       setAuth({user: undefined, isAuthenticated: false, isLoading: false});
       outputErrors(errors);
     }
