@@ -6,7 +6,6 @@ import {useSocket} from "../../../../../hooks/useSocket";
 
 import './Chessboard.scss'
 
-
 // const Chessboard = ({room}) => {
 const Chessboard = () => {
   // TODO Save previous move

@@ -151,7 +151,64 @@ const prepareCellInitialState = (i) => {
   }
 }
 
-const getPossibleMovesForWhitePawn = (boardState, previousMove, cell, i, j) => {
+const getDiagonalCells = (boardState, start, end) => {
+  const startI = rows.indexOf(Number(start.y))
+  const startJ = columns.indexOf(start.x)
+
+  const endI = rows.indexOf(Number(end.y))
+  const endJ = columns.indexOf(end.x)
+
+  if (Math.max(startI, endI) - Math.min(startI, endI) !== Math.max(startJ, endJ) - Math.min(startJ, endJ)) {
+    return []
+  }
+
+  const cells = []
+
+  let modI = startI < endI ? 1 : -1
+  let modJ = startJ < endJ ? 1 : -1
+
+  for (let i = endI, j = endJ; i !== startI && j !== startJ; i -= modI, j -= modJ) {
+    cells.push(getCell(boardState, i, j))
+  }
+  return cells
+}
+
+const getHorizontalCells = (boardState, start, end) => {
+  const startI = rows.indexOf(Number(start.y))
+  const startJ = columns.indexOf(start.x)
+
+  const endI = rows.indexOf(Number(end.y))
+  const endJ = columns.indexOf(end.x)
+
+  const cells = []
+
+  if (startI === endI) {
+    if (startJ < endJ) {
+      for (let i = startJ + 1; i <= endJ; i++) {
+        cells.push(getCell(boardState, startI, i))
+      }
+    } else if (startJ > endJ) {
+      for (let i = endJ; i < startJ; i++) {
+        cells.push(getCell(boardState, startI, i))
+      }
+    }
+  } else if (startJ === endJ) {
+    if (startI < endI) {
+      for (let i = startI + 1; i <= endI; i++) {
+        cells.push(getCell(boardState, i, startJ))
+      }
+    } else if (startI > endI) {
+      for (let i = endI; i < startI; i++) {
+        cells.push(getCell(boardState, i, startJ))
+      }
+    }
+  } else {
+    return []
+  }
+  return cells
+}
+
+const getPossibleMovesForAllPawn = (boardState, previousMove, cell, i, j) => {
   const activeCells = []
 
   const oneForward = getCell(boardState, i - 1, j)
@@ -170,6 +227,7 @@ const getPossibleMovesForWhitePawn = (boardState, previousMove, cell, i, j) => {
 
   if (!previousMove.to) return activeCells
 
+  // TODO make universal
   if (previousMove.to.y === "5" && previousMove.from.y === "7" && cell.y === "5") {
     const [enPassantLeft, enPassantRight] = [getCell(boardState, i, j - 1), getCell(boardState, i, j + 1)]
 
@@ -184,68 +242,38 @@ const getPossibleMovesForWhitePawn = (boardState, previousMove, cell, i, j) => {
   return activeCells
 }
 
-const getPossibleMovesForBlackPawn = (boardState, previousMove, cell, i, j) => {
+const getPossibleMovesForPawn = (boardState, previousMove, cell, i, j, king) => {
   const activeCells = []
 
-  const oneForward = getCell(boardState, i + 1, j)
-  if (!oneForward.figure) {
-    activeCells.push(oneForward)
+  activeCells.push(...getPossibleMovesForAllPawn(boardState, previousMove, cell, i, j))
 
-    if (cell.y === "7") {
-      const twoForward = getCell(boardState, i + 2, j)
-      if (!twoForward.figure) activeCells.push(twoForward)
+  let attackingBishopsOrQueens = getAttackingBishopsOrQueens(boardState, cell, i, j)
+  if (attackingBishopsOrQueens.length) {
+    attackingBishopsOrQueens = attackingBishopsOrQueens.filter(attacker => getDiagonalCells(boardState, king, attacker).length)
+    if (attackingBishopsOrQueens.length) {
+      const attackersCoordinates = attackingBishopsOrQueens.map(i => i.x + i.y)
+      return activeCells.filter(aCell => attackersCoordinates.includes(aCell.x + aCell.y))
     }
   }
 
-  const [left, right] = [getCell(boardState, i + 1, j - 1), getCell(boardState, i + 1, j + 1)]
-  if (left && left.figure && left.side === sides.OPPONENT) activeCells.push(left)
-  if (right && right.figure && right.side === sides.OPPONENT) activeCells.push(right)
+  let attackingRooksOrQueens = getAttackingRooksOrQueens(boardState, cell, i, j)
+  if (attackingRooksOrQueens.length) {
+    attackingRooksOrQueens = attackingRooksOrQueens.filter(attacker => getHorizontalCells(boardState, king, attacker).length)
 
-  if (!previousMove.to) return activeCells
-
-
-  if (previousMove.to.y === "4" && previousMove.from.y === "2" && cell.y === "4") {
-    const [enPassantLeft, enPassantRight] = [getCell(boardState, i, j - 1), getCell(boardState, i, j + 1)]
-
-    if (previousMove.to.x === enPassantLeft.x) {
-      activeCells.push(getCell(boardState, i + 1, j - 1))
-    }
-    if (previousMove.to.x === enPassantRight.x) {
-      activeCells.push(getCell(boardState, i + 1, j + 1))
+    for (let i = 0; i < attackingRooksOrQueens.length; i++) {
+      let attacker = attackingRooksOrQueens[i]
+      if (attacker.y === cell.y) {
+        return []
+      } else if (attacker.x === cell.x) {
+        return activeCells.filter(aCell => aCell.x === cell.x)
+      }
     }
   }
 
   return activeCells
 }
 
-const getPossibleMovesForPawn = (boardState, previousMove, cell, i, j) => {
-  const activeCells = []
-
-  if (cell.color === colors.WHITE) {
-    activeCells.push(...getPossibleMovesForWhitePawn(boardState, previousMove, cell, i, j))
-  } else if (cell.color === colors.BLACK) {
-    activeCells.push(...getPossibleMovesForBlackPawn(boardState, previousMove, cell, i, j))
-  }
-
-
-  if (previousMove.figure === figures.PAWN &&
-    (cell.y === "5" && cell.color === colors.WHITE) ||
-    (cell.y === "6" && cell.color === colors.BLACK)) {
-  }
-
-  // TODO if king on the same diagonal
-  // TODO and if queen or bishop on the same diagonal
-  // TODO if king on the same row/line
-  // TODO and if queen or rook on the same row/line
-  // TODO if two true than can't move
-  // TODO else if can take that queen/rook/bishop return only that cell
-  // TODO else if queen or rook up and king down/queen or rook down and king up = can move
-  // TODO else can't move
-
-  return activeCells
-}
-
-const getPossibleMovesForHorse = (boardState, cell, i, j) => {
+const getPossibleMovesForHorse = (boardState, cell, i, j, king = null) => {
   const horseMoves = [
     getCell(boardState, i - 2, j + 1),
     getCell(boardState, i - 2, j - 1),
@@ -257,90 +285,29 @@ const getPossibleMovesForHorse = (boardState, cell, i, j) => {
     getCell(boardState, i - 1, j + 2),
   ]
 
-  // TODO if king on the same diagonal
-  // TODO and if queen or bishop on the same diagonal
-  // TODO if king on the same row/line
-  // TODO and if queen or rook on the same row/line
-  // TODO if any true can't move
+  if (!king) {
+    return horseMoves.filter(i => {
+      return i && (!i.figure || i.side === sides.OPPONENT)
+    })
+  }
 
+  let attackingBishopsOrQueens = getAttackingBishopsOrQueens(boardState, cell, i, j)
+  if (attackingBishopsOrQueens.length) {
+    attackingBishopsOrQueens = attackingBishopsOrQueens.filter(attacker => getDiagonalCells(boardState, king, attacker).length)
+    if (attackingBishopsOrQueens.length) return []
+  }
+
+  let attackingRooksOrQueens = getAttackingRooksOrQueens(boardState, cell, i, j)
+  if (attackingRooksOrQueens.length) {
+    attackingRooksOrQueens = attackingRooksOrQueens.filter(attacker => getHorizontalCells(boardState, king, attacker).length)
+    if (attackingRooksOrQueens.length) return []
+  }
   return horseMoves.filter(i => {
     return i && (!i.figure || i.side === sides.OPPONENT)
   })
 }
 
-const getPossibleMovesForRook = (boardState, cell, i, j) => {
-  const activeCells = []
-  let cursorX = i
-  let cursorY = j
-  while (true) {
-    cursorX++
-    let gotCell = getCell(boardState, cursorX, cursorY)
-    if (gotCell) {
-      if (!gotCell.figure) activeCells.push(gotCell)
-      else if (gotCell.side === sides.OPPONENT) {
-        activeCells.push(gotCell)
-        break
-      } else {
-        break
-      }
-    } else break;
-  }
-  cursorX = i
-  cursorY = j
-  while (true) {
-    cursorX--
-    let gotCell = getCell(boardState, cursorX, cursorY)
-    if (gotCell) {
-      if (!gotCell.figure) activeCells.push(gotCell)
-      else if (gotCell.side === sides.OPPONENT) {
-        activeCells.push(gotCell)
-        break
-      } else {
-        break
-      }
-    } else break;
-  }
-  cursorX = i
-  cursorY = j
-  while (true) {
-    cursorY++
-    let gotCell = getCell(boardState, cursorX, cursorY)
-    if (gotCell) {
-      if (!gotCell.figure) activeCells.push(gotCell)
-      else if (gotCell.side === sides.OPPONENT) {
-        activeCells.push(gotCell)
-        break
-      } else {
-        break
-      }
-    } else break;
-  }
-  cursorX = i
-  cursorY = j
-  while (true) {
-    cursorY--
-    let gotCell = getCell(boardState, cursorX, cursorY)
-    if (gotCell) {
-      if (!gotCell.figure) activeCells.push(gotCell)
-      else if (gotCell.side === sides.OPPONENT) {
-        activeCells.push(gotCell)
-        break
-      } else {
-        break
-      }
-    } else break;
-  }
-
-  // TODO if king on the same diagonal
-  // TODO and if queen or bishop on the same diagonal = can't move
-  // TODO if king on the same row/line
-  // TODO and if queen or rook on the same row/line
-  // TODO can move on that row/line
-
-  return activeCells
-}
-
-const getPossibleMovesForBishop = (boardState, cell, i, j) => {
+const getPossibleMovesForBishop = (boardState, cell, i, j, king = null) => {
   const activeCells = []
   let cursorX = i
   let cursorY = j
@@ -406,31 +373,121 @@ const getPossibleMovesForBishop = (boardState, cell, i, j) => {
       }
     } else break;
   }
-  // TODO if king on the same row/line
-  // TODO and if queen or rook on the same row/line = can't move
-  // TODO if king on the same diagonal
-  // TODO and if queen or bishop on the same diagonal
-  // TODO can move on that diagonal
 
+  if (!king)
+    return activeCells
+
+  let attackingBishopsOrQueens = getAttackingBishopsOrQueens(boardState, cell, i, j)
+  if (attackingBishopsOrQueens.length) {
+    attackingBishopsOrQueens = attackingBishopsOrQueens.filter(attacker => getDiagonalCells(boardState, king, attacker).length)
+    if (attackingBishopsOrQueens.length) {
+      const attacker = attackingBishopsOrQueens[0]
+      const cellCoordinate = cell.x + cell.y
+      return getDiagonalCells(boardState, king, attacker).filter(i => i.x + i.y !== cellCoordinate)
+    }
+  }
+
+  let attackingRooksOrQueens = getAttackingRooksOrQueens(boardState, cell, i, j)
+  if (attackingRooksOrQueens.length) {
+    attackingRooksOrQueens = attackingRooksOrQueens.filter(attacker => getHorizontalCells(boardState, king, attacker).length)
+    if (attackingRooksOrQueens.length) return []
+  }
   return activeCells
 }
 
-const getPossibleMovesForQueen = (boardState, cell, i, j) => {
+const getPossibleMovesForRook = (boardState, cell, i, j, king = null) => {
   const activeCells = []
-  activeCells.push(...getPossibleMovesForRook(boardState, cell, i, j))
-  activeCells.push(...getPossibleMovesForBishop(boardState, cell, i, j))
+  let cursorX = i
+  let cursorY = j
+  while (true) {
+    cursorX++
+    let gotCell = getCell(boardState, cursorX, cursorY)
+    if (gotCell) {
+      if (!gotCell.figure) activeCells.push(gotCell)
+      else if (gotCell.side === sides.OPPONENT) {
+        activeCells.push(gotCell)
+        break
+      } else {
+        break
+      }
+    } else break;
+  }
+  cursorX = i
+  cursorY = j
+  while (true) {
+    cursorX--
+    let gotCell = getCell(boardState, cursorX, cursorY)
+    if (gotCell) {
+      if (!gotCell.figure) activeCells.push(gotCell)
+      else if (gotCell.side === sides.OPPONENT) {
+        activeCells.push(gotCell)
+        break
+      } else {
+        break
+      }
+    } else break;
+  }
+  cursorX = i
+  cursorY = j
+  while (true) {
+    cursorY++
+    let gotCell = getCell(boardState, cursorX, cursorY)
+    if (gotCell) {
+      if (!gotCell.figure) activeCells.push(gotCell)
+      else if (gotCell.side === sides.OPPONENT) {
+        activeCells.push(gotCell)
+        break
+      } else {
+        break
+      }
+    } else break;
+  }
+  cursorX = i
+  cursorY = j
+  while (true) {
+    cursorY--
+    let gotCell = getCell(boardState, cursorX, cursorY)
+    if (gotCell) {
+      if (!gotCell.figure) activeCells.push(gotCell)
+      else if (gotCell.side === sides.OPPONENT) {
+        activeCells.push(gotCell)
+        break
+      } else {
+        break
+      }
+    } else break;
+  }
 
-  // TODO if king on the same row/line
-  // TODO and if queen or rook on the same row/line
-  // TODO can move on that row/line break;
-  // TODO if king on the same diagonal
-  // TODO and if queen or bishop on the same diagonal
-  // TODO can move on that diagonal
+  if (!king)
+    return activeCells
 
+  let attackingBishopsOrQueens = getAttackingBishopsOrQueens(boardState, cell, i, j)
+  if (attackingBishopsOrQueens.length) {
+    attackingBishopsOrQueens = attackingBishopsOrQueens.filter(attacker => getDiagonalCells(boardState, king, attacker).length)
+    if (attackingBishopsOrQueens.length) return []
+
+  }
+
+  let attackingRooksOrQueens = getAttackingRooksOrQueens(boardState, cell, i, j)
+  if (attackingRooksOrQueens.length) {
+    attackingRooksOrQueens = attackingRooksOrQueens.filter(attacker => getHorizontalCells(boardState, king, attacker).length)
+    if (attackingRooksOrQueens.length) {
+      const attacker = attackingRooksOrQueens[0]
+      const cellCoordinate = cell.x + cell.y
+      return getHorizontalCells(boardState, king, attacker).filter(i => i.x + i.y !== cellCoordinate)
+    }
+  }
   return activeCells
 }
 
-const getCastlingMoveWhite = (boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved) => {
+const getPossibleMovesForQueen = (boardState, cell, i, j, kingCell) => {
+  const activeCells = []
+  activeCells.push(...getPossibleMovesForRook(boardState, cell, i, j, kingCell))
+  activeCells.push(...getPossibleMovesForBishop(boardState, cell, i, j, kingCell))
+  return activeCells
+}
+
+const getCastlingMoves = (boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved) => {
   const activeCells = []
   if (!kingMoved) {
     if (!shortRookMoved) {
@@ -462,34 +519,6 @@ const getCastlingMoveWhite = (boardState, cell, i, j, kingMoved, shortRookMoved,
   return activeCells
 }
 
-const getCastlingMoveBlack = (boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved) => {
-  const activeCells = []
-  if (!kingMoved) {
-    if (!shortRookMoved) {
-      const moves = [
-        getCell(boardState, i - 1, j),
-        getCell(boardState, i - 2, j),
-      ]
-      const movesNotUnderAttack = moves.filter(i => isUnderAttack(boardState, cell))
-      if (!movesNotUnderAttack.length) {
-        activeCells.push(getCell(boardState, i - 2, j))
-      }
-    }
-    if (!longRookMoved) {
-      const moves = [
-        getCell(boardState, i + 1, j),
-        getCell(boardState, i + 2, j),
-        getCell(boardState, i + 3, j),
-      ]
-      const movesNotUnderAttack = moves.filter(i => isUnderAttack(boardState, cell))
-      if (!movesNotUnderAttack.length) {
-        activeCells.push(getCell(boardState, i + 3, j))
-      }
-    }
-  }
-  return activeCells
-}
-
 const getAllMovesForKing = (boardState, cell, i, j) => {
   return [
     getCell(boardState, i - 1, j),
@@ -509,16 +538,23 @@ const getAllMovesForKing = (boardState, cell, i, j) => {
 
 const getPossibleMovesForKing = (boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved) => {
   let kingMoves = getAllMovesForKing(boardState, cell, i, j)
+  const boardStateWithNoKing = boardState.map(_ => _.map(i => {
+    if (i.figure === figures.KING && i.side === sides.ME) {
+      return {
+        ...i,
+        figure: undefined,
+        side: undefined,
+        color: undefined
+      }
 
+    }
+    return i
+  }))
   kingMoves = kingMoves.filter(move => {
-    return (!move.figure || move.side === sides.OPPONENT) && !isUnderAttack(boardState, move)
+    return (!move.figure || move.side === sides.OPPONENT) && !isUnderAttack(boardStateWithNoKing, move)
   })
 
-  if (cell.color === colors.WHITE) {
-    kingMoves.push(...getCastlingMoveWhite(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
-  } else if (cell.color === colors.BLACK) {
-    kingMoves.push(...getCastlingMoveBlack(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
-  }
+  kingMoves.push(...getCastlingMoves(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
 
   return kingMoves
 }
@@ -534,10 +570,30 @@ const getKing = (boardState) => {
 }
 
 const getAttackers = (boardState, kingCell) => {
-  getAttackingPawns()
-  getAttackingHorses()
-  getAttackingBishopsOrQueens()
-  getAttackingRooksOrQueens()
+  const i = rows.indexOf(Number(kingCell.y))
+  const j = columns.indexOf(kingCell.x)
+  const attackers = []
+  attackers.push(...getAttackingPawns(boardState, kingCell, i, j))
+  attackers.push(...getAttackingHorses(boardState, kingCell, i, j))
+  attackers.push(...getAttackingBishopsOrQueens(boardState, kingCell, i, j))
+  attackers.push(...getAttackingRooksOrQueens(boardState, kingCell, i, j))
+  return attackers
+}
+
+const getLegalMovesDuringCheck = (boardState, kingCell, attackers) => {
+  const legalMoves = []
+
+  if (attackers.length === 1) {
+    const attacker = attackers[0]
+    if (attacker.figure === figures.PAWN || attacker.figure === figures.HORSE) {
+      legalMoves.push(attacker)
+    } else {
+      legalMoves.push(...getDiagonalCells(boardState, kingCell, attacker))
+      legalMoves.push(...getHorizontalCells(boardState, kingCell, attacker))
+    }
+  }
+
+  return legalMoves
 }
 
 const getPossibleMoves = (boardState, previousMove, cell, kingMoved, shortRookMoved, longRookMoved) => {
@@ -547,37 +603,36 @@ const getPossibleMoves = (boardState, previousMove, cell, kingMoved, shortRookMo
   const kingCell = getKing(boardState)
   const isCheck = isUnderAttack(boardState, kingCell)
 
-  if (isCheck) {
-    const atackers = getAttackers(boardState, kingCell)
-  }
-
-  // TODO if check
-  // TODO check attackers
-  // TODO if 0 attackers = no check
-  // TODO if 1 attacker = get Get all moves that block check or take a piece
-  // TODO if 2 or more attackers = no move can block
-  // TODO Check for escape squares
-  // const possibleMovesThatPreventCheck = getMovesThatPreventCheck()
-
   switch (cell.figure) {
     case (figures.PAWN):
-      activeCells.push(...getPossibleMovesForPawn(boardState, previousMove, cell, i, j))
-      break;
-    case (figures.BISHOP):
-      activeCells.push(...getPossibleMovesForBishop(boardState, cell, i, j))
+      activeCells.push(...getPossibleMovesForPawn(boardState, previousMove, cell, i, j, kingCell))
       break;
     case (figures.HORSE):
-      activeCells.push(...getPossibleMovesForHorse(boardState, cell, i, j))
+      activeCells.push(...getPossibleMovesForHorse(boardState, cell, i, j, kingCell))
+      break;
+    case (figures.BISHOP):
+      activeCells.push(...getPossibleMovesForBishop(boardState, cell, i, j, kingCell))
       break;
     case (figures.ROOK):
-      activeCells.push(...getPossibleMovesForRook(boardState, cell, i, j))
+      activeCells.push(...getPossibleMovesForRook(boardState, cell, i, j, kingCell))
       break;
     case (figures.QUEEN):
-      activeCells.push(...getPossibleMovesForQueen(boardState, cell, i, j))
+      activeCells.push(...getPossibleMovesForQueen(boardState, cell, i, j, kingCell))
       break;
     case (figures.KING):
       activeCells.push(...getPossibleMovesForKing(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
       break;
+  }
+
+  if (isCheck) {
+    const attackers = getAttackers(boardState, kingCell)
+    const legalMovesDuringCheck = getLegalMovesDuringCheck(boardState, kingCell, attackers)
+    const legalMovesCoordinates = legalMovesDuringCheck.map(i => i.x + i.y)
+
+    if (cell.figure !== figures.KING) {
+      activeCells = activeCells.filter(aCell => legalMovesCoordinates.includes(aCell.x + aCell.y))
+    }
+
   }
 
   return activeCells
