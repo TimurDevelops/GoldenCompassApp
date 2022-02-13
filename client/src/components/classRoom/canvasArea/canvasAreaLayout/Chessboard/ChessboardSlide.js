@@ -172,32 +172,26 @@ const ChessboardSlide = ({room, visible}) => {
 
   const takeMoveBack = () => {
     if (previousMoves.length === 0) return
-    const logic = new ChessLogic(rows, columns)
     const previousMove = previousMoves[previousMoves.length - 1]
+    const WHITE = ChessLogic.colors.WHITE
+    const BLACK = ChessLogic.colors.BLACK
+    const ME = ChessLogic.sides.ME
+    const OPPONENT = ChessLogic.sides.OPPONENT
 
-    const fromJ = columns.indexOf(previousMove.from.x)
-    const fromI = rows.indexOf(Number(previousMove.from.y))
-    const toJ = columns.indexOf(previousMove.to.x)
-    const toI = rows.indexOf(Number(previousMove.to.y))
-
-    const fromCell = logic.getCell(boardState, fromI, fromJ)
-    const toCell = logic.getCell(boardState, toI, toJ)
-
-    console.log(previousMove)
     if (previousMove.isCastle) {
-      if (previousMove.fromTwo.color === ChessLogic.colors.WHITE) {
+      if (previousMove.fromTwo.color === WHITE) {
         setWhiteKingMoved(false)
       } else {
         setBlackKingMoved(false)
       }
       if (previousMove.fromTwo.x === "h") {
-        if (previousMove.fromTwo.color === ChessLogic.colors.WHITE) {
+        if (previousMove.fromTwo.color === WHITE) {
           setWhiteShortRookMoved(false)
         } else {
           setBlackShortRookMoved(false)
         }
       } else {
-        if (previousMove.fromTwo.color === ChessLogic.colors.WHITE) {
+        if (previousMove.fromTwo.color === WHITE) {
           setWhiteLongRookMoved(false)
         } else {
           setBlackLongRookMoved(false)
@@ -206,26 +200,36 @@ const ChessboardSlide = ({room, visible}) => {
     }
 
     setBoardState(boardState.map(_ => _.map(i => {
-      if (i.x === fromCell.x && i.y === fromCell.y)
-        return {...i, figure: previousMove.from.figure, side: previousMove.from.side, color: previousMove.from.color}
-      if (i.x === toCell.x && i.y === toCell.y)
-        return {...i, figure: previousMove.to.figure, side: previousMove.to.side, color: previousMove.to.color}
-
-      if (previousMove.isCastle && i.x === previousMove.fromTwo.x && i.y === previousMove.fromTwo.y)
-        return {
-          ...i, figure: previousMove.fromTwo.figure, side: previousMove.fromTwo.side, color: previousMove.fromTwo.color
-        }
-      if (previousMove.isCastle && i.x === previousMove.toTwo.x && i.y === previousMove.toTwo.y)
-        return {...i, figure: previousMove.toTwo.figure, side: previousMove.toTwo.side, color: previousMove.toTwo.color}
-
-      if (previousMove.isAnPassant && i.x === previousMove.anPassant.x && i.y === previousMove.anPassant.y)
-        return {
-          ...i,
-          figure: previousMove.anPassant.figure,
-          side: previousMove.anPassant.side,
-          color: previousMove.anPassant.color
-        }
-
+      if (i.x === previousMove.from.x && i.y === previousMove.from.y) {
+        let color = previousMove.from.color
+        let side = (color === WHITE && isPlayingAsWhite) || (color === BLACK && !isPlayingAsWhite) ? ME : OPPONENT
+        side = color ? side : undefined
+        return {...i, figure: previousMove.from.figure, side: side, color: previousMove.from.color}
+      }
+      if (i.x === previousMove.to.x && i.y === previousMove.to.y){
+        let color = previousMove.to.color
+        let side = (color === WHITE && isPlayingAsWhite) || (color === BLACK && !isPlayingAsWhite) ? ME : OPPONENT
+        side = color ? side : undefined
+        return {...i, figure: previousMove.to.figure, side: side, color: previousMove.to.color}
+      }
+      if (previousMove.isCastle && i.x === previousMove.fromTwo.x && i.y === previousMove.fromTwo.y){
+        let color = previousMove.fromTwo.color
+        let side = (color === WHITE && isPlayingAsWhite) || (color === BLACK && !isPlayingAsWhite) ? ME : OPPONENT
+        side = color ? side : undefined
+        return {...i, figure: previousMove.fromTwo.figure, side: side, color: previousMove.fromTwo.color}
+      }
+      if (previousMove.isCastle && i.x === previousMove.toTwo.x && i.y === previousMove.toTwo.y){
+        let color = previousMove.toTwo.color
+        let side = (color === WHITE && isPlayingAsWhite) || (color === BLACK && !isPlayingAsWhite) ? ME : OPPONENT
+        side = color ? side : undefined
+        return {...i, figure: previousMove.toTwo.figure, side: side, color: previousMove.toTwo.color}
+      }
+      if (previousMove.isAnPassant && i.x === previousMove.anPassant.x && i.y === previousMove.anPassant.y){
+        let color = previousMove.anPassant.color
+        let side = (color === WHITE && isPlayingAsWhite) || (color === BLACK && !isPlayingAsWhite) ? ME : OPPONENT
+        side = color ? side : undefined
+        return {...i, figure: previousMove.anPassant.figure, side: side, color: previousMove.anPassant.color}
+      }
       return i
     })))
 
@@ -236,8 +240,18 @@ const ChessboardSlide = ({room, visible}) => {
 
   const unTakeMoveBack = () => {
     if (takenBackMoves.length === 0) return
+    const logic = new ChessLogic(rows, columns)
     const previousMove = takenBackMoves[takenBackMoves.length - 1]
-    makeMove(previousMove.to, previousMove.from)
+
+    const fromJ = columns.indexOf(previousMove.from.x)
+    const fromI = rows.indexOf(Number(previousMove.from.y))
+    const toJ = columns.indexOf(previousMove.to.x)
+    const toI = rows.indexOf(Number(previousMove.to.y))
+
+    const fromCell = logic.getCell(boardState, fromI, fromJ)
+    const toCell = logic.getCell(boardState, toI, toJ)
+
+    makeMove(fromCell, toCell)
     setTakenBackMoves(takenBackMoves.slice(0, -1))
   }
 
