@@ -17,9 +17,14 @@ const Chessboard = ({
                       isPlayingAsWhite,
                       isWhiteTurn,
                       previousMove,
-                      kingMoved,
-                      shortRookMoved,
-                      longRookMoved
+                      castingInfo: {
+                        whiteKingMoved,
+                        blackKingMoved,
+                        whiteShortRookMoved,
+                        blackShortRookMoved,
+                        whiteLongRookMoved,
+                        blackLongRookMoved
+                      }
                     }) => {
 
   const [clickedCell, setClickedCell] = useState(null)
@@ -33,6 +38,9 @@ const Chessboard = ({
   }, [])
 
   const showPossibleMoves = (cell) => {
+    const kingMoved = cell.color === ChessLogic.colors.WHITE ? whiteKingMoved : blackKingMoved
+    const shortRookMoved = cell.color === ChessLogic.colors.WHITE ? whiteShortRookMoved : blackShortRookMoved
+    const longRookMoved = cell.color === ChessLogic.colors.WHITE ? whiteLongRookMoved : blackLongRookMoved
     const activeCells = new ChessLogic(rows, columns).getPossibleMoves(boardState, previousMove, cell, kingMoved, shortRookMoved, longRookMoved)
     const activeCellsCoordinates = activeCells.map(i => i.x + i.y)
 
@@ -63,18 +71,17 @@ const Chessboard = ({
   return (
     <div className={"chessboard-holder"}>
       {
-        boardState.map(i => {
+        boardState.map((i, rowIndex) => {
           isBlack = !isBlack
-          return i.map(cell => {
-
+          return i.map((cell, index) => {
             const img = new ChessLogic(rows, columns).getImg(cell.figure + cell.color)
 
             let el = (
               <div onClick={() => handleClick(cell)} key={cell.x + cell.y}
                    className={`chessboard-cell ${isBlack ? "black" : "white"}`}>
 
-                <div className={`chess-number ${cell.x === "a" ? "visible" : ""}`}>{cell.y}</div>
-                <div className={`chess-letter ${cell.y === "1" ? "visible" : ""}`}>{cell.x}</div>
+                <div className={`chess-number ${index === 0 ? "visible" : ""}`}>{cell.y}</div>
+                <div className={`chess-letter ${rowIndex === 7 ? "visible" : ""}`}>{cell.x}</div>
 
                 {img && <img className={"chess-piece-img"} src={img} alt=""/>}
 
@@ -103,9 +110,7 @@ Chessboard.propTypes = {
   isPlayingAsWhite: PropTypes.bool.isRequired,
   isWhiteTurn: PropTypes.bool.isRequired,
   previousMove: PropTypes.object.isRequired,
-  kingMoved: PropTypes.bool.isRequired,
-  shortRookMoved: PropTypes.bool.isRequired,
-  longRookMoved: PropTypes.bool.isRequired
+  castingInfo: PropTypes.object.isRequired,
 }
 
 export default Chessboard;

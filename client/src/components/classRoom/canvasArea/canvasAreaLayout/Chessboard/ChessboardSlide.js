@@ -6,9 +6,12 @@ import {ChessLogic} from "./ChessLogic";
 import './Chessboard.scss'
 
 const ChessboardSlide = ({room, visible}) => {
-  const [kingMoved, setKingMoved] = useState(false)
-  const [shortRookMoved, setShortRookMoved] = useState(false)
-  const [longRookMoved, setLongRookMoved] = useState(false)
+  const [whiteKingMoved, setWhiteKingMoved] = useState(false)
+  const [blackKingMoved, setBlackKingMoved] = useState(false)
+  const [whiteShortRookMoved, setWhiteShortRookMoved] = useState(false)
+  const [blackShortRookMoved, setBlackShortRookMoved] = useState(false)
+  const [whiteLongRookMoved, setWhiteLongRookMoved] = useState(false)
+  const [blackLongRookMoved, setBlackLongRookMoved] = useState(false)
 
   const [isPlayingAsWhite, setIsPlayingAsWhite] = useState(true)
   const [isWhiteTurn, setIsWhiteTurn] = useState(true)
@@ -44,18 +47,18 @@ const ChessboardSlide = ({room, visible}) => {
 
 
       let side
-      if (isPlayingAsWhite){
-        if (cell.color === ChessLogic.colors.WHITE){
+      if (isPlayingAsWhite) {
+        if (cell.color === ChessLogic.colors.WHITE) {
           side = ChessLogic.sides.ME
         }
-        if (cell.color === ChessLogic.colors.BLACK){
+        if (cell.color === ChessLogic.colors.BLACK) {
           side = ChessLogic.sides.OPPONENT
         }
       } else {
-        if (cell.color === ChessLogic.colors.WHITE){
+        if (cell.color === ChessLogic.colors.WHITE) {
           side = ChessLogic.sides.OPPONENT
         }
-        if (cell.color === ChessLogic.colors.BLACK){
+        if (cell.color === ChessLogic.colors.BLACK) {
           side = ChessLogic.sides.ME
         }
       }
@@ -78,13 +81,25 @@ const ChessboardSlide = ({room, visible}) => {
 
   const checkCastlingRights = (from) => {
     if (from.figure === ChessLogic.figures.KING) {
-      setKingMoved(true)
+      if (from.color === ChessLogic.colors.WHITE) {
+        setWhiteKingMoved(true)
+      } else {
+        setBlackKingMoved(true)
+      }
     }
     if (from.figure === ChessLogic.figures.ROOK && from.x === "a") {
-      setShortRookMoved(true)
+      if (from.color === ChessLogic.colors.WHITE) {
+        setWhiteShortRookMoved(true)
+      } else {
+        setBlackShortRookMoved(true)
+      }
     }
     if (from.figure === ChessLogic.figures.ROOK && from.x === "h") {
-      setLongRookMoved(true)
+      if (from.color === ChessLogic.colors.WHITE) {
+        setWhiteLongRookMoved(true)
+      } else {
+        setBlackLongRookMoved(true)
+      }
     }
   }
 
@@ -101,7 +116,16 @@ const ChessboardSlide = ({room, visible}) => {
     const [fromTwo, toTwo] = logic.checkCastlingMoves(boardState, from, to)
     checkCastlingRights(from)
     const anPassant = logic.checkAnPassant(boardState, from, to)
-    setPreviousMoves([...previousMoves, {from, to, figure: from.figure, anPassant, fromTwo, toTwo, isCastle: !!fromTwo, isAnPassant: !!anPassant}])
+    setPreviousMoves([...previousMoves, {
+      from,
+      to,
+      figure: from.figure,
+      anPassant,
+      fromTwo,
+      toTwo,
+      isCastle: !!fromTwo,
+      isAnPassant: !!anPassant
+    }])
     hideMoves()
     setStateMakeMove(from, to, fromTwo, toTwo, anPassant)
     setIsWhiteTurn(from.color === ChessLogic.colors.BLACK)
@@ -159,17 +183,26 @@ const ChessboardSlide = ({room, visible}) => {
     const fromCell = logic.getCell(boardState, fromI, fromJ)
     const toCell = logic.getCell(boardState, toI, toJ)
 
-    let fromTwoCell
-    let toTwoCell
-
-    if (previousMove.isCastle){
-      const fromTwoJ = columns.indexOf(previousMove.from.x)
-      const fromTwoI = rows.indexOf(Number(previousMove.from.y))
-      const toTwoJ = columns.indexOf(previousMove.to.x)
-      const toTwoI = rows.indexOf(Number(previousMove.to.y))
-
-      fromTwoCell = logic.getCell(boardState, fromTwoI, fromTwoJ)
-      toTwoCell = logic.getCell(boardState, toTwoI, toTwoJ)
+    console.log(previousMove)
+    if (previousMove.isCastle) {
+      if (previousMove.fromTwo.color === ChessLogic.colors.WHITE) {
+        setWhiteKingMoved(false)
+      } else {
+        setBlackKingMoved(false)
+      }
+      if (previousMove.fromTwo.x === "h") {
+        if (previousMove.fromTwo.color === ChessLogic.colors.WHITE) {
+          setWhiteShortRookMoved(false)
+        } else {
+          setBlackShortRookMoved(false)
+        }
+      } else {
+        if (previousMove.fromTwo.color === ChessLogic.colors.WHITE) {
+          setWhiteLongRookMoved(false)
+        } else {
+          setBlackLongRookMoved(false)
+        }
+      }
     }
 
     setBoardState(boardState.map(_ => _.map(i => {
@@ -178,16 +211,25 @@ const ChessboardSlide = ({room, visible}) => {
       if (i.x === toCell.x && i.y === toCell.y)
         return {...i, figure: previousMove.to.figure, side: previousMove.to.side, color: previousMove.to.color}
 
-      if (fromTwoCell && i.x === fromTwoCell.x && i.y === fromTwoCell.y)
-        return {...i, figure: previousMove.fromTwo.figure, side: previousMove.fromTwo.side, color: previousMove.fromTwo.color}
-      if (toTwoCell && i.x === toTwoCell.x && i.y === toTwoCell.y)
+      if (previousMove.isCastle && i.x === previousMove.fromTwo.x && i.y === previousMove.fromTwo.y)
+        return {
+          ...i, figure: previousMove.fromTwo.figure, side: previousMove.fromTwo.side, color: previousMove.fromTwo.color
+        }
+      if (previousMove.isCastle && i.x === previousMove.toTwo.x && i.y === previousMove.toTwo.y)
         return {...i, figure: previousMove.toTwo.figure, side: previousMove.toTwo.side, color: previousMove.toTwo.color}
+
+      if (previousMove.isAnPassant && i.x === previousMove.anPassant.x && i.y === previousMove.anPassant.y)
+        return {
+          ...i,
+          figure: previousMove.anPassant.figure,
+          side: previousMove.anPassant.side,
+          color: previousMove.anPassant.color
+        }
 
       return i
     })))
 
     setIsWhiteTurn(previousMove.from.color === ChessLogic.colors.WHITE)
-
     setPreviousMoves(previousMoves.slice(0, -1))
     setTakenBackMoves([...takenBackMoves, previousMove])
   }
@@ -218,9 +260,14 @@ const ChessboardSlide = ({room, visible}) => {
         isPlayingAsWhite={isPlayingAsWhite}
         isWhiteTurn={isWhiteTurn}
         previousMove={previousMoves.length > 0 ? previousMoves[previousMoves.length - 1] : {}}
-        kingMoved={kingMoved}
-        shortRookMoved={shortRookMoved}
-        longRookMoved={longRookMoved}
+        castingInfo={{
+          whiteKingMoved,
+          blackKingMoved,
+          whiteShortRookMoved,
+          blackShortRookMoved,
+          whiteLongRookMoved,
+          blackLongRookMoved
+        }}
       />
     </div>
   );

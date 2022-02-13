@@ -155,7 +155,7 @@ class ChessLogic {
     return moves.filter(i => i.figure === ChessLogic.figures.KING && i.side === ChessLogic.sides.OPPONENT)
   }
 
-  isUnderAttack (boardState, cell) {
+  isUnderAttack(boardState, cell) {
     const i = this.rows.indexOf(Number(cell.y))
     const j = this.columns.indexOf(cell.x)
     const attackingPieces = []
@@ -523,41 +523,46 @@ class ChessLogic {
     return activeCells
   }
 
-  getCastlingMoves(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved) {
+  getCastlingMovesWhite(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved) {
+    let sign
+    if (cell.color === ChessLogic.colors.WHITE) {
+      sign = 1
+    } else {
+      sign = -1
+    }
+
     const activeCells = []
-    console.log(kingMoved, shortRookMoved, longRookMoved)
     if (!kingMoved) {
       if (!shortRookMoved) {
         const moves = [
-          this.getCell(boardState, i, j + 1),
-          this.getCell(boardState, i, j + 2),
+          this.getCell(boardState, i, j + (sign)),
+          this.getCell(boardState, i, j + (2 * sign)),
         ]
-        console.log(moves)
         const movesWithoutFigures = moves.filter(move => move && !move.figure)
         const movesNotUnderAttack = movesWithoutFigures.filter(move => move && !this.isUnderAttack(boardState, move))
 
         if (movesNotUnderAttack.length === 2) {
-          activeCells.push(this.getCell(boardState, i, j + 2))
+          activeCells.push(this.getCell(boardState, i, j + (2 * sign)))
         }
       }
       if (!longRookMoved) {
         const moves = [
-          this.getCell(boardState, i, j - 1),
-          this.getCell(boardState, i, j - 2),
-          this.getCell(boardState, i, j - 3),
+          this.getCell(boardState, i, j - (sign)),
+          this.getCell(boardState, i, j - (2 * sign)),
+          this.getCell(boardState, i, j - (3 * sign)),
         ]
         const movesWithoutFigures = moves.filter(move => move && !move.figure)
         const movesNotUnderAttack = movesWithoutFigures.filter(move => move && !this.isUnderAttack(boardState, move))
 
         if (movesNotUnderAttack.length === 3) {
-          activeCells.push(this.getCell(boardState, i, j - 2))
+          activeCells.push(this.getCell(boardState, i, j - (2 * sign)))
         }
       }
     }
     return activeCells
   }
 
-  getAllMovesForKing (boardState, cell, i, j) {
+  getAllMovesForKing(boardState, cell, i, j) {
     return [
       this.getCell(boardState, i - 1, j),
       this.getCell(boardState, i + 1, j),
@@ -592,7 +597,7 @@ class ChessLogic {
       return (!move.figure || move.side === ChessLogic.sides.OPPONENT) && !this.isUnderAttack(boardStateWithNoKing, move)
     })
 
-    kingMoves.push(...this.getCastlingMoves(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
+    kingMoves.push(...this.getCastlingMovesWhite(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
 
     return kingMoves
   }
