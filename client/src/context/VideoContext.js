@@ -36,7 +36,20 @@ const VideoContextProvider = ({children}) => {
       stream.getAudioTracks().forEach(track => track.enabled = captureAudio);
 
       if (user.type === 'student') {
-        connectionRef.current = new Peer({initiator: false, trickle: false, stream: stream})
+        connectionRef.current = new Peer({
+          initiator: false,
+          trickle: false,
+          config: {
+            iceServers: [
+              {
+                urls: "turn:161.35.232.115:3478",
+                username: "test",
+                credential: "123456"
+              }
+            ]
+          },
+          stream: stream
+        })
 
         connectionRef.current.on('signal', data => {
           connectionRef.current.signal(data);
@@ -122,7 +135,20 @@ const VideoContextProvider = ({children}) => {
 
     if (connectionRef.current.destroy) connectionRef.current.destroy();
 
-    const studentPeer = new Peer({initiator: true, trickle: false, stream: stream})
+    const studentPeer = new Peer({
+      initiator: true,
+      trickle: false,
+      config: {
+        iceServers: [
+          {
+            urls: "turn:161.35.232.115:3478",
+            username: "test",
+            credential: "123456"
+          }
+        ]
+      },
+      stream: stream
+    })
 
     studentPeer.on('signal', data => {
       socket.emit('call-teacher', {teacherLogin, studentLogin: user.login, signalData: data});
