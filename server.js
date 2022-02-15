@@ -8,6 +8,7 @@ const connectDB = require("./config/db");
 const userHandlers = require('./handlers/userHandlers')
 const canvasHandlers = require('./handlers/canvasHandlers')
 const videoHandlers = require('./handlers/videoHandlers')
+const chessboardHandlers = require('./handlers/chessboardHandlers')
 
 const {env} = require('./config.json');
 const credentials = {};
@@ -61,5 +62,7 @@ io.sockets.on('connection', (socket) => {
   canvasHandlers(io, socket);
 
   videoHandlers(io, socket)
+
+  chessboardHandlers(io, socket)
 
 })

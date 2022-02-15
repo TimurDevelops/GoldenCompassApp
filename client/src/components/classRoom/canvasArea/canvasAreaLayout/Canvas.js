@@ -42,7 +42,6 @@ const Canvas = ({room, img, hasChessboard, hasAbacus, activeTool, drawWidth, dra
       setWidth(img.width);
       setHeight(img.height);
     }
-
     const user = getUser();
     socket.emit("image-loaded", {login: user.login});
   }
@@ -63,7 +62,8 @@ const Canvas = ({room, img, hasChessboard, hasAbacus, activeTool, drawWidth, dra
              }}
         >
           <AbacusSlide visible={hasAbacus} room={room}/>
-          {/*<ChessboardSlide visible={hasChessboard || true} room={room}/>*/}
+          {/*<ChessboardSlide visible={hasChessboard} room={room}/>*/}
+          <ChessboardSlide visible={hasChessboard || true} room={room}/>
 
           <P5Wrapper
             sketch={sketch}

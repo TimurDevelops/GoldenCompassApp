@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 
 import {ChessLogic} from "./ChessLogic";
-import {useSocket} from "../../../../../hooks/useSocket";
 
 import './Chessboard.scss'
 
 const Chessboard = ({
-                      room,
                       boardState,
                       setBoardState,
                       makeMove,
@@ -28,14 +26,6 @@ const Chessboard = ({
                     }) => {
 
   const [clickedCell, setClickedCell] = useState(null)
-
-  const {socket} = useSocket();
-
-  useEffect(() => {
-    socket.on("move-made", ({from, to}) => {
-
-    })
-  }, [])
 
   const showPossibleMoves = (cell) => {
     const kingMoved = cell.color === ChessLogic.colors.WHITE ? whiteKingMoved : blackKingMoved
@@ -61,7 +51,7 @@ const Chessboard = ({
         showPossibleMoves(cell)
       } else {
         setClickedCell(null)
-        hideMoves()
+        hideMoves(boardState)
       }
     }
   }
@@ -100,7 +90,6 @@ const Chessboard = ({
 
 
 Chessboard.propTypes = {
-  room: PropTypes.string.isRequired,
   boardState: PropTypes.array.isRequired,
   setBoardState: PropTypes.func.isRequired,
   makeMove: PropTypes.func.isRequired,

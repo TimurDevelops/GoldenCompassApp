@@ -115,9 +115,9 @@ class ChessLogic {
     return {
       x,
       y,
-      figure,
-      side,
-      color,
+      figure: figure ? figure : null,
+      side: side ? side : null,
+      color: color ? color : null,
       possibleMove: false
     }
   }
@@ -585,9 +585,9 @@ class ChessLogic {
       if (i.figure === ChessLogic.figures.KING && i.side === ChessLogic.sides.ME) {
         return {
           ...i,
-          figure: undefined,
-          side: undefined,
-          color: undefined
+          figure: null,
+          side: null,
+          color: null
         }
 
       }
