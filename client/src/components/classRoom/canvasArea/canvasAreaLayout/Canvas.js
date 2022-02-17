@@ -11,10 +11,10 @@ import {useUser} from "../../../../hooks/useUser";
 const Canvas = ({room, img, hasChessboard, hasAbacus, activeTool, drawWidth, drawColor, active}) => {
   const {socket} = useSocket();
   const {getUser} = useUser();
-  // const [width, setWidth] = useState('100px');
-  const [width, setWidth] = useState('800px');
-  // const [height, setHeight] = useState('100px');
-  const [height, setHeight] = useState('800px');
+  const [width, setWidth] = useState('100px');
+  // const [width, setWidth] = useState('800px');
+  const [height, setHeight] = useState('100px');
+  // const [height, setHeight] = useState('800px');
   const canvasBackground = React.createRef();
 
   const onImgLoad = ({target: img}) => {
