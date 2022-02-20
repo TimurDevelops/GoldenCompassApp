@@ -47,6 +47,7 @@ const ChessboardSlide = ({room, visible}) => {
     const newDesk = newRows.map(i => newColumns.map(j => `${j}${i}`))
 
     setBoardState(newDesk.map(_ => _.map(field => {
+
       const [x, y] = field.split("")
       const i = oldRows.indexOf(Number(y))
       const j = oldColumns.indexOf(x)
@@ -98,7 +99,7 @@ const ChessboardSlide = ({room, visible}) => {
 
     socket.on("new-game-started", ({isPlayingAsWhite: isWhite}) => {
       setIsPlayingAsWhite(isWhite)
-      newGameStarted()
+      newGameStarted(isWhite)
     })
 
     socket.on("move-taken-back", ({previousMove: pMove, state, previousMoves: pMoves, takenBackMoves: tbMoves}) => {
@@ -146,6 +147,7 @@ const ChessboardSlide = ({room, visible}) => {
   const moveMade = (from, to, state, pMoves) => {
     const logic = new ChessLogic(rows, columns)
     const [fromTwo, toTwo] = logic.checkCastlingMoves(state, from, to)
+    const isQueen = logic.checkQueen(state, from, to)
     checkCastlingRights(from)
     const anPassant = logic.checkAnPassant(state, from, to)
     setPreviousMoves([...pMoves, {
@@ -159,14 +161,15 @@ const ChessboardSlide = ({room, visible}) => {
       isAnPassant: !!anPassant
     }])
     hideMoves(state)
-    setStateMakeMove(from, to, fromTwo, toTwo, anPassant, state)
+    setStateMakeMove(from, to, fromTwo, toTwo, anPassant, state, isQueen)
     setIsWhiteTurn(from.color === ChessLogic.colors.BLACK)
   }
 
-  const setStateMakeMove = (from, to, fromTwo, toTwo, anPassant, state) => {
+  const setStateMakeMove = (from, to, fromTwo, toTwo, anPassant, state, isQueen) => {
+    const toFigure = isQueen ? ChessLogic.figures.QUEEN : from.figure
     setBoardState(state.map(_ => _.map(i => {
       if (i.x === from.x && i.y === from.y) return {...i, figure: null, side: null, color: null}
-      if (i.x === to.x && i.y === to.y) return {...i, figure: from.figure, side: from.side, color: from.color}
+      if (i.x === to.x && i.y === to.y) return {...i, figure: toFigure, side: from.side, color: from.color}
       if (fromTwo && i.x === fromTwo.x && i.y === fromTwo.y) return {...i, figure: null, side: null, color: null}
       if (toTwo && i.x === toTwo.x && i.y === toTwo.y)
         return {...i, figure: fromTwo.figure, side: fromTwo.side, color: fromTwo.color}
@@ -181,9 +184,20 @@ const ChessboardSlide = ({room, visible}) => {
     socket.emit("start-new-game", {room, isPlayingAsWhite});
   }
 
-  const newGameStarted = () => {
-    setBoardState(desk.map(_ => _.map(i => {
-      return new ChessLogic(rows, columns).prepareCellInitialState(i, isPlayingAsWhite)
+  const newGameStarted = (isWhite) => {
+    let newRows
+    let newColumns
+    if (isWhite) {
+      newRows = [8, 7, 6, 5, 4, 3, 2, 1]
+      newColumns = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    } else {
+      newRows = [8, 7, 6, 5, 4, 3, 2, 1].reverse()
+      newColumns = ["a", "b", "c", "d", "e", "f", "g", "h"].reverse()
+    }
+    const newDesk = newRows.map(i => newColumns.map(j => `${j}${i}`))
+
+    setBoardState(newDesk.map(_ => _.map(i => {
+      return new ChessLogic(newRows, newColumns).prepareCellInitialState(i, isWhite)
     })))
     setIsWhiteTurn(true)
   }

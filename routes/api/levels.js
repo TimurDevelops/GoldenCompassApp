@@ -23,7 +23,6 @@ router.post(
 
     try {
       const teacher = await Teacher.findOne({login});
-
       const levels = await Level.find({_id: {$in: teacher.levels}})
         .populate({ path: 'lessons', model: Lesson, populate: { path: 'slides', model: Slide } }).lean();
 

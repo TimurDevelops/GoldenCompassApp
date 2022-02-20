@@ -249,7 +249,6 @@ class ChessLogic {
     const oneForward = this.getCell(boardState, i - 1, j)
     if (!oneForward.figure) {
       activeCells.push(oneForward)
-
       if (i === 6) {
         const twoForward = this.getCell(boardState, i - 2, j)
         if (!twoForward.figure) activeCells.push(twoForward)
@@ -696,7 +695,12 @@ class ChessLogic {
     }
   }
 
+  checkQueen(boardState, from, to){
+    const fromY = this.rows.indexOf(Number(from.y))
+    const toY = this.rows.indexOf(Number(to.y))
 
+    return ((fromY === 1 && toY === 0) || (fromY === 6 && toY === 7)) && from.figure === ChessLogic.figures.PAWN
+  }
 }
 
 export {

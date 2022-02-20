@@ -52,7 +52,7 @@ module.exports = (io, socket) => {
     }
   }
 
-  const switchSides = async ({room, isWhite}) => {
+  const switchSides = async ({room, isPlayingAsWhite: isWhite}) => {
     if (room) {
       const teacherSocketId = getSocketIdByLogin(room);
       io.to(teacherSocketId).emit('sides-switched', {isWhite});
