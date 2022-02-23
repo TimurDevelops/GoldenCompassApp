@@ -6,8 +6,8 @@
   flex-direction: column;
   height: 100%;
 
-  &.hidden{
-    display: none;
+  &.hidden {
+    visibility: hidden;
   }
 
   .chess-buttons {

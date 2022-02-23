@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import Chessboard from "./Chessboard";
 import {ChessLogic} from "./ChessLogic";
@@ -33,6 +33,26 @@ const ChessboardSlide = ({room, visible}) => {
   const [boardState, setBoardState] = useState(desk.map(_ => _.map(i => {
     return new ChessLogic(rows, columns).prepareCellInitialState(i, isPlayingAsWhite)
   })))
+
+  const stateRef = useRef(boardState);
+  React.useEffect(() => {
+    stateRef.current = boardState;
+  }, [boardState]);
+
+  const previousMovesRef = useRef(previousMoves);
+  React.useEffect(() => {
+    previousMovesRef.current = previousMoves;
+  }, [previousMoves]);
+
+  const takenBackMovesRef = useRef(takenBackMoves);
+  React.useEffect(() => {
+    takenBackMovesRef.current = takenBackMoves;
+  }, [takenBackMoves]);
+
+  const isPlayingAsWhiteRef = useRef(isPlayingAsWhite);
+  React.useEffect(() => {
+    isPlayingAsWhiteRef.current = isPlayingAsWhite;
+  }, [isPlayingAsWhite]);
 
   useEffect(() => {
     if (!activeSwitch) {
@@ -89,8 +109,8 @@ const ChessboardSlide = ({room, visible}) => {
   const {socket} = useSocket();
 
   useEffect(() => {
-    socket.on("move-made", ({from, to, state, previousMoves: pMoves}) => {
-      moveMade(from, to, state, pMoves)
+    socket.on("move-made", ({from, to}) => {
+      moveMade(from, to)
     })
 
     socket.on("sides-switched", ({isWhite}) => {
@@ -102,8 +122,8 @@ const ChessboardSlide = ({room, visible}) => {
       newGameStarted(isWhite)
     })
 
-    socket.on("move-taken-back", ({previousMove: pMove, state, previousMoves: pMoves, takenBackMoves: tbMoves}) => {
-      moveTakenBack(pMove, state, pMoves, tbMoves)
+    socket.on("move-taken-back", ({previousMove: pMove}) => {
+      moveTakenBack(pMove)
     })
 
     startNewGame()
@@ -141,10 +161,12 @@ const ChessboardSlide = ({room, visible}) => {
   }
 
   const makeMove = (from, to) => {
-    socket.emit("chess-make-move", {room, from, to, boardState, previousMoves});
+    socket.emit("chess-make-move", {room, from, to});
   }
 
-  const moveMade = (from, to, state, pMoves) => {
+  const moveMade = (from, to) => {
+    const state = stateRef.current
+    const pMoves = previousMovesRef.current
     const logic = new ChessLogic(rows, columns)
     const [fromTwo, toTwo] = logic.checkCastlingMoves(state, from, to)
     const isQueen = logic.checkQueen(state, from, to)
@@ -166,13 +188,26 @@ const ChessboardSlide = ({room, visible}) => {
   }
 
   const setStateMakeMove = (from, to, fromTwo, toTwo, anPassant, state, isQueen) => {
+    const isWhite = isPlayingAsWhiteRef.current;
     const toFigure = isQueen ? ChessLogic.figures.QUEEN : from.figure
+    const WHITE = ChessLogic.colors.WHITE
+    const BLACK = ChessLogic.colors.BLACK
+    const ME = ChessLogic.sides.ME
+    const OPPONENT = ChessLogic.sides.OPPONENT
+
     setBoardState(state.map(_ => _.map(i => {
       if (i.x === from.x && i.y === from.y) return {...i, figure: null, side: null, color: null}
-      if (i.x === to.x && i.y === to.y) return {...i, figure: toFigure, side: from.side, color: from.color}
+      if (i.x === to.x && i.y === to.y) {
+        let color = from.color
+        let side = (color === WHITE && isWhite) || (color === BLACK && !isWhite) ? ME : OPPONENT
+        return {...i, figure: toFigure, side: side, color: from.color}
+      }
       if (fromTwo && i.x === fromTwo.x && i.y === fromTwo.y) return {...i, figure: null, side: null, color: null}
-      if (toTwo && i.x === toTwo.x && i.y === toTwo.y)
-        return {...i, figure: fromTwo.figure, side: fromTwo.side, color: fromTwo.color}
+      if (toTwo && i.x === toTwo.x && i.y === toTwo.y){
+        let color = fromTwo.color
+        let side = (color === WHITE && isWhite) || (color === BLACK && !isWhite) ? ME : OPPONENT
+        return {...i, figure: fromTwo.figure, side: side, color: fromTwo.color}
+      }
       if (anPassant && i.x === anPassant.x && i.y === anPassant.y)
         return {...i, figure: null, side: null, color: null}
 
@@ -212,7 +247,10 @@ const ChessboardSlide = ({room, visible}) => {
     socket.emit("take-move-back", {room, previousMove, state: boardState, previousMoves, takenBackMoves});
   }
 
-  const moveTakenBack = (pMove, state, pMoves, tbMoves) => {
+  const moveTakenBack = (pMove) => {
+    const state = stateRef.current
+    const pMoves = previousMovesRef.current
+    const tbMoves = takenBackMovesRef.current
     const WHITE = ChessLogic.colors.WHITE
     const BLACK = ChessLogic.colors.BLACK
     const ME = ChessLogic.sides.ME

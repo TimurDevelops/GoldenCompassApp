@@ -23,7 +23,6 @@ import {useUser} from "../../hooks/useUser";
 import "./ClassRoom.scss";
 import {TeacherContext} from "../../context/TeacherContext";
 import {StudentContext} from "../../context/StudentContext";
-import ChessboardSlide from "./canvasArea/canvasAreaLayout/Chessboard/ChessboardSlide";
 
 const ClassRoom = ({logout}) => {
   const {teacher} = useParams();
@@ -72,10 +71,6 @@ const ClassRoom = ({logout}) => {
     else if (user.type === 'student') socket.emit("join-student", {room: teacher, login: user.login});
   }, [user, socket, teacher]);
 
-  if (waitingScreen) {
-    return <WaitingScreen message={waitingScreenMessage}/>
-  }
-
   const studentPicked = (value) => {
     socket.emit("student-allow", {teacherLogin: teacher, studentLogin: value});
   }
@@ -96,8 +91,10 @@ const ClassRoom = ({logout}) => {
     socket.emit("canvas-change-slide", {teacherLogin: teacher, slide: value});
   }
 
+
   return (
     <div className={"class-room"}>
+      <WaitingScreen message={waitingScreenMessage} active={waitingScreen}/>
       <Header logout={logout}/>
       <div className={'waiting-screen-class-room-wrapper'}>
 

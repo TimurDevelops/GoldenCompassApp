@@ -5,16 +5,16 @@ const {
 
 module.exports = (io, socket) => {
 
-  const makeMove = async ({room, from, to, boardState: state, previousMoves}) => {
+  const makeMove = async ({room, from, to}) => {
     if (room) {
       const teacherSocketId = getSocketIdByLogin(room);
-      io.to(teacherSocketId).emit('move-made', {from, to, state, previousMoves});
+      io.to(teacherSocketId).emit('move-made', {from, to});
 
       const allowedStudents = getAllowedStudents(room);
       for (const studentLogin of allowedStudents) {
         const studentSocketId = getSocketIdByLogin(studentLogin);
         if (studentSocketId) {
-          io.to(studentSocketId).emit('move-made', {from, to, state, previousMoves});
+          io.to(studentSocketId).emit('move-made', {from, to});
         }
       }
 
@@ -37,16 +37,16 @@ module.exports = (io, socket) => {
     }
   }
 
-  const takeMoveBack = async ({room, previousMove, state, previousMoves, takenBackMoves}) => {
+  const takeMoveBack = async ({room, previousMove}) => {
     if (room) {
       const teacherSocketId = getSocketIdByLogin(room);
-      io.to(teacherSocketId).emit('move-taken-back', {previousMove, state, previousMoves, takenBackMoves});
+      io.to(teacherSocketId).emit('move-taken-back', {previousMove});
 
       const allowedStudents = getAllowedStudents(room);
       for (const studentLogin of allowedStudents) {
         const studentSocketId = getSocketIdByLogin(studentLogin);
         if (studentSocketId) {
-          io.to(studentSocketId).emit('move-taken-back', {previousMove, state, previousMoves, takenBackMoves});
+          io.to(studentSocketId).emit('move-taken-back', {previousMove});
         }
       }
     }

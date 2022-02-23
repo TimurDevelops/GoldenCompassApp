@@ -8,6 +8,10 @@
   background: #17a2b8;
   z-index: 100;
 
+  &.hidden{
+    display: none;
+  }
+
   .title{
     font-size: 2em;
   }

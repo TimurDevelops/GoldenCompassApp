@@ -243,6 +243,37 @@ class ChessLogic {
 
   // *** GET MOVES FOR FIGURES METHODS *** //
 
+  filterAttackingBishopsForPin(boardState, cell, king, attackingBishopsOrQueens) {
+    return attackingBishopsOrQueens.filter(attacker => {
+      const diagonalCells = this.getDiagonalCells(boardState, king, attacker)
+      if (!diagonalCells.length) return false
+      for (let i = 0; i < diagonalCells.length; i++) {
+        let diagonalCell = diagonalCells[i]
+        if (diagonalCell.figure
+          && (diagonalCell.x !== cell.x && diagonalCell.y !== cell.y)
+          && (diagonalCell.x !== attacker.x && diagonalCell.y !== attacker.y))
+          return false
+      }
+      return true
+    })
+  }
+
+  filterAttackingRooksForPin(boardState, cell, king, attackingRooksOrQueens) {
+    return attackingRooksOrQueens.filter(attacker => {
+      const horizontalCells = this.getHorizontalCells(boardState, king, attacker)
+      if (!horizontalCells.length) return false
+      for (let i = 0; i < horizontalCells.length; i++) {
+        let horizontalCell = horizontalCells[i]
+        if (horizontalCell.figure
+          && (horizontalCell.x !== cell.x && horizontalCell.y !== cell.y)
+          && (horizontalCell.x !== attacker.x && horizontalCell.y !== attacker.y))
+          return false
+      }
+      return true
+    })
+  }
+
+
   getAllMovesForPawn(boardState, previousMove, cell, i, j) {
     const activeCells = []
 
@@ -293,7 +324,7 @@ class ChessLogic {
 
     let attackingRooksOrQueens = this.getAttackingRooksOrQueens(boardState, cell, i, j)
     if (attackingRooksOrQueens.length) {
-      attackingRooksOrQueens = attackingRooksOrQueens.filter(attacker => this.getHorizontalCells(boardState, king, attacker).length)
+      attackingRooksOrQueens = this.filterAttackingRooksForPin(boardState, cell, king, attackingRooksOrQueens)
 
       for (let i = 0; i < attackingRooksOrQueens.length; i++) {
         let attacker = attackingRooksOrQueens[i]
@@ -328,13 +359,13 @@ class ChessLogic {
 
     let attackingBishopsOrQueens = this.getAttackingBishopsOrQueens(boardState, cell, i, j)
     if (attackingBishopsOrQueens.length) {
-      attackingBishopsOrQueens = attackingBishopsOrQueens.filter(attacker => this.getDiagonalCells(boardState, king, attacker).length)
+      attackingBishopsOrQueens = this.filterAttackingBishopsForPin(boardState, cell, king, attackingBishopsOrQueens)
       if (attackingBishopsOrQueens.length) return []
     }
 
     let attackingRooksOrQueens = this.getAttackingRooksOrQueens(boardState, cell, i, j)
     if (attackingRooksOrQueens.length) {
-      attackingRooksOrQueens = attackingRooksOrQueens.filter(attacker => this.getHorizontalCells(boardState, king, attacker).length)
+      attackingRooksOrQueens = this.filterAttackingRooksForPin(boardState, cell, king, attackingRooksOrQueens)
       if (attackingRooksOrQueens.length) return []
     }
     return horseMoves.filter(i => {
@@ -414,17 +445,17 @@ class ChessLogic {
 
     let attackingBishopsOrQueens = this.getAttackingBishopsOrQueens(boardState, cell, i, j)
     if (attackingBishopsOrQueens.length) {
-      attackingBishopsOrQueens = attackingBishopsOrQueens.filter(attacker => this.getDiagonalCells(boardState, king, attacker).length)
+      attackingBishopsOrQueens = this.filterAttackingBishopsForPin(boardState, cell, king, attackingBishopsOrQueens)
       if (attackingBishopsOrQueens.length) {
         const attacker = attackingBishopsOrQueens[0]
         const cellCoordinate = cell.x + cell.y
-        return this.getDiagonalCells(boardState, king, attacker).filter(i => i.x + i.y !== cellCoordinate)
+        return this.getDiagonalCells(boardState, king, attacker).filter(i => i.x + i.y !== cellCoordinate && i.side !== ChessLogic.sides.ME)
       }
     }
 
     let attackingRooksOrQueens = this.getAttackingRooksOrQueens(boardState, cell, i, j)
     if (attackingRooksOrQueens.length) {
-      attackingRooksOrQueens = attackingRooksOrQueens.filter(attacker => this.getHorizontalCells(boardState, king, attacker).length)
+      attackingRooksOrQueens = this.filterAttackingRooksForPin(boardState, cell, king, attackingRooksOrQueens)
       if (attackingRooksOrQueens.length) return []
     }
     return activeCells
@@ -498,14 +529,14 @@ class ChessLogic {
 
     let attackingBishopsOrQueens = this.getAttackingBishopsOrQueens(boardState, cell, i, j)
     if (attackingBishopsOrQueens.length) {
-      attackingBishopsOrQueens = attackingBishopsOrQueens.filter(attacker => this.getDiagonalCells(boardState, king, attacker).length)
+      attackingBishopsOrQueens = this.filterAttackingBishopsForPin(boardState, cell, king, attackingBishopsOrQueens)
       if (attackingBishopsOrQueens.length) return []
 
     }
 
     let attackingRooksOrQueens = this.getAttackingRooksOrQueens(boardState, cell, i, j)
     if (attackingRooksOrQueens.length) {
-      attackingRooksOrQueens = attackingRooksOrQueens.filter(attacker => this.getHorizontalCells(boardState, king, attacker).length)
+      attackingRooksOrQueens = this.filterAttackingRooksForPin(boardState, cell, king, attackingRooksOrQueens)
       if (attackingRooksOrQueens.length) {
         const attacker = attackingRooksOrQueens[0]
         const cellCoordinate = cell.x + cell.y
@@ -522,7 +553,7 @@ class ChessLogic {
     return activeCells
   }
 
-  getCastlingMovesWhite(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved) {
+  getCastlingMoves(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved) {
     let sign
     if (cell.color === ChessLogic.colors.WHITE) {
       sign = 1
@@ -596,7 +627,7 @@ class ChessLogic {
       return (!move.figure || move.side === ChessLogic.sides.OPPONENT) && !this.isUnderAttack(boardStateWithNoKing, move)
     })
 
-    kingMoves.push(...this.getCastlingMovesWhite(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
+    kingMoves.push(...this.getCastlingMoves(boardState, cell, i, j, kingMoved, shortRookMoved, longRookMoved))
 
     return kingMoves
   }
@@ -695,7 +726,7 @@ class ChessLogic {
     }
   }
 
-  checkQueen(boardState, from, to){
+  checkQueen(boardState, from, to) {
     const fromY = this.rows.indexOf(Number(from.y))
     const toY = this.rows.indexOf(Number(to.y))
 
