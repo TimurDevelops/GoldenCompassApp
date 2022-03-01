@@ -18,7 +18,7 @@ router.post(
         user: typeof user === 'object' ? JSON.stringify(user) : user,
       });
 
-      // await savedError.save();
+      await savedError.save();
 
     } catch (err) {
 

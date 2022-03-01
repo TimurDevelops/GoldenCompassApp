@@ -39,15 +39,15 @@ const VideoContextProvider = ({children}) => {
         connectionRef.current = new Peer({
           initiator: false,
           trickle: false,
-          config: {
-            iceServers: [
-              {
-                urls: "turn:161.35.232.115:3478",
-                username: "test",
-                credential: "123456"
-              }
-            ]
-          },
+          // config: {
+          //   iceServers: [
+          //     {
+          //       urls: "turn:161.35.232.115:3478",
+          //       username: "test",
+          //       credential: "123456"
+          //     }
+          //   ]
+          // },
           stream: stream
         })
 
@@ -138,15 +138,15 @@ const VideoContextProvider = ({children}) => {
     const studentPeer = new Peer({
       initiator: true,
       trickle: false,
-      config: {
-        iceServers: [
-          {
-            urls: "turn:161.35.232.115:3478",
-            username: "test",
-            credential: "123456"
-          }
-        ]
-      },
+      // config: {
+      //   iceServers: [
+      //     {
+      //       urls: "turn:161.35.232.115:3478",
+      //       username: "test",
+      //       credential: "123456"
+      //     }
+      //   ]
+      // },
       stream: stream
     })
 
