@@ -38,7 +38,7 @@ const VideoContextProvider = ({children}) => {
       if (user.type === 'student') {
         connectionRef.current = new Peer({
           initiator: false,
-          trickle: true,
+          trickle: false,
           stream: stream,
           answerConstraints: {
             offerToReceiveAudio: false,
@@ -132,7 +132,7 @@ const VideoContextProvider = ({children}) => {
 
     const studentPeer = new Peer({
       initiator: true,
-      trickle: true,
+      trickle: false,
       iceTransportPolicy: 'relay',
       offerConstraints: {
         offerToReceiveAudio: true,

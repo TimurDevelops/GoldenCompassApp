@@ -37,6 +37,8 @@ const ClassRoom = ({logout}) => {
 
   const [students, setStudents] = useState([]);
   const [levels, setLevels] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [slides, setSlides] = useState([]);
 
   const [slidePickerOpen, setSlidePickerOpen] = useState(false);
   const [lessonPickerOpen, setLessonPickerOpen] = useState(false);
@@ -56,15 +58,37 @@ const ClassRoom = ({logout}) => {
   }, [user]);
 
   useEffect(() => {
-    const getLevels = async () => {
+    const getLessons = async () => {
       if (user.type === 'teacher') {
         const res = await api.post('/level/get-levels', {login: user.login});
         setLevels(res.data.levels);
       }
     }
-    getLevels().catch((err) => console.error(err))
+    getLessons().catch((err) => console.error(err))
 
   }, [user]);
+
+  useEffect(() => {
+    const getLevels = async () => {
+      if (user.type === 'teacher' && level._id) {
+        const res = await api.post('/level/get-lessons', {level: level._id});
+        setLessons(res.data.lessons);
+      }
+    }
+    getLevels().catch((err) => console.error(err))
+
+  }, [level]);
+
+  useEffect(() => {
+    const getSlides = async () => {
+      if (user.type === 'teacher' && lesson._id) {
+        const res = await api.post('/level/get-slides', {lesson: lesson._id});
+        setSlides(res.data.slides);
+      }
+    }
+    getSlides().catch((err) => console.error(err))
+
+  }, [lesson]);
 
   useEffect(() => {
     if (user.type === 'teacher') socket.emit("join-teacher", {room: teacher, login: user.login});
@@ -109,7 +133,7 @@ const ClassRoom = ({logout}) => {
           {user.type === 'teacher' ?
             <SlidePicker open={slidePickerOpen}
                        setOpen={setSlidePickerOpen}
-                       slides={lesson.slides}
+                       slides={slides}
                        setSlide={slidePicked}/> : ''}
 
 
@@ -119,7 +143,7 @@ const ClassRoom = ({logout}) => {
 
               <LessonPicker open={lessonPickerOpen}
                             setOpen={setLessonPickerOpen}
-                            lessons={level.lessons}
+                            lessons={lessons}
                             setLesson={lessonPicked}/>
 
               <LevelPicker open={levelPickerOpen}

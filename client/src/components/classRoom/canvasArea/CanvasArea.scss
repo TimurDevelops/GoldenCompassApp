@@ -112,6 +112,7 @@ $tool-panel-divider: #587873;
   }
 
   .tools-buttons {
+    z-index: 500;
     display: flex;
     justify-content: space-between;
 
