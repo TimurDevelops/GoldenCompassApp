@@ -3,6 +3,7 @@ const https = require('https')
 const http = require('http')
 const cors = require('cors');
 const fs = require('fs');
+const ws = require('ws');
 
 const connectDB = require("./config/db");
 const userHandlers = require('./handlers/userHandlers')
@@ -48,7 +49,7 @@ const server = listener.listen(Number(PORT), () => {
 });
 
 const io = require('socket.io')(server, {
-  wsEngine: 'ws',
+  wsEngine: ws.Server,
   cors: {
     origin: '*'
   }
