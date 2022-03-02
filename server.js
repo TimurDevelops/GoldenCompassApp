@@ -55,10 +55,10 @@ const io = require('socket.io')(server, {
 
 
 io.sockets.on('connection', (socket) => {
-
-  socket.on('ping', function() {
-    socket.emit('pong');
-  });
+  //
+  // socket.on('ping', function() {
+  //   socket.emit('pong');
+  // });
 
   userHandlers(io, socket);
 

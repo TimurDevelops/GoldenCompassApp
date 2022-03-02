@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 
 import {useUser} from "./hooks/useUser";
@@ -17,25 +17,24 @@ import {ErrorBoundary} from 'react-error-boundary';
 import './App.css'
 import './Common.scss'
 import api from "./utils/api";
-import {serverUrl} from './config.json';
-import io from 'socket.io-client'
+// import {serverUrl} from './config.json';
+// import io from 'socket.io-client'
 
 const App = () => {
-  const socket = io(serverUrl);
-  let startTime;
-
-  useEffect(() => {
-    setInterval(function () {
-      startTime = Date.now();
-      socket.emit('ping');
-    }, 2000);
-
-    socket.on('pong', function () {
-      let latency = Date.now() - startTime;
-      console.log(latency);
-    });
-  }, [])
-
+  // const socket = io(serverUrl);
+  // let startTime;
+  //
+  // useEffect(() => {
+  //   setInterval(function () {
+  //     startTime = Date.now();
+  //     socket.emit('ping');
+  //   }, 2000);
+  //
+  //   socket.on('pong', function () {
+  //     let latency = Date.now() - startTime;
+  //     console.log(latency);
+  //   });
+  // }, [])
 
   const {user, getUser} = useUser();
 
