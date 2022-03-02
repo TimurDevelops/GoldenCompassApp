@@ -48,6 +48,7 @@ const server = listener.listen(Number(PORT), () => {
 });
 
 const io = require('socket.io')(server, {
+  wsEngine: 'ws',
   cors: {
     origin: '*'
   }
