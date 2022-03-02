@@ -18,9 +18,10 @@ import './App.css'
 import './Common.scss'
 import api from "./utils/api";
 import {serverUrl} from './config.json';
+import io from 'socket.io-client'
 
 const App = () => {
-  const socket = io.connect(serverUrl);
+  const socket = io(serverUrl);
   let startTime;
 
   useEffect(() => {
