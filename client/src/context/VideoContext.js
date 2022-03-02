@@ -215,8 +215,8 @@ const VideoContextProvider = ({children}) => {
           url: 'stun:stun.xten.com'
         }, {
           url: "turn:161.35.232.115:3478",
-          username: "testturn",
-          credential: "passturnuser"
+          username: "test",
+          credential: "123456"
         }
         ]
       },
