@@ -40,10 +40,15 @@ const VideoContextProvider = ({children}) => {
           initiator: false,
           trickle: false,
           stream: stream,
-          answerConstraints: {
-            offerToReceiveAudio: false,
-            offerToReceiveVideo: false
-          }
+          config: {
+            iceServers: [{
+              urls: "stun:stun.golden-compass-app.com:5349",
+            }, {
+              urls: "turn:turn.golden-compass-app.com:5349",
+              username: "tiredman",
+              credential: "terminusest"
+            }]
+          },
         })
 
         connectionRef.current.on('signal', data => {
@@ -56,7 +61,20 @@ const VideoContextProvider = ({children}) => {
 
 
       } else if (user.type === 'teacher') {
-        connectionRef.current = new Peer({initiator: false, trickle: false, stream: stream});
+        connectionRef.current = new Peer({
+          initiator: false,
+          trickle: false,
+          stream: stream,
+          config: {
+            iceServers: [{
+              urls: "stun:stun.golden-compass-app.com:5349",
+            }, {
+              urls: "turn:turn.golden-compass-app.com:5349",
+              username: "tiredman",
+              credential: "terminusest"
+            }]
+          },
+        });
 
         connectionRef.current.on('signal', data => {
           connectionRef.current.signal(data)
@@ -101,7 +119,20 @@ const VideoContextProvider = ({children}) => {
     stream.getVideoTracks().forEach(track => track.enabled = captureVideo);
     stream.getAudioTracks().forEach(track => track.enabled = captureAudio);
 
-    const teacherPeer = new Peer({initiator: false, trickle: false, stream: stream});
+    const teacherPeer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: stream,
+      config: {
+        iceServers: [{
+          urls: "stun:stun.golden-compass-app.com:5349",
+        }, {
+          urls: "turn:turn.golden-compass-app.com:5349",
+          username: "tiredman",
+          credential: "terminusest"
+        }]
+      },
+    });
 
     teacherPeer.on('signal', data => {
       setCallAccepted(true);
@@ -133,11 +164,6 @@ const VideoContextProvider = ({children}) => {
     const studentPeer = new Peer({
       initiator: true,
       trickle: false,
-      iceTransportPolicy: 'relay',
-      offerConstraints: {
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: true
-      },
       config: {
         iceServers: [{
           urls: "stun:stun.golden-compass-app.com:5349",
