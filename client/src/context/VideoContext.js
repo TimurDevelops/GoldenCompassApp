@@ -42,9 +42,9 @@ const VideoContextProvider = ({children}) => {
           stream: stream,
           config: {
             iceServers: [{
-              urls: "stun:stun.golden-compass-app.com:5349",
+              urls: "stun:stun.golden-compass-app.com:3478",
             }, {
-              urls: "turn:turn.golden-compass-app.com:5349",
+              urls: ['turn:turn.golden-compass-app.com:3478?transport=udp','turn:turn.golden-compass-app.com:3478?transport=tcp', 'turn:turn.golden-compass-app.com:443?transport=tcp'],
               username: "tiredman",
               credential: "pleasework"
             }]
@@ -67,9 +67,9 @@ const VideoContextProvider = ({children}) => {
           stream: stream,
           config: {
             iceServers: [{
-              urls: "stun:stun.golden-compass-app.com:5349",
+              urls: "stun:stun.golden-compass-app.com:3478",
             }, {
-              urls: "turn:turn.golden-compass-app.com:5349",
+              urls: ['turn:turn.golden-compass-app.com:3478?transport=udp','turn:turn.golden-compass-app.com:3478?transport=tcp', 'turn:turn.golden-compass-app.com:443?transport=tcp'],
               username: "tiredman",
               credential: "pleasework"
             }]
@@ -125,9 +125,9 @@ const VideoContextProvider = ({children}) => {
       stream: stream,
       config: {
         iceServers: [{
-          urls: "stun:stun.golden-compass-app.com:5349",
+          urls: "stun:stun.golden-compass-app.com:3478",
         }, {
-          urls: "turn:turn.golden-compass-app.com:5349",
+          urls: ['turn:turn.golden-compass-app.com:3478?transport=udp','turn:turn.golden-compass-app.com:3478?transport=tcp', 'turn:turn.golden-compass-app.com:443?transport=tcp'],
           username: "tiredman",
           credential: "pleasework"
         }]
@@ -166,9 +166,9 @@ const VideoContextProvider = ({children}) => {
       trickle: false,
       config: {
         iceServers: [{
-          urls: "stun:stun.golden-compass-app.com:5349",
+          urls: "stun:stun.golden-compass-app.com:3478",
         }, {
-          urls: "turn:turn.golden-compass-app.com:5349",
+          urls: ['turn:turn.golden-compass-app.com:3478?transport=udp','turn:turn.golden-compass-app.com:3478?transport=tcp', 'turn:turn.golden-compass-app.com:443?transport=tcp'],
           username: "tiredman",
           credential: "pleasework"
         }]
