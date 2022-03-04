@@ -46,7 +46,7 @@ const VideoContextProvider = ({children}) => {
             }, {
               urls: "turn:turn.golden-compass-app.com:5349",
               username: "tiredman",
-              credential: "terminusest"
+              credential: "pleasework"
             }]
           },
         })
@@ -71,7 +71,7 @@ const VideoContextProvider = ({children}) => {
             }, {
               urls: "turn:turn.golden-compass-app.com:5349",
               username: "tiredman",
-              credential: "terminusest"
+              credential: "pleasework"
             }]
           },
         });
@@ -129,7 +129,7 @@ const VideoContextProvider = ({children}) => {
         }, {
           urls: "turn:turn.golden-compass-app.com:5349",
           username: "tiredman",
-          credential: "terminusest"
+          credential: "pleasework"
         }]
       },
     });
@@ -170,7 +170,7 @@ const VideoContextProvider = ({children}) => {
         }, {
           urls: "turn:turn.golden-compass-app.com:5349",
           username: "tiredman",
-          credential: "terminusest"
+          credential: "pleasework"
         }]
       },
       stream: stream
