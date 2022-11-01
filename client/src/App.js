@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 
 import {useUser} from "./hooks/useUser";
 
@@ -68,14 +68,14 @@ const App = () => {
         <Router>
           <Switch>
             {/* Sign In Page */}
-            <Route exact path={`${baseURL}/login`}
+            <Route exact path="/login"
                    render={(props) =>
                      <Login {...props} setAuth={setAuth}/>
                    }/>
 
             {/* Teacher Menu */}
             {auth.user && auth.user.type === 'teacher' &&
-              <PrivateRoute exact path={`${baseURL}/teacher`}
+              <PrivateRoute exact path="/teacher"
                             component={TeacherMenu}
                             auth={{isAuthenticated: auth.isAuthenticated, isLoading: auth.isLoading}}
                             logout={logout}/>
@@ -83,7 +83,7 @@ const App = () => {
 
             {/* Student Menu */}
             {auth.user && auth.user.type === 'student' &&
-              <PrivateRoute exact path={`${baseURL}/student`}
+              <PrivateRoute exact path="/student"
                             component={StudentMenu}
                             auth={{isAuthenticated: auth.isAuthenticated, isLoading: auth.isLoading}}
                             logout={logout}/>
@@ -91,20 +91,20 @@ const App = () => {
 
             {/* Student Available Teachers */}
             {auth.user && auth.user.type === 'student' &&
-              <PrivateRoute exact path={`${baseURL}/teachers-list`}
+              <PrivateRoute exact path="/teachers-list"
                             component={TeachersList}
                             auth={{isAuthenticated: auth.isAuthenticated, isLoading: auth.isLoading}}/>
             }
 
             {/* canvas will determine content by type and room */}
-            <PrivateRoute exact path={`${baseURL}/canvas/:teacher`}
+            <PrivateRoute exact path="/canvas/:teacher"
                           component={ClassRoom}
                           auth={auth}
                           user={auth.user}
                           logout={logout}/>
 
             {/* Reset pass word */}
-            <PrivateRoute exact path={`${baseURL}/reset-password/:user/:type`}
+            <PrivateRoute exact path="/reset-password/:user/:type"
                           component={ResetPassword}
                           auth={auth}
                           user={auth.user}
@@ -115,14 +115,14 @@ const App = () => {
               () => {
                 if (auth.isAuthenticated) {
                   if (auth.user.type === 'student') {
-                    return <Redirect to={`${baseURL}/student`}/>
+                    return <Redirect to="/student"/>
                   } else if (auth.user.type === 'teacher') {
-                    return <Redirect to={`${baseURL}/teacher`}/>
+                    return <Redirect to="/teacher"/>
                   } else {
-                    return <Redirect to={`${baseURL}/login`}/>
+                    return <Redirect to="/login"/>
                   }
                 } else {
-                  return <Redirect to={`${baseURL}/login`}/>
+                  return <Redirect to="/login"/>
                 }
               }
             }/>
