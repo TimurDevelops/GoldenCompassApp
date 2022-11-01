@@ -58,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^4.0.0",
     "prop-types": "^15.7.2"
   }
 }
