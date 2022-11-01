@@ -9,11 +9,16 @@ const userHandlers = require('./handlers/userHandlers')
 const canvasHandlers = require('./handlers/canvasHandlers')
 const videoHandlers = require('./handlers/videoHandlers')
 const chessboardHandlers = require('./handlers/chessboardHandlers')
-
-const {env} = require('./config.json');
+let config;
+try {
+  config = require('./config.json');
+} catch (ex) {
+  config = process.env;
+}
+const {env} = config;
 const credentials = {};
 
-if (env === 'prod'){
+if (env === 'prod') {
   const privateKey = fs.readFileSync('./sslcert/golden-compass-app.key', 'utf8');
   const certificate = fs.readFileSync('./sslcert/golden-compass-app_com_chain.crt', 'utf8');
   credentials.key = privateKey;
