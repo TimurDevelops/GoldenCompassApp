@@ -7,6 +7,7 @@ import App from './App';
 import {AppContextProvider} from "./context/AppContextProvider";
 
 import './index.css';
+import HashRouter from "react-router-dom/es/HashRouter";
 
 // optional configuration
 const options = {
@@ -22,7 +23,9 @@ ReactDOM.render(
   <React.StrictMode>
     <AlertProvider template={AlertTemplate} {...options}>
       <AppContextProvider>
-        <App/>
+        <HashRouter>
+          <App/>
+        </HashRouter>
       </AppContextProvider>
     </AlertProvider>
   </React.StrictMode>,
