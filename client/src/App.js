@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 
 import {useUser} from "./hooks/useUser";
 
